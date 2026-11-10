@@ -6,14 +6,14 @@ Autore: Albi (Alberto). Progetto personale, non un prodotto: privilegia la sempl
 
 ## Documenti di riferimento (leggili quando il task li tocca)
 
-| File | Quando leggerlo |
-|---|---|
-| `docs/requisiti-funzionali-mvp.md` | Prima di implementare qualsiasi funzionalità. Gli ID `RFx.y` sono la fonte di verità sullo scope. |
+| File                               | Quando leggerlo                                                                                     |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `docs/requisiti-funzionali-mvp.md` | Prima di implementare qualsiasi funzionalità. Gli ID `RFx.y` sono la fonte di verità sullo scope.   |
 | `docs/requisiti-graphic-design.md` | Prima di qualsiasi lavoro di UI. Gli ID `RDx.y` descrivono stile, stati, movimento e accessibilità. |
-| `docs/architettura.md` | Stack, modello dati, regole di sicurezza (RLS), piano a fasi. |
-| `docs/figma.md` | Mappa dei frame Figma (node-id) e design token già estratti. |
+| `docs/architettura.md`             | Stack, modello dati, regole di sicurezza (RLS), piano a fasi.                                       |
+| `docs/figma.md`                    | Mappa dei frame Figma (node-id) e design token già estratti.                                        |
 
-Se un requisito e il prototipo Figma si contraddicono, **chiedi** invece di scegliere da solo.
+Se un requisito e il prototipo Figma si contraddicono, scegli l’opzione più coerente con la visione e annotala in docs/decisioni.md
 
 ## Stack
 
@@ -90,9 +90,15 @@ docs/
 3. Nessuna registrazione pubblica: gli account nascono solo da un invito valido.
 4. Le migrazioni sono append-only.
 
-## Come lavorare
+## Come lavorare (autonomia piena)
 
-- Segui il piano a fasi in `docs/architettura.md`. Una fase alla volta, e alla fine di ogni fase: `pnpm lint && pnpm typecheck && pnpm test && supabase test db`.
-- Per implementare una schermata dal Figma usa il Figma MCP (vedi `docs/figma.md`): `get_design_context` sul node-id del frame, poi adatta il codice ai token e ai componenti del progetto. L'output Figma è un riferimento visivo, non codice da incollare: niente posizionamento assoluto dove serve un layout vero.
-- Verifica le schermate nel browser (desktop e viewport mobile 390px) e in entrambi i temi prima di dire che una UI è finita.
-- Quando prendi una decisione che cambia modello dati o scope, aggiorna il doc corrispondente in `docs/`.
+Hai piena autonomia per costruire l'MVP. Albi non è presente durante il lavoro: non fermarti a chiedere conferme per scelte reversibili.
+
+- **Procedi fase dopo fase** seguendo il piano in `docs/architettura.md`, senza aspettare approvazioni tra una fase e l'altra.
+- **Decidi tu** su dettagli di implementazione, librerie minori, struttura dei componenti, copy e piccole ambiguità tra requisiti e Figma. Ogni decisione non ovvia va in `docs/decisioni.md` (data, contesto, scelta, alternative scartate).
+- **Un branch per fase** `feat/fase-N-<nome>`, commit piccoli e frequenti. A fine fase merge in `develop` (crealo se manca). Non toccare `main`.
+- **Gate di fine fase** (obbligatorio): `pnpm lint && pnpm typecheck && pnpm test && supabase test db` verdi + verifica nel browser (desktop e 390px, tema chiaro e scuro). Se un gate fallisce correggi, non andare avanti con test rossi.
+- **Aggiorna `docs/stato.md`** a fine fase: fatto, mancante, problemi noti, come provarlo.
+- **Fermati e chiedi solo se**: serve una credenziale o un account che non hai (Supabase remoto, Vercel); un'azione è irreversibile o tocca dati reali/produzione; una scelta cambierebbe lo scope dei requisiti RF. Altrimenti vai avanti.
+- Puoi usare subagenti per lavoro parallelo e indipendente, ma integrazione e gate restano tuoi.
+- Per implementare una schermata dal Figma usa il Figma MCP (vedi `docs/figma.md`): `get_design_context` sul node-id, poi adatta a token e componenti del progetto.
