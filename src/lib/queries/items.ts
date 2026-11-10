@@ -149,3 +149,15 @@ export function useSearch(q: string, galaxyId: string | null) {
     },
   });
 }
+
+/** Closes the "since your last visit" banner (RF8.2). */
+export function useTouchLastSeen() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => unwrap(await db().rpc('touch_last_seen')),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['items'] });
+      void qc.invalidateQueries({ queryKey: ['galaxies'] });
+    },
+  });
+}

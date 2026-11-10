@@ -26,6 +26,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       <Toaster
         position="bottom-center"
         offset={88}
+        mobileOffset={{ bottom: 84 }}
         toastOptions={{
           classNames: {
             toast:

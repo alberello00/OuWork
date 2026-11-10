@@ -4,6 +4,11 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-10 | Novità | Il banner si chiude esplicitamente ("Got it" / ×), che aggiorna `last_seen_at` di tutte le mie galassie | Aggiornarlo a ogni apertura: il banner sparirebbe prima di essere letto |
+| 2026-11-10 | Ricerca | Ricerca lato database (`ILIKE` + trigram, già filtrata dalle RLS) con debounce 180 ms, non sui dati in cache | Filtrare in cache: dovrebbe scaricare tutti gli elementi di tutte le galassie |
+| 2026-11-10 | PWA | Service worker "solo rete" | Cache offline: rischio di servire contenuti privati dopo un logout o da un dispositivo condiviso |
+| 2026-11-10 | Export | Generato da route handler con la sessione dell'utente (non service role) | Service role: dovrebbe rifare a mano i filtri di privacy delle RLS |
+| 2026-11-10 | Dev | `devIndicators: false` in `next.config.ts` | L'indicatore di Next copre la barra mobile in basso a sinistra |
 | 2026-11-10 | Universo | `spheres.x/y` sono il **centro** del pianeta | Angolo in alto a sinistra: cambiando dimensione (più elementi) il pianeta si sposterebbe |
 | 2026-11-10 | Universo | Clic su un pianeta = pannello "Sphere index"; doppio clic = entra | Clic = entra: il pannello del frame `7:2` non avrebbe un modo naturale di aprirsi |
 | 2026-11-10 | Universo | Universo della galassia con React Flow (come la tela) | Canvas/SVG a mano: pan, zoom, drag e touch da riscrivere |

@@ -30,15 +30,13 @@ Non aggiungere dipendenze pesanti senza chiedere. Niente stato globale (Redux/Zu
 
 ## Comandi
 
-> Da aggiornare dopo lo scaffold (fase 0).
-
 ```bash
 pnpm dev                 # sviluppo locale
 pnpm build && pnpm start # build di produzione
 pnpm lint                # ESLint
 pnpm typecheck           # tsc --noEmit
 pnpm test                # Vitest
-supabase start           # stack Supabase locale (Docker)
+supabase start -x logflare,vector,edge-runtime,imgproxy,supavisor,studio,mailpit   # stack locale (Docker)
 supabase db reset        # riapplica migrazioni + seed
 supabase test db         # test SQL/RLS (pgTAP) in supabase/tests
 supabase gen types typescript --local > src/lib/supabase/database.types.ts

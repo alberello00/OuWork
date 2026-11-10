@@ -9,6 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { CanvasControls } from '@/components/canvas/CanvasControls';
 import { GalaxySettingsDialog } from '@/components/galaxies/GalaxySettingsDialog';
+import { NewsBanner } from '@/components/news/NewsBanner';
 import { SphereFormDialog } from '@/components/spheres/SphereFormDialog';
 import { AvatarStack } from '@/components/ui/AvatarStack';
 import { Button } from '@/components/ui/Button';
@@ -201,6 +202,9 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
           </Link>
           <Button size="icon" aria-label={copy.universe.newSphere} onClick={() => setCreating(true)}><Plus size={17} aria-hidden /></Button>
           <Button size="icon" aria-label={copy.nav.settings} onClick={() => setSettingsOpen(true)}><Settings size={17} aria-hidden /></Button>
+        </div>
+        <div className="pointer-events-auto w-full sm:max-w-xl">
+          <NewsBanner galaxyId={galaxyId} />
         </div>
       </div>
 

@@ -250,4 +250,29 @@ export const copy = {
     links: (n: number) => (n === 1 ? '1 link' : `${n} links`),
     enter: (name: string) => `Enter ${name}`,
   },
+  search: {
+    placeholder: 'Search notes, links and pictures…',
+    shortcut: '⌘K',
+    allGalaxies: 'All galaxies',
+    allSpheres: 'All spheres',
+    empty: 'Nothing found. Try another word.',
+    hint: 'Type to search everything you can see.',
+    searching: 'Searching…',
+    filterSphere: 'Filter by sphere',
+    filterGalaxy: 'Filter by galaxy',
+  },
+  news: {
+    title: 'Since your last visit',
+    summary: (n: number, people: string, galaxies: number) =>
+      `${n === 1 ? '1 new thing' : `${n} new things`} from ${people}${galaxies > 1 ? ` in ${galaxies} galaxies` : ''}.`,
+    and: 'and',
+    seeAll: 'See what’s new',
+    dismiss: 'Got it',
+    dismissed: 'All caught up.',
+    edited: 'edited',
+    added: 'added',
+  },
+  exportData: {
+    filename: (name: string, ext: string) => `${name.replace(/[^\w-]+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.${ext}`,
+  },
 } as const;
