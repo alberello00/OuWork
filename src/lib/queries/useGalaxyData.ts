@@ -6,6 +6,10 @@ import { useItems } from './items';
 import { useSphereStats, useSpheres } from './spheres';
 import type { Item, Profile, Sphere } from './types';
 
+// stable empty values: a new [] on every render would retrigger effects while loading
+const NO_SPHERES: Sphere[] = [];
+const NO_ITEMS: Item[] = [];
+
 /** Everything a galaxy view needs, plus lookup maps. All of it already filtered by RLS. */
 export function useGalaxyData(galaxyId: string) {
   const galaxy = useGalaxy(galaxyId);
@@ -30,8 +34,8 @@ export function useGalaxyData(galaxyId: string) {
 
   return {
     galaxy: galaxy.data,
-    spheres: spheres.data ?? [],
-    items: items.data ?? [],
+    spheres: spheres.data ?? NO_SPHERES,
+    items: items.data ?? NO_ITEMS,
     stats: stats.data,
     isLoading: galaxy.isLoading || spheres.isLoading || items.isLoading,
     ...maps,

@@ -1,7 +1,7 @@
 'use client';
 
 import '@xyflow/react/dist/base.css';
-import { Background, BackgroundVariant, Panel, ReactFlow, ReactFlowProvider, useNodesState, useReactFlow, type OnNodeDrag } from '@xyflow/react';
+import { Background, BackgroundVariant, Panel, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, type OnNodeDrag } from '@xyflow/react';
 import { LayoutGrid, Plus, Settings, Shuffle } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -92,13 +92,15 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
     [flow, router, galaxyId, sizeOf, data.sphereById]
   );
 
+  const { topLevel, childrenOf, sphereById, items: allItems } = data;
   const [nodes, setNodes, onNodesChange] = useNodesState<PlanetNodeType>([]);
+  const initialized = useNodesInitialized();
   const dragging = useRef(new Set<string>());
 
   useEffect(() => {
     setNodes((current) => {
       const prev = new Map(current.map((n) => [n.id, n]));
-      return data.topLevel.map((s) => {
+      return topLevel.map((s) => {
         const items = itemsByTop.get(s.id) ?? [];
         const size = sphereDiameter(items.length);
         const old = prev.get(s.id);
@@ -112,9 +114,9 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             size,
             count: items.length,
             newCount: items.filter((i) => i.is_new).length,
-            isPrivate: isSpherePrivate(s, data.sphereById),
-            moons: data.childrenOf(s.id).map((m) => {
-              const mi = data.items.filter((i) => i.sphere_id === m.id);
+            isPrivate: isSpherePrivate(s, sphereById),
+            moons: childrenOf(s.id).map((m) => {
+              const mi = allItems.filter((i) => i.sphere_id === m.id);
               return { sphere: m, count: mi.length, newCount: mi.filter((i) => i.is_new).length };
             }),
             onMoon: (subId: string) => enter(s.id, subId),
@@ -122,7 +124,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
         };
       });
     });
-  }, [data.topLevel, data.items, data.sphereById, data, itemsByTop, selectedId, setNodes, enter]);
+  }, [topLevel, allItems, sphereById, childrenOf, itemsByTop, selectedId, setNodes, enter]);
 
   const edges: SphereEdgeType[] = useMemo(() => {
     const itemTop = new Map<string, string>();
@@ -136,7 +138,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   // first view: fit, or zoom out of the sphere we come back from (RD7.2)
   const fitted = useRef(false);
   useEffect(() => {
-    if (fitted.current || !nodes.length) return;
+    if (fitted.current || !nodes.length || !initialized) return;
     fitted.current = true;
     const from = params.get('from');
     const node = from ? nodes.find((n) => n.id === from) : undefined;
@@ -149,7 +151,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
         void flow.fitView({ padding: 0.25, maxZoom: 1.1 });
       }
     });
-  }, [nodes, flow, params]);
+  }, [nodes, initialized, flow, params]);
 
   const onNodeDragStart: OnNodeDrag<PlanetNodeType> = useCallback((_, n) => void dragging.current.add(n.id), []);
   const onNodeDragStop: OnNodeDrag<PlanetNodeType> = useCallback(
