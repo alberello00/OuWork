@@ -11,7 +11,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | 2 — Login, inviti, galassie | ✅ fatta | `feat/fase-2-auth` → `develop` |
 | 3 — CRUD sfere/elementi, aggiunta rapida, Notes | ✅ fatta | `feat/fase-3-content` → `develop` |
 | 4 — Tela della sfera | ✅ fatta | `feat/fase-4-canvas` → `develop` |
-| 5 — Universi | ⏳ | |
+| 5 — Universi | ✅ fatta | `feat/fase-5-universe` → `develop` |
 | 6 — Novità, ricerca, export, PWA | ⏳ | |
 
 ## Come provarlo
@@ -97,3 +97,20 @@ Verificato nel browser: trascinamento salvato, creazione al clic, tratto + frecc
 **Problemi noti**
 - Su mobile la tela è navigabile (pinch, trascinamento) ma il disegno con un dito disattiva il pan finché non si torna allo strumento "sposta".
 - Le card non si raggiungono da tastiera sulla tela; da tastiera si usa la vista Elenco.
+
+## Fase 5 — Universi
+
+**Fatto**
+- Universo della galassia `/g/<id>` (frame `5:2`): sfere-pianeta con gradiente radiale e alone, diametro ∝ radice del numero di elementi (84–220 px), contorno tratteggiato se vuote, lucchetto se private, puntino giallo se hanno novità, fluttuazione lenta (disattivata da `prefers-reduced-motion`) (RF2.3, RD4).
+- Sotto-sfere come lune che compaiono avvicinandosi (zoom ≥ 0,9) e aprono la sfera madre filtrata.
+- Archi tra sfere quando ci sono collegamenti tra elementi di sfere diverse, spessore ∝ numero di collegamenti (RF7.2, RD4.4).
+- Pianeti trascinabili (posizione salvata); "Reorganize" li dispone ad anelli, il più grande al centro e Random in fondo.
+- Pannello "Sphere index" al clic (frame `7:2` / `14:2`): anteprima della tela, sotto-sfere, ultimi elementi, "Open sphere".
+- Transizione firma (RD7.2): doppio clic o "Open sphere" zooma dentro il pianeta con una dissolvenza nel suo colore; tornando indietro (`?from=`) l'universo parte zoomato sul pianeta e si allontana. Con `prefers-reduced-motion` solo dissolvenza.
+- Universo delle galassie `/` (frame `3:2`): un riquadro per galassia con le sfere in miniatura nella loro disposizione, membri, conteggi e badge novità; legenda.
+- Il selettore "All galaxies" (frame `4:2`) c'era già dalla fase 2.
+
+Verificato nel browser (desktop chiaro/scuro, 390 px): 6 pianeti e 2 archi, pannello, lune avvicinandosi, Reorganize salvato, ingresso e ritorno, lola vede la propria sfera privata "Gift ideas" e alberto no.
+
+**Problemi noti**
+- La fluttuazione dei pianeti si può spegnere solo con l'impostazione di sistema "riduci movimento" (nessun interruttore nell'app).

@@ -111,3 +111,20 @@ export function useMarkSphereSeen() {
     },
   });
 }
+
+/** Planet drag / Reorganize: optimistic, positions are sphere centres. */
+export function useMoveSpheres(galaxyId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (moves: { id: string; x: number; y: number }[]) => {
+      for (const m of moves) unwrap(await db().from('spheres').update({ x: m.x, y: m.y }).eq('id', m.id).select('id').single());
+    },
+    onMutate: (moves) => {
+      const byId = new Map(moves.map((m) => [m.id, m]));
+      qc.setQueryData<Sphere[]>(keys.spheres(galaxyId), (old) =>
+        old?.map((s) => (byId.has(s.id) ? { ...s, x: byId.get(s.id)!.x, y: byId.get(s.id)!.y } : s))
+      );
+    },
+    onError: () => void qc.invalidateQueries({ queryKey: keys.spheres(galaxyId) }),
+  });
+}

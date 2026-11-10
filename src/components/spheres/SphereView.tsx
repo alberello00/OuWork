@@ -94,7 +94,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
   );
 
   return (
-    <main className="flex min-h-0 flex-1 flex-col">
+    <main className="flex min-h-0 flex-1 flex-col animate-fade-in">
       <SphereHeader
         galaxyId={galaxyId}
         sphere={sphere}

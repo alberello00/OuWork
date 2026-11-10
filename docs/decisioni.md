@@ -4,6 +4,9 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-10 | Universo | `spheres.x/y` sono il **centro** del pianeta | Angolo in alto a sinistra: cambiando dimensione (più elementi) il pianeta si sposterebbe |
+| 2026-11-10 | Universo | Clic su un pianeta = pannello "Sphere index"; doppio clic = entra | Clic = entra: il pannello del frame `7:2` non avrebbe un modo naturale di aprirsi |
+| 2026-11-10 | Universo | Universo della galassia con React Flow (come la tela) | Canvas/SVG a mano: pan, zoom, drag e touch da riscrivere |
 | 2026-11-10 | Tela | Clic singolo su uno spazio vuoto apre un piccolo menu del tipo (non crea subito) | Doppio clic: il Figma dice "Click anywhere to add". Creare al clic: troppe note vuote per sbaglio |
 | 2026-11-10 | Tela | Un solo tipo di nodo React Flow (`item`) che usa `ItemCard`, invece di tre nodi | Tre nodi duplicherebbero drag, selezione e zoom semantico; la card cambia già layout per tipo |
 | 2026-11-10 | Tela | Le annotazioni stanno in un `ViewportPortal` sopra le card; nuove annotazioni vanno nella sotto-sfera filtrata, altrimenti nella sfera | SVG separato sincronizzato a mano con `useViewport`: più codice per lo stesso risultato |

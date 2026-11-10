@@ -8,6 +8,7 @@ import {
   ReactFlow,
   ReactFlowProvider,
   useNodesState,
+  useNodesInitialized,
   useReactFlow,
   type NodeMouseHandler,
   type OnNodeDrag,
@@ -76,6 +77,7 @@ function CanvasInner(props: Props) {
   const dragging = useRef(new Set<string>());
   const pending = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   const [nodes, setNodes, onNodesChange] = useNodesState<ItemNodeType>([]);
+  const initialized = useNodesInitialized();
 
   useEffect(() => {
     setNodes((current) => {
@@ -123,14 +125,14 @@ function CanvasInner(props: Props) {
   // ── fit on first load, or centre on the item asked for (RF9.3) ──
   const didFit = useRef(false);
   useEffect(() => {
-    if (didFit.current || !nodes.length) return;
+    if (didFit.current || !nodes.length || !initialized) return;
     didFit.current = true;
     requestAnimationFrame(() => {
       const focus = focusId ? nodes.find((n) => n.id === focusId) : undefined;
       if (focus) flow.setCenter(focus.position.x + canvas.cardWidth / 2, focus.position.y + 80, { zoom: 1, duration: 400 });
       else flow.fitView({ padding: 0.2, maxZoom: 1 });
     });
-  }, [nodes, focusId, flow]);
+  }, [nodes, initialized, focusId, flow]);
 
   const onNodeDragStart: OnNodeDrag<ItemNodeType> = useCallback((_, node) => {
     dragging.current.add(node.id);
