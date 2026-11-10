@@ -12,7 +12,15 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | 3 — CRUD sfere/elementi, aggiunta rapida, Notes | ✅ fatta | `feat/fase-3-content` → `develop` |
 | 4 — Tela della sfera | ✅ fatta | `feat/fase-4-canvas` → `develop` |
 | 5 — Universi | ✅ fatta | `feat/fase-5-universe` → `develop` |
-| 6 — Novità, ricerca, export, PWA | ⏳ | |
+| 6 — Novità, ricerca, export, PWA | ✅ fatta | `feat/fase-6-news-search` → `develop` |
+
+## Prossimi passi (servono Albi e le sue credenziali)
+
+1. **Supabase remoto**: creare il progetto (piano free), `supabase link`, `supabase db push`. In Auth: signup disabilitato, conferma email disabilitata (già così in `config.toml` per il locale).
+2. **Vercel**: importare il repo, impostare `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (solo server).
+3. **Primo account**: non esiste registrazione pubblica. Crearlo dalla dashboard Supabase (Auth → Add user, email `<username>@users.ourworld.local`, `user_metadata.username`): i trigger creano profilo e "Just me". Da lì si creano galassie e link d'invito.
+4. Merge `develop` → `main` quando Albi ha rivisto il lavoro.
+5. Confronto con i frame Figma (non fatto: limite del piano Starter del Figma MCP, vedi problemi noti della fase 2).
 
 ## Come provarlo
 
@@ -114,3 +122,18 @@ Verificato nel browser (desktop chiaro/scuro, 390 px): 6 pianeti e 2 archi, pann
 
 **Problemi noti**
 - La fluttuazione dei pianeti si può spegnere solo con l'impostazione di sistema "riduci movimento" (nessun interruttore nell'app).
+
+## Fase 6 — Novità, ricerca, export, PWA, mobile
+
+**Fatto**
+- Banner "Since your last visit" sulla home (tutte le galassie) e nell'universo della galassia (solo quella): quante novità, da chi, in quante galassie; "See what's new" apre la modale (frame `8:2`) con elemento, autore, sfera e galassia; "Got it" / × chiude e aggiorna `last_seen_at` (RF8.2). Badge NEW su card, sfere, pianeti e galassie già dalle fasi precedenti (RF8.1, RF8.3).
+- Ricerca ⌘K / Ctrl+K e pulsante nella barra (RF9, RD9.1): risultati dal database (`search_items`, solo contenuti visibili), raggruppati per sfera con la sotto-sfera a destra, chip per filtrare per galassia e per sfera, snippet del testo. Invio apre la sfera sulla tela centrata sull'elemento con il dettaglio aperto (RF9.3).
+- Export della galassia in JSON o Markdown dalle impostazioni (`/api/export`), con la sessione dell'utente: contiene solo ciò che lui vede (RF11.3).
+- PWA: manifest, icone 192/512 + SVG, service worker solo rete (niente cache di dati privati), `theme-color` per tema.
+- Mobile (RD8.3): barra in basso con Cerca, "+" e interruttore tema; contenuti e tele si fermano sopra la barra.
+
+Verificato nel browser: banner (6 novità da Lola e Giulia in 2 galassie) e modale, chiusura persistente; ricerca "lis" raggruppata per sfera, Invio apre Tram 28 sulla tela; lola non trova la nota privata di alberto ma trova la propria; export: alberto e lola ottengono ciascuno i propri contenuti privati e non quelli dell'altro (5 vs 4 collegamenti), giulia riceve 404; manifest valido; 390 px chiaro.
+
+**Problemi noti**
+- Il service worker non mette nulla in cache: l'app non funziona offline (scelta voluta per la privacy).
+- Le immagini nell'export sono riferite con il loro path nello storage, non incluse nel file.

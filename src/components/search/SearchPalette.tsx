@@ -26,8 +26,18 @@ function useDebounced<T>(value: T, ms: number): T {
   return v;
 }
 
+/** Markdown to plain text, enough for a one-line snippet. */
+function plain(md: string): string {
+  return md
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^[#>\-*+\d.\s]+/gm, '')
+    .replace(/[*_`~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function snippet(item: Item, q: string): string {
-  const text = item.type === 'link' ? item.url ?? '' : item.body_md ?? item.caption ?? '';
+  const text = item.type === 'link' ? item.url ?? '' : plain(item.body_md ?? item.caption ?? '');
   const i = text.toLowerCase().indexOf(q.toLowerCase());
   if (i < 0) return item.type === 'link' ? domainOf(item.url) : text.slice(0, 80);
   const start = Math.max(0, i - 30);
@@ -111,7 +121,7 @@ export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenCha
                 value={q}
                 onValueChange={setQ}
                 placeholder={copy.search.placeholder}
-                className="h-14 w-full bg-transparent text-[16px] outline-none placeholder:text-placeholder"
+                className="h-14 w-full bg-transparent text-[16px] outline-none placeholder:text-placeholder focus-visible:outline-none"
                 autoFocus
               />
               <DialogPrimitive.Close className="rounded-[6px] border border-border px-1.5 py-0.5 text-[11px] text-text-muted max-sm:hidden">esc</DialogPrimitive.Close>
