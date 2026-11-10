@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { LayoutGrid, Shapes } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ItemCard } from '@/components/items/ItemCard';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -9,9 +11,17 @@ import { useMarkSphereSeen } from '@/lib/queries/spheres';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { useOpenItem } from '@/lib/useOpenItem';
 import { tiltFor } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { SphereHeader } from './SphereHeader';
 
-/** A sphere: header with sub-sphere filter + its items. Phase 4 adds the canvas next to the list. */
+const SphereCanvas = dynamic(() => import('@/components/canvas/SphereCanvas').then((m) => m.SphereCanvas), {
+  ssr: false,
+  loading: () => <div className="paper-sky h-full w-full" />,
+});
+
+type View = 'canvas' | 'list';
+
+/** A sphere: header with sub-sphere filter, then its canvas or its list (RD8.4). */
 export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId: string }) {
   const data = useGalaxyData(galaxyId);
   const router = useRouter();
@@ -20,6 +30,13 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
   const openItem = useOpenItem();
   const markSphereSeen = useMarkSphereSeen();
   const activeSub = params.get('sub');
+  const viewParam = params.get('view');
+  // canvas by default on larger screens, list on phones (RD8.4)
+  const [defaultView, setDefaultView] = useState<View>('canvas');
+  useEffect(() => {
+    if (window.matchMedia('(max-width: 639px)').matches) setDefaultView('list');
+  }, []);
+  const view: View = viewParam === 'list' || viewParam === 'canvas' ? viewParam : defaultView;
 
   const sphere = data.sphereById.get(sphereId);
   const parent = sphere?.parent_id ? data.sphereById.get(sphere.parent_id) : undefined;
@@ -38,18 +55,43 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
     if (all.some((i) => i.is_new)) markSphereSeen.mutate(sphere.id);
   }, [data.isLoading, sphere, all, markSphereSeen]);
 
-  function setSub(id: string | null) {
+  function setParam(key: string, value: string | null) {
     const next = new URLSearchParams(params.toString());
-    if (id) next.set('sub', id);
-    else next.delete('sub');
+    if (value) next.set(key, value);
+    else next.delete(key);
     const qs = next.toString();
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
+  const setSub = (id: string | null) => setParam('sub', id);
+
+  const isNew = useCallback((id: string) => newOnOpen?.has(id) ?? false, [newOnOpen]);
+  const scopeIds = useMemo(() => [...scope], [scope]);
 
   if (data.isLoading) return <main className="flex-1 p-8 text-[13px] text-text-muted">{copy.common.loading}</main>;
   if (!sphere) return <EmptyState emoji="🫧" title={copy.galaxies.emptyTitle} className="flex-1" />;
 
-  const isNew = (id: string) => newOnOpen?.has(id) ?? false;
+  const target = (activeSub && data.sphereById.get(activeSub)) || sphere;
+  const viewSwitch = (
+    <div role="group" aria-label="View" className="flex items-center rounded-pill border border-border bg-card p-0.5">
+      {(
+        [
+          ['canvas', copy.spheres.canvas, <Shapes key="c" size={15} aria-hidden />],
+          ['list', copy.spheres.list, <LayoutGrid key="l" size={15} aria-hidden />],
+        ] as const
+      ).map(([v, label, icon]) => (
+        <button
+          key={v}
+          type="button"
+          aria-pressed={view === v}
+          onClick={() => setParam('view', v)}
+          className={cn('inline-flex h-10 items-center gap-1.5 rounded-pill px-3 text-[12px] font-medium', view === v ? 'bg-text text-bg' : 'text-text-muted hover:text-text')}
+        >
+          {icon}
+          <span className="max-sm:sr-only">{label}</span>
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <main className="flex min-h-0 flex-1 flex-col">
@@ -65,7 +107,27 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
         isPrivate={isSpherePrivate(sphere, data.sphereById)}
         activeSub={activeSub}
         onSubChange={setSub}
-      />
+      >
+        {viewSwitch}
+      </SphereHeader>
+      {view === 'canvas' ? (
+        <div className="relative min-h-[420px] flex-1">
+          <div className="absolute inset-0">
+            <SphereCanvas
+              galaxyId={galaxyId}
+              target={target}
+              targetPrivate={isSpherePrivate(target, data.sphereById)}
+              scopeIds={activeSub ? [activeSub] : scopeIds}
+              items={shown}
+              sphereById={data.sphereById}
+              profileById={data.profileById}
+              isNew={isNew}
+              focusId={params.get('focus')}
+              onOpenItem={openItem}
+            />
+          </div>
+        </div>
+      ) : (
       <div className="paper-sky flex-1 px-3 pb-28 pt-4 sm:px-6">
         {sphere.is_inbox && shown.length ? <p className="mb-3 text-[12px] text-text-muted">{copy.spheres.inbox}</p> : null}
         {shown.length ? (
@@ -93,6 +155,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
           <EmptyState emoji={sphere.emoji} title={copy.spheres.emptyTitle} body={copy.spheres.emptyBody} />
         )}
       </div>
+      )}
     </main>
   );
 }
