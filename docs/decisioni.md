@@ -4,6 +4,10 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-10 | UI | Sfondi degli universi seguono il tema (puntini "carta" di giorno, cielo "notte" di notte) | Universi sempre scuri come nel Figma: l'interruttore tema (RF11.4) non avrebbe effetto lì; RD4.3 descrive entrambe le varianti |
+| 2026-11-10 | UI | `accent-strong` (#C8431F) per i pulsanti con testo bianco; `accent` (#E4572E) resta per FAB e dettagli | Bianco su #E4572E ha contrasto 3,6:1, sotto AA (RD2.5) |
+| 2026-11-10 | UI | Primitive scritte a mano in stile shadcn su Radix (`dialog`, `dropdown-menu`), più `sonner`, `cmdk`, `lucide-react`, `react-markdown` | CLI shadcn: interattiva e con più dipendenze del necessario |
+| 2026-11-10 | Figma | UI basata su `docs/figma.md`: il Figma MCP ha esaurito le chiamate del piano Starter | Aggirare il limite o fare l'upgrade: decisione di Albi |
 | 2026-11-10 | Ambiente | Storage locale fissato a `v1.60.0` (`supabase/.temp/storage-version`, non versionato) e Realtime disattivato in `config.toml` | L'immagine storage di default (Node 26) va in segfault su Docker Desktop 4.36 / M3; Realtime non serve all'MVP. Aggiornando Docker Desktop il pin si può togliere |
 | 2026-11-10 | DB | `updated_by` su `items`; NEW = modifica di contenuto fatta da un altro. Spostare una card (x, y) non genera novità | Con il solo `created_by` chi modifica l'elemento di un altro lo vedrebbe come NEW; ogni trascinamento accenderebbe i badge |
 | 2026-11-10 | DB | Lettura tramite viste `security_invoker` (`items_feed`, `sphere_stats`) e RPC invoker (`search_items`, `mark_seen`…) | Viste/RPC definer: conteggi, ricerca e novità rischierebbero di includere contenuti privati (RF4.3) |

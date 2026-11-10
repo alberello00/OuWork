@@ -18,8 +18,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'OurUniverse',
-  description: 'Your personal universe for notes, links, and memories',
+  title: 'OurWorld',
+  description: 'Our little universe: notes, links and pictures, shared in galaxies.',
 };
 
 export default function RootLayout({

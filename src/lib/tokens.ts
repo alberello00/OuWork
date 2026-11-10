@@ -1,37 +1,73 @@
-// Design tokens as JS values for canvas/SVG usage where CSS variables are unavailable.
-// Keep in sync with the @theme block in globals.css.
+// Design tokens as JS values, for places where a class name is not enough
+// (canvas, SVG, dynamic sphere/user colours). Colour VALUES live in
+// src/app/globals.css as CSS variables, one set per theme; here we only keep
+// the palette keys and the helpers that point at those variables.
 
-export const colors = {
-  bg: '#FAF6EF',
-  surface2: '#F3EDE2',
-  card: '#FFFDF8',
-  border: '#E2DACB',
-  dotGrid: '#D6CDBD',
-  text: '#2B2A33',
-  textMuted: '#6B6872',
-  placeholder: '#757575',
-  accent: '#E4572E',
-  newBg: '#F7D774',
-  newText: '#7A5A00',
-  userLola: '#D9467A',
-  userAlberto: '#2F8F83',
-  cardStripe: '#C7A96C',
-  spherePlaces: '#FFD98A',
+export const SPHERE_COLORS = [
+  'coral',
+  'amber',
+  'sage',
+  'teal',
+  'sky',
+  'lavender',
+  'rose',
+  'terracotta',
+  'moss',
+  'plum',
+] as const;
+export type SphereColor = (typeof SPHERE_COLORS)[number];
+
+export const USER_COLORS = [
+  'pink',
+  'teal',
+  'indigo',
+  'orange',
+  'green',
+  'violet',
+  'blue',
+  'red',
+] as const;
+export type UserColor = (typeof USER_COLORS)[number];
+
+export function isSphereColor(value: string | null | undefined): value is SphereColor {
+  return !!value && (SPHERE_COLORS as readonly string[]).includes(value);
+}
+
+/** CSS colour for a sphere palette key, theme-aware. */
+export function sphereVar(color: string | null | undefined): string {
+  return `var(--sphere-${isSphereColor(color) ? color : 'amber'})`;
+}
+
+/** CSS colour for a personal colour key. */
+export function userVar(color: string | null | undefined): string {
+  const key = (USER_COLORS as readonly string[]).includes(color ?? '') ? color : 'teal';
+  return `var(--user-${key})`;
+}
+
+export const SPHERE_EMOJIS = [
+  '📍', '🎵', '🎬', '💡', '📸', '🎲', '✨', '📚', '🍝', '🌿',
+  '✈️', '🏠', '🎁', '🎨', '🧩', '⚽', '🐾', '🌙', '☕', '💌',
+] as const;
+
+export const radius = { card: 12, pill: 99, login: 20 } as const;
+
+/** Canvas geometry shared by cards, edges and annotations. */
+export const canvas = {
+  cardWidth: 240,
+  semanticZoomThreshold: 0.55,
+  gridGap: 22,
 } as const;
 
-export const colorsDark = {
-  bg: '#14152B',
-  surface2: '#1F2144',
-  card: '#2A2C5C',
-  border: '#3A3D6B',
-  dotGrid: '#2E3158',
-  text: '#EDE8F5',
-  textMuted: '#9B96B0',
-  placeholder: '#6B6880',
+/** Universe geometry (RD4.2): diameter grows with sqrt(items), clamped. */
+export const universe = {
+  minDiameter: 84,
+  maxDiameter: 220,
+  moonDiameter: 44,
 } as const;
 
-export const radius = {
-  card: 12,
-  pill: 99,
-  login: 20,
-} as const;
+export function sphereDiameter(itemCount: number): number {
+  const d = universe.minDiameter + Math.sqrt(Math.max(0, itemCount)) * 26;
+  return Math.round(Math.min(universe.maxDiameter, d));
+}
+
+export const durations = { micro: 200, scene: 420 } as const;

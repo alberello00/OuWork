@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* ── Typography ── */
   --font-heading: var(--font-fraunces), Georgia, serif;
@@ -10,7 +12,7 @@
   --radius-pill: 99px;
   --radius-login: 20px;
 
-  /* ── Light palette ── */
+  /* ── Light palette "paper" ── */
   --color-bg: #FAF6EF;
   --color-surface-2: #F3EDE2;
   --color-card: #FFFDF8;
@@ -20,38 +22,261 @@
   --color-text-muted: #6B6872;
   --color-placeholder: #757575;
   --color-accent: #E4572E;
+  /* accent for surfaces that carry white text (AA contrast) */
+  --color-accent-strong: #C8431F;
+  --color-on-accent: #FFFDF8;
   --color-new-bg: #F7D774;
   --color-new-text: #7A5A00;
-  --color-user-lola: #D9467A;
-  --color-user-alberto: #2F8F83;
+  --color-danger: #B3261E;
+  --color-danger-soft: #FBE9E7;
+  --color-success: #2F7D5B;
+  --color-warning: #8A6100;
   --color-card-stripe: #C7A96C;
-  --color-sphere-places: #FFD98A;
+  --color-overlay: rgba(43, 42, 51, 0.38);
+  /* ink used on top of sphere / avatar colours, same in both themes */
+  --color-sphere-ink: #2B2A33;
+  --color-on-user: #FFFFFF;
+
+  /* night sky, used by the universe views and the login illustration in both themes */
+  --color-night-1: #2A2C5C;
+  --color-night-2: #1F2144;
+  --color-night-3: #14152B;
+  --color-night-text: #EDE8DF;
+  --color-night-muted: #B4B0CC;
+  --color-night-border: rgba(237, 232, 223, 0.16);
+  --color-night-surface: rgba(237, 232, 223, 0.07);
 
   /* ── Shadows ── */
   --shadow-card: 0 6px 18px rgba(80, 60, 30, 0.12);
+  --shadow-card-lifted: 0 14px 30px rgba(80, 60, 30, 0.22);
   --shadow-accent: 0 8px 11px rgba(228, 87, 46, 0.45);
   --shadow-zoom: 0 0 14px 2px rgba(247, 215, 116, 0.28);
+  --shadow-panel: 0 18px 48px rgba(30, 25, 50, 0.22);
+
+  /* ── Motion (RD7) ── */
+  --ease-soft: cubic-bezier(0.22, 0.8, 0.3, 1);
+  --animate-fade-in: fade-in 200ms var(--ease-soft) both;
+  --animate-pop-in: pop-in 220ms var(--ease-soft) both;
+  --animate-sheet-up: sheet-up 320ms var(--ease-soft) both;
+  --animate-panel-in: panel-in 320ms var(--ease-soft) both;
+  --animate-drift: drift 14s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; scale: 0.97; }
+    to { opacity: 1; scale: 1; }
+  }
+  @keyframes sheet-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  @keyframes panel-in {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes drift {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -8px, 0); }
+  }
 }
 
-/* ── Dark theme overrides ── */
+:root {
+  color-scheme: light;
+
+  /* ── Sphere palette (RD2.2): the only colours a sphere can have ── */
+  --sphere-coral: #F4A08A;
+  --sphere-amber: #FFD98A;
+  --sphere-sage: #B9CFA8;
+  --sphere-teal: #8FD0C4;
+  --sphere-sky: #A5CEF0;
+  --sphere-lavender: #C9B8F0;
+  --sphere-rose: #EFB3C4;
+  --sphere-terracotta: #D99A7A;
+  --sphere-moss: #B4C283;
+  --sphere-plum: #CFA5D3;
+
+  /* ── Personal colours (RD1.2) ── */
+  --user-pink: #D9467A;
+  --user-teal: #2F8F83;
+  --user-indigo: #5B5BD6;
+  --user-orange: #B8581A;
+  --user-green: #37804A;
+  --user-violet: #8E4EC6;
+  --user-blue: #2A6FBD;
+  --user-red: #C23B3B;
+}
+
+/* ── Dark theme "night" ── */
 .dark {
+  color-scheme: dark;
+
   --color-bg: #14152B;
   --color-surface-2: #1F2144;
-  --color-card: #2A2C5C;
-  --color-border: #3A3D6B;
-  --color-dot-grid: #2E3158;
-  --color-text: #EDE8F5;
-  --color-text-muted: #9B96B0;
-  --color-placeholder: #6B6880;
+  --color-card: #262850;
+  --color-border: #3D4074;
+  --color-dot-grid: #33366A;
+  --color-text: #EDE8DF;
+  --color-text-muted: #B4B0CC;
+  --color-placeholder: #9490B0;
+  --color-accent: #F0683F;
+  --color-accent-strong: #C8431F;
+  --color-new-bg: #F7D774;
+  --color-new-text: #5C4400;
+  --color-danger: #FF8A80;
+  --color-danger-soft: #4A2230;
+  --color-success: #7FD1A9;
+  --color-warning: #F7D774;
+  --color-card-stripe: #C7A96C;
+  --color-overlay: rgba(8, 8, 20, 0.62);
+
+  --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --shadow-card-lifted: 0 14px 30px rgba(0, 0, 0, 0.5);
+  --shadow-panel: 0 18px 48px rgba(0, 0, 0, 0.55);
+
+  --sphere-coral: #E58B74;
+  --sphere-amber: #F2C365;
+  --sphere-sage: #9DB88A;
+  --sphere-teal: #6FBDB0;
+  --sphere-sky: #86B6E0;
+  --sphere-lavender: #B09DE3;
+  --sphere-rose: #DE98AC;
+  --sphere-terracotta: #C98462;
+  --sphere-moss: #9FAE6C;
+  --sphere-plum: #BB8CC0;
 }
 
-/* ── Base styles ── */
+/* ── Base ── */
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: var(--font-body);
+  font-optical-sizing: auto;
   background-color: var(--color-bg);
   color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6,
+.font-heading {
   font-family: var(--font-heading);
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+  font-weight: 400;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+button,
+[role="button"],
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:not(:disabled),
+[role="button"] {
+  cursor: pointer;
+}
+
+/* night sky background for the universe views (RD4.3) */
+.night-sky {
+  background-color: var(--color-night-3);
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(237, 232, 223, 0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 12%, rgba(237, 232, 223, 0.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 64% 72%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 82%, rgba(237, 232, 223, 0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 54%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 42% 38%, rgba(247, 215, 116, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 60%, rgba(237, 232, 223, 0.4) 50%, transparent 51%),
+    radial-gradient(ellipse at 50% 35%, var(--color-night-1) 0%, var(--color-night-2) 45%, var(--color-night-3) 100%);
+  color: var(--color-night-text);
+}
+
+/* paper variant of the universe background: soft dots (RD4.3) */
+.paper-sky {
+  background-color: var(--color-bg);
+  background-image: radial-gradient(var(--color-dot-grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ── Markdown inside notes (RD3.3) ── */
+.prose-note {
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.prose-note > * + * { margin-top: 0.7em; }
+.prose-note h1, .prose-note h2, .prose-note h3 { line-height: 1.25; margin-top: 1.1em; }
+.prose-note h1 { font-size: 1.5em; }
+.prose-note h2 { font-size: 1.3em; }
+.prose-note h3 { font-size: 1.12em; }
+.prose-note ul { list-style: disc; padding-left: 1.3em; }
+.prose-note ol { list-style: decimal; padding-left: 1.3em; }
+.prose-note li + li { margin-top: 0.25em; }
+.prose-note a { color: var(--color-accent-strong); text-decoration: underline; text-underline-offset: 2px; }
+.dark .prose-note a { color: var(--color-accent); }
+.prose-note blockquote {
+  border-left: 3px solid var(--color-border);
+  padding-left: 0.9em;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+.prose-note code {
+  font-size: 0.9em;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.05em 0.35em;
+}
+.prose-note pre {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 0.8em 1em;
+  overflow-x: auto;
+}
+.prose-note pre code { background: none; border: 0; padding: 0; }
+.prose-note hr { border-color: var(--color-border); }
+.prose-note img { border-radius: 8px; max-width: 100%; }
+
+/* ── Reduced motion (RD7.4): fades only ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* universe background follows the theme: paper dots by day, night sky by night */
+.universe-bg {
+  background-color: var(--color-bg);
+  background-image: radial-gradient(var(--color-dot-grid) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.dark .universe-bg {
+  background-color: var(--color-night-3);
+  background-size: auto;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(237, 232, 223, 0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 12%, rgba(237, 232, 223, 0.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 64% 72%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 82%, rgba(237, 232, 223, 0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 54%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 42% 38%, rgba(247, 215, 116, 0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 60%, rgba(237, 232, 223, 0.4) 50%, transparent 51%),
+    radial-gradient(ellipse at 50% 30%, var(--color-night-1) 0%, var(--color-night-2) 45%, var(--color-night-3) 100%);
+  background-attachment: fixed;
 }
