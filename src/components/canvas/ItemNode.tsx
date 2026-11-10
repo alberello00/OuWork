@@ -1,6 +1,6 @@
 'use client';
 
-import { type NodeProps, type Node, useStore } from '@xyflow/react';
+import { Handle, Position, type NodeProps, type Node, useStore } from '@xyflow/react';
 import { memo } from 'react';
 import { ItemCard } from '@/components/items/ItemCard';
 import type { Item, Profile, Sphere } from '@/lib/queries/types';
@@ -30,6 +30,8 @@ export const ItemNode = memo(function ItemNode({ data, selected, dragging }: Nod
         data.dimmed && 'opacity-45'
       )}
     >
+      {/* edges need handles; links are not drawn by hand, so they stay invisible */}
+      <Handle type="target" position={Position.Left} isConnectable={false} className="!pointer-events-none !opacity-0" />
       <ItemCard
         item={data.item}
         sphere={data.sphere}
@@ -38,6 +40,7 @@ export const ItemNode = memo(function ItemNode({ data, selected, dragging }: Nod
         tilt={data.tilt}
         className={cn(selected && 'outline outline-2 outline-offset-2 outline-text')}
       />
+      <Handle type="source" position={Position.Right} isConnectable={false} className="!pointer-events-none !opacity-0" />
     </div>
   );
 });

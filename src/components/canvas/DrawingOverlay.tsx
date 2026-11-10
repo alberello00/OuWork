@@ -83,7 +83,7 @@ export function DrawingOverlay({ tool, color, size, emoji, sphereId, onDraft, on
 
   return (
     <div
-      className="nopan nodrag absolute inset-0 z-[6] touch-none"
+      className="nopan nodrag absolute inset-0 z-[4] touch-none"
       style={{ cursor: tool === 'sticker' ? 'copy' : 'crosshair' }}
       onPointerDown={down}
       onPointerMove={move}

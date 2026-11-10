@@ -10,7 +10,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | 1 — Schema, RLS, test pgTAP, seed | ✅ fatta | `feat/fase-1-db` → `develop` |
 | 2 — Login, inviti, galassie | ✅ fatta | `feat/fase-2-auth` → `develop` |
 | 3 — CRUD sfere/elementi, aggiunta rapida, Notes | ✅ fatta | `feat/fase-3-content` → `develop` |
-| 4 — Tela della sfera | ⏳ | |
+| 4 — Tela della sfera | ✅ fatta | `feat/fase-4-canvas` → `develop` |
 | 5 — Universi | ⏳ | |
 | 6 — Novità, ricerca, export, PWA | ⏳ | |
 
@@ -80,3 +80,20 @@ Verificato nel browser (desktop chiaro/scuro, 390 px chiaro/scuro): aggiunta di 
 
 **Problemi noti**
 - Le immagini dei link vengono caricate direttamente dal sito d'origine (`referrerPolicy=no-referrer`): se il sito le blocca, resta il fallback colorato solo in assenza di immagine, altrimenti un'immagine rotta.
+
+## Fase 4 — Tela della sfera
+
+**Fatto**
+- Tela React Flow nella pagina sfera, con interruttore Tela / Elenco (`?view=`); predefinita la tela su desktop, l'elenco sotto i 640 px (RD8.4).
+- Card trascinabili, posizione salvata dopo 400 ms con aggiornamento ottimistico; il polling non riporta indietro una card mentre la si sposta (RF5.2).
+- Clic su un punto vuoto → menu Nota / Link / Immagine → elemento creato in quel punto (RF5.3, RD6.5). Suggerimento "Click anywhere to add" come nel frame `15:2`.
+- Collegamenti come curve bezier nel colore della sfera d'origine, evidenziati al passaggio sulla card (RF7.2, RD6.3).
+- Annotazioni (RF6): penna a mano libera (perfect-freehand, 6 colori, 3 spessori), frecce curve, sticker emoji e sticker foto; si spostano trascinandole e si eliminano con × o Canc; autore nel tooltip.
+- Zoom semantico sotto il 55 %: le card mostrano solo titolo e colore (RD6.2). Controlli zoom / "mostra tutto" in basso a sinistra (RD6.4).
+- `?focus=<item>` centra la tela su un elemento (servirà alla ricerca, RF9.3). Il filtro per sotto-sfera vale anche sulla tela.
+
+Verificato nel browser: trascinamento salvato, creazione al clic, tratto + freccia + sticker salvati, sticker spostato ed eliminato, zoom semantico, filtro Italy, lola vede 2 collegamenti su 3 (quello verso la nota privata di alberto resta nascosto), tela navigabile a 390 px, tema scuro.
+
+**Problemi noti**
+- Su mobile la tela è navigabile (pinch, trascinamento) ma il disegno con un dito disattiva il pan finché non si torna allo strumento "sposta".
+- Le card non si raggiungono da tastiera sulla tela; da tastiera si usa la vista Elenco.
