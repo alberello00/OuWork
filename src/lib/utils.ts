@@ -31,3 +31,19 @@ export function domainOf(url: string | null | undefined): string {
     return '';
   }
 }
+
+/** Stable pseudo-random number in [0, 1) from a string (uuid). */
+export function hashUnit(id: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 10000) / 10000;
+}
+
+/** Polaroid tilt between -7° and 7°, never almost straight (figma.md). */
+export function tiltFor(id: string): number {
+  const u = hashUnit(id) * 2 - 1;
+  return Math.round((Math.sign(u) || 1) * (1 + Math.abs(u) * 6) * 10) / 10;
+}

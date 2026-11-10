@@ -12,14 +12,14 @@ export type Invite = Tables['invites']['Row'];
 
 export type ItemType = 'note' | 'link' | 'image';
 
-/** A row of the `items_feed` view: view columns are nullable in generated types, so we pin them. */
 type FeedRow = Views['items_feed']['Row'];
-export type Item = {
-  [K in keyof FeedRow]: K extends
-    | 'title' | 'body_md' | 'url' | 'preview' | 'image_path' | 'caption' | 'created_by' | 'updated_by'
-    ? FeedRow[K]
-    : NonNullable<FeedRow[K]>;
-} & { type: ItemType };
+/** A row of the `items_feed` view, with the boolean flags made non-null. */
+export type Item = Omit<FeedRow, 'is_new' | 'since_last_visit' | 'type' | 'preview'> & {
+  type: ItemType;
+  is_new: boolean;
+  since_last_visit: boolean;
+  preview: LinkPreview | null;
+};
 
 export interface LinkPreview {
   title?: string | null;
