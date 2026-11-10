@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Typography ── */
+  --font-heading: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+
+  /* ── Radii ── */
+  --radius-card: 12px;
+  --radius-pill: 99px;
+  --radius-login: 20px;
+
+  /* ── Light palette ── */
+  --color-bg: #FAF6EF;
+  --color-surface-2: #F3EDE2;
+  --color-card: #FFFDF8;
+  --color-border: #E2DACB;
+  --color-dot-grid: #D6CDBD;
+  --color-text: #2B2A33;
+  --color-text-muted: #6B6872;
+  --color-placeholder: #757575;
+  --color-accent: #E4572E;
+  --color-new-bg: #F7D774;
+  --color-new-text: #7A5A00;
+  --color-user-lola: #D9467A;
+  --color-user-alberto: #2F8F83;
+  --color-card-stripe: #C7A96C;
+  --color-sphere-places: #FFD98A;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 6px 18px rgba(80, 60, 30, 0.12);
+  --shadow-accent: 0 8px 11px rgba(228, 87, 46, 0.45);
+  --shadow-zoom: 0 0 14px 2px rgba(247, 215, 116, 0.28);
+}
+
+/* ── Dark theme overrides ── */
+.dark {
+  --color-bg: #14152B;
+  --color-surface-2: #1F2144;
+  --color-card: #2A2C5C;
+  --color-border: #3A3D6B;
+  --color-dot-grid: #2E3158;
+  --color-text: #EDE8F5;
+  --color-text-muted: #9B96B0;
+  --color-placeholder: #6B6880;
+}
+
+/* ── Base styles ── */
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
