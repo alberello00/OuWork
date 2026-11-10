@@ -8,7 +8,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | ---- | ----- | ------ |
 | 0 — Scaffold | ✅ fatta | `main` |
 | 1 — Schema, RLS, test pgTAP, seed | ✅ fatta | `feat/fase-1-db` → `develop` |
-| 2 — Login, inviti, galassie | 🟡 quasi finita (non ancora in `develop`) | `feat/fase-2-auth` |
+| 2 — Login, inviti, galassie | ✅ fatta | `feat/fase-2-auth` → `develop` |
 | 3 — CRUD sfere/elementi, aggiunta rapida, Notes | ⏳ | |
 | 4 — Tela della sfera | ⏳ | |
 | 5 — Universi | ⏳ | |
@@ -52,15 +52,14 @@ Contenuti privati da controllare a mano: nota "Anniversary surprise" di alberto 
 - Il disco del Mac era pieno (2,4 GB liberi) e Docker si bloccava: è stata svuotata **solo la build cache di Docker** (14 GB, rigenerabile). Immagini, container e volumi di altri progetti non sono stati toccati.
 - Un membro rimosso da una galassia lascia lì i propri contenuti privati, che restano invisibili a tutti.
 
-## Fase 2 — Login, inviti, galassie (in corso)
+## Fase 2 — Login, inviti, galassie
 
 **Fatto** (branch `feat/fase-2-auth`): token e tema chiaro/scuro, login username+password, middleware di sessione, pagina `/invite/<token>` (nuovo account via service role oppure "Join" se già loggati), selettore galassie, creazione galassia, impostazioni (rinomina, membri, link d'invito, esci/elimina).
 Verificato nel browser: login (desktop chiaro/scuro, 390 px), password errata, creazione invito, registrazione da invito su mobile, invito non riusabile, un non membro non vede la galassia, logout.
 
-**Da fare prima del merge**: ricontrollare a schermo il dialogo impostazioni dopo la correzione dell'animazione (era fuori posizione), provare impostazioni a 390 px e tema chiaro, rilanciare il gate completo.
+Impostazioni galassia verificate su desktop chiaro, 390 px chiaro e scuro.
 
 **Problemi noti**
 - **Figma MCP non disponibile**: il piano Starter ha esaurito le chiamate. La UI è costruita su `docs/figma.md`; il confronto con i frame e l'estrazione dei token del tema scuro restano da fare.
 - La prova nel browser ha creato l'utente demo `marta` nel DB locale (sparisce con `supabase db reset`).
 
-**Non iniziate**: fasi 3–6.
