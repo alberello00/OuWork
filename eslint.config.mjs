@@ -11,6 +11,11 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  {
+    // images come from signed Storage URLs and arbitrary link-preview hosts:
+    // next/image would need a remote pattern for each of them
+    rules: { '@next/next/no-img-element': 'off' },
+  },
 ];
 
 export default eslintConfig;

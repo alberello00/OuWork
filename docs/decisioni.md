@@ -4,6 +4,11 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-10 | UI | Il dettaglio di un elemento si apre con `?item=<id>` nell'URL, ovunque dentro una galassia | Stato locale: la ricerca (RF9.3) e i link condivisi non potrebbero aprire un elemento |
+| 2026-11-10 | UX | Aprire una sfera la segna come vista subito, ma i badge NEW restano visibili fino a quando la si lascia | Segnarla alla chiusura: fragile su mobile. Toglierli subito: l'utente non vedrebbe mai cosa è nuovo |
+| 2026-11-10 | UX | L'aggiunta rapida preseleziona la sfera in cui ci si trova; fuori da una galassia si sceglie la galassia (ricordata in `localStorage`) | Sempre Random: scomodo quando si aggiunge dentro una sfera |
+| 2026-11-10 | Rotte | Notes è per galassia (`/g/<id>/notes`); `/notes` porta alla prima galassia condivisa | Notes globale su tutte le galassie: il frame `9:2` mostra una sola galassia |
+| 2026-11-10 | UI | `<img>` normale (regola ESLint disattivata) invece di `next/image` | Signed URL di Storage e domini arbitrari delle anteprime richiederebbero `remotePatterns` per ognuno |
 | 2026-11-10 | UI | Sfondi degli universi seguono il tema (puntini "carta" di giorno, cielo "notte" di notte) | Universi sempre scuri come nel Figma: l'interruttore tema (RF11.4) non avrebbe effetto lì; RD4.3 descrive entrambe le varianti |
 | 2026-11-10 | UI | `accent-strong` (#C8431F) per i pulsanti con testo bianco; `accent` (#E4572E) resta per FAB e dettagli | Bianco su #E4572E ha contrasto 3,6:1, sotto AA (RD2.5) |
 | 2026-11-10 | UI | Primitive scritte a mano in stile shadcn su Radix (`dialog`, `dropdown-menu`), più `sonner`, `cmdk`, `lucide-react`, `react-markdown` | CLI shadcn: interattiva e con più dipendenze del necessario |
