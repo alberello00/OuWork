@@ -1,5 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Fraunces, DM_Sans } from 'next/font/google';
+import { ServiceWorker } from '@/components/shell/ServiceWorker';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import './globals.css';
 
@@ -20,6 +21,16 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: 'OurWorld',
   description: 'Our little universe: notes, links and pictures, shared in galaxies.',
+  icons: { icon: '/icon.svg', apple: '/icon-192.png' },
+  appleWebApp: { capable: true, title: 'OurWorld', statusBarStyle: 'black-translucent' },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F3EDE2' },
+    { media: '(prefers-color-scheme: dark)', color: '#14152B' },
+  ],
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -38,6 +49,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <ServiceWorker />
       </body>
     </html>
   );

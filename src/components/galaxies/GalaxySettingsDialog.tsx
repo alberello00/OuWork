@@ -1,6 +1,6 @@
 'use client';
 
-import { Copy, Link2, LogOut, Trash2, UserMinus } from 'lucide-react';
+import { Copy, Download, Link2, LogOut, Trash2, UserMinus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -202,6 +202,22 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, children }: P
             )}
           </Section>
         ) : null}
+
+        <Section title={copy.settings.export} hint={copy.settings.exportHint}>
+          <div className="flex gap-2">
+            {(['json', 'md'] as const).map((f) => (
+              <a
+                key={f}
+                href={`/api/export?galaxy=${galaxy.id}&format=${f}`}
+                download
+                className="inline-flex h-11 items-center gap-2 rounded-pill border border-border bg-card px-4 text-[13px] font-medium hover:bg-surface-2"
+              >
+                <Download size={15} aria-hidden />
+                {f === 'json' ? copy.settings.exportJson : copy.settings.exportMarkdown}
+              </a>
+            ))}
+          </div>
+        </Section>
 
         {children}
 
