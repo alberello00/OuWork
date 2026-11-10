@@ -154,9 +154,11 @@ export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: 
           />
 
           <FieldError>{error}</FieldError>
-          <Button type="submit" variant="primary" className="w-full" disabled={add.isPending || !target || !isDraftValid(type, draft)}>
-            {add.isPending ? copy.items.adding : copy.items.add}
-          </Button>
+          <div className="sticky -bottom-5 -mx-5 border-t border-border bg-card px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:static sm:mx-0 sm:border-0 sm:p-0">
+            <Button type="submit" variant="primary" className="w-full" disabled={add.isPending || !target || !isDraftValid(type, draft)}>
+              {add.isPending ? copy.items.adding : copy.items.add}
+            </Button>
+          </div>
         </form>
       </SheetContent>
     </Dialog>
