@@ -4,6 +4,9 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-11 | Universo | Il menu del pianeta (clic destro / pressione prolungata) offre Open, Edit e Delete, non solo Delete; anche le colonne di Notes hanno Edit + Delete | Un menu con una sola voce distruttiva: facile da toccare per sbaglio, e "Edit" mancava comunque dall'universo |
+| 2026-11-11 | Universo | Pressione prolungata gestita a mano (520 ms, tolleranza 10 px) oltre all'evento `contextmenu` | Solo `contextmenu`: Safari su iOS non lo emette |
+| 2026-11-11 | Universo | Il pianeta eliminato resta come "fantasma" per 260 ms e poi sparisce | Aspettare la fine dell'animazione prima di chiamare la RPC: l'eliminazione sembrerebbe lenta e l'animazione partirebbe prima della conferma del database |
 | 2026-11-10 | Novità | Il banner si chiude esplicitamente ("Got it" / ×), che aggiorna `last_seen_at` di tutte le mie galassie | Aggiornarlo a ogni apertura: il banner sparirebbe prima di essere letto |
 | 2026-11-10 | Ricerca | Ricerca lato database (`ILIKE` + trigram, già filtrata dalle RLS) con debounce 180 ms, non sui dati in cache | Filtrare in cache: dovrebbe scaricare tutti gli elementi di tutte le galassie |
 | 2026-11-10 | PWA | Service worker "solo rete" | Cache offline: rischio di servire contenuti privati dopo un logout o da un dispositivo condiviso |

@@ -127,6 +127,8 @@ export const copy = {
     newSphere: 'New sphere',
     newSubSphere: 'New sub-sphere',
     edit: 'Edit sphere',
+    actions: (name: string) => `Actions for ${name}`,
+    deleteSphere: 'Delete sphere',
     name: 'Name',
     namePlaceholder: 'e.g. Recipes',
     color: 'Colour',
