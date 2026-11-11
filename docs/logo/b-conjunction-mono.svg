@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <mask id="b-conjunction-m-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-m-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg>

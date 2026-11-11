@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OurWorld — logo proposals</title>
+<style>
+  :root { --paper: #FAF6EF; --ink: #2B2A33; --night: #14152B; --night-text: #EDE8DF; --border: #E2DACB; --muted: #6B6872; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F3EDE2; color: var(--ink); font: 15px/1.55 "DM Sans", system-ui, sans-serif; }
+  main { max-width: 2000px; margin: 0 auto; padding: 32px 20px 80px; }
+  h1, h2, h3, .lockup span { font-family: Fraunces, Georgia, serif; font-weight: 400; }
+  h1 { font-size: 34px; margin: 0 0 6px; }
+  h2 { font-size: 26px; margin: 56px 0 4px; }
+  h3 { font-size: 15px; margin: 0 0 12px; opacity: .7; }
+  p { margin: 0; max-width: 70ch; }
+  .intro, .why { color: var(--muted); }
+  .files { margin-top: 6px; font-size: 13px; color: var(--muted); }
+  code { font-size: 12.5px; background: #fff8; border: 1px solid var(--border); border-radius: 6px; padding: 1px 5px; }
+  nav { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  nav a { color: inherit; border: 1px solid var(--border); background: #FFFDF8; border-radius: 99px; padding: 8px 14px; text-decoration: none; font-size: 13px; }
+  .panels { display: grid; gap: 16px; margin-top: 18px; }
+  @media (min-width: 1900px) { .panels { grid-template-columns: 1fr 1fr; } }
+  .panel { border-radius: 20px; padding: 20px; min-width: 0; }
+  .paper { background: var(--paper); color: var(--ink); border: 1px solid var(--border); }
+  .night { background: radial-gradient(ellipse at 50% 30%, #2A2C5C, #1F2144 45%, #14152B); color: var(--night-text); }
+  .row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px; margin-top: 18px; }
+  .tag { width: 62px; flex: none; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .6; align-self: center; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; }
+  figure svg { display: block; }
+  .panel .row > figure:first-of-type svg { width: min(512px, 100vw - 82px); height: auto; }
+  @media (max-width: 700px) { .tag { width: 100%; } }
+  figcaption { font-size: 11px; opacity: .6; }
+  .uses { align-items: center; flex-wrap: wrap; }
+  .lockup { display: inline-flex; align-items: center; gap: 8px; }
+  .lockup span { font-size: 19px; line-height: 1; }
+  .tab { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; padding: 7px 12px; border-radius: 9px 9px 0 0; background: #8881; border: 1px solid #8883; }
+  .icons { background: #FFFDF8; border: 1px solid var(--border); border-radius: 20px; padding: 18px 20px; margin-top: 16px; }
+  .icons svg { border-radius: 22%; }
+</style>
+</head>
+<body>
+<main>
+  <h1>OurWorld — logo proposals</h1>
+  <p class="intro">Three directions for RF16, each at 512, 192, 32 and 16&nbsp;px, on paper and on night, in colour and in one colour. Colours come only from the design tokens: personal pink <code>#D9467A</code> and teal <code>#2F8F83</code> (the two of us, as in today's logo), the "new" yellow <code>#F7D774</code>, and the night sky for the app icon. Nothing is wired into the app yet: pick one and the rest follows.</p>
+  <nav><a href="#a-shared-orbit">A — Shared orbit</a><a href="#b-conjunction">B — Conjunction</a><a href="#c-o-planet">C — The O is a world</a></nav>
+  <section id="a-shared-orbit">
+<h2>A — Shared orbit</h2>
+<p class="why">One planet and its companion on the same orbit: two of us, one path. The orbit passes in front of the planet, so it keeps some depth even when tiny.</p>
+<p class="files">Files: <code>a-shared-orbit.svg</code> · <code>a-shared-orbit-mono.svg</code> · <code>a-shared-orbit-icon.svg</code></p>
+<div class="panels"><div class="panel paper">
+  <h3>Paper</h3>
+  <div class="row"><span class="tag">colour</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="A — Shared orbit, 512px">
+  <defs>
+    <mask id="a-shared-orbit-2-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-2-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-2-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-2-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="A — Shared orbit, 192px">
+  <defs>
+    <mask id="a-shared-orbit-3-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-3-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-3-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-3-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="A — Shared orbit, 32px">
+  <defs>
+    <mask id="a-shared-orbit-4-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-4-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-4-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-4-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="A — Shared orbit, 16px">
+  <defs>
+    <mask id="a-shared-orbit-5-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-5-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-5-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-5-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row"><span class="tag">mono</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="A — Shared orbit, 512px">
+  <defs>
+    <mask id="a-shared-orbit-6-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-6-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-6-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-6-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="A — Shared orbit, 192px">
+  <defs>
+    <mask id="a-shared-orbit-7-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-7-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-7-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-7-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="A — Shared orbit, 32px">
+  <defs>
+    <mask id="a-shared-orbit-8-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-8-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-8-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-8-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="A — Shared orbit, 16px">
+  <defs>
+    <mask id="a-shared-orbit-9-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-9-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-9-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-9-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row uses"><span class="tag">in use</span>
+    <span class="lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="A — Shared orbit, 26px">
+  <defs>
+    <mask id="a-shared-orbit-10-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-10-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-10-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-10-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><span>OurWorld</span></span>
+    <span class="lockup mono"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="A — Shared orbit, 26px">
+  <defs>
+    <mask id="a-shared-orbit-11-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-11-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-11-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-11-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><span>OurWorld</span></span>
+    <span class="tab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="A — Shared orbit, 16px">
+  <defs>
+    <mask id="a-shared-orbit-12-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-12-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-12-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-12-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><span>OurWorld</span></span>
+  </div>
+</div><div class="panel night">
+  <h3>Night</h3>
+  <div class="row"><span class="tag">colour</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="A — Shared orbit, 512px">
+  <defs>
+    <mask id="a-shared-orbit-13-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-13-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-13-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-13-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="A — Shared orbit, 192px">
+  <defs>
+    <mask id="a-shared-orbit-14-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-14-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-14-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-14-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="A — Shared orbit, 32px">
+  <defs>
+    <mask id="a-shared-orbit-15-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-15-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-15-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-15-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="A — Shared orbit, 16px">
+  <defs>
+    <mask id="a-shared-orbit-16-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-16-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-16-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-16-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row"><span class="tag">mono</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="A — Shared orbit, 512px">
+  <defs>
+    <mask id="a-shared-orbit-17-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-17-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-17-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-17-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="A — Shared orbit, 192px">
+  <defs>
+    <mask id="a-shared-orbit-18-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-18-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-18-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-18-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="A — Shared orbit, 32px">
+  <defs>
+    <mask id="a-shared-orbit-19-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-19-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-19-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-19-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="A — Shared orbit, 16px">
+  <defs>
+    <mask id="a-shared-orbit-20-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-20-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-20-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-20-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row uses"><span class="tag">in use</span>
+    <span class="lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="A — Shared orbit, 26px">
+  <defs>
+    <mask id="a-shared-orbit-21-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-21-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-21-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-21-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><span>OurWorld</span></span>
+    <span class="lockup mono"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="A — Shared orbit, 26px">
+  <defs>
+    <mask id="a-shared-orbit-22-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-22-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-22-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="currentColor" mask="url(#a-shared-orbit-22-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="currentColor"/>
+  </g>
+</svg><span>OurWorld</span></span>
+    <span class="tab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="A — Shared orbit, 16px">
+  <defs>
+    <mask id="a-shared-orbit-23-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-23-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-23-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-23-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+</svg><span>OurWorld</span></span>
+  </div>
+</div></div>
+<div class="row icons"><span class="tag">home screen</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="180" height="180">
+  <defs>
+    <radialGradient id="a-shared-orbit-ic180-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#a-shared-orbit-ic180-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <mask id="a-shared-orbit-ic180-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-ic180-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-ic180-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-ic180-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+  </svg>
+</svg><figcaption>app icon 180</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="64" height="64">
+  <defs>
+    <radialGradient id="a-shared-orbit-ic64-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#a-shared-orbit-ic64-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <mask id="a-shared-orbit-ic64-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-ic64-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-ic64-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-ic64-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+  </svg>
+</svg><figcaption>app icon 64</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="32" height="32">
+  <defs>
+    <radialGradient id="a-shared-orbit-ic32-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#a-shared-orbit-ic32-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <mask id="a-shared-orbit-ic32-back" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="32" cy="32" r="18.6" fill="#000"/>
+    </mask>
+    <mask id="a-shared-orbit-ic32-planet" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <path d="M3 32A29 7 0 0 0 61 32" transform="rotate(-24 32 32)" fill="none" stroke="#000" stroke-width="8.4"/>
+    </mask>
+  </defs>
+  <g transform="rotate(-24 32 32)" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="32" cy="32" rx="29" ry="7" mask="url(#a-shared-orbit-ic32-back)"/>
+  </g>
+  <circle cx="32" cy="32" r="16" fill="#D9467A" mask="url(#a-shared-orbit-ic32-planet)"/>
+  <g transform="rotate(-24 32 32)">
+    <path d="M3 32A29 7 0 0 0 61 32" fill="none" stroke="#2F8F83" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="54.85" cy="27.69" r="5.2" fill="#2F8F83"/>
+  </g>
+  </svg>
+</svg><figcaption>app icon 32</figcaption></figure></div>
+</section><section id="b-conjunction">
+<h2>B — Conjunction</h2>
+<p class="why">The closest to today's two circles: two planets of different size meeting in the sky, and a warm light where they overlap.</p>
+<p class="files">Files: <code>b-conjunction.svg</code> · <code>b-conjunction-mono.svg</code> · <code>b-conjunction-icon.svg</code></p>
+<div class="panels"><div class="panel paper">
+  <h3>Paper</h3>
+  <div class="row"><span class="tag">colour</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="B — Conjunction, 512px">
+  <defs>
+    <clipPath id="b-conjunction-2-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-2-big)"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="B — Conjunction, 192px">
+  <defs>
+    <clipPath id="b-conjunction-3-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-3-big)"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="B — Conjunction, 32px">
+  <defs>
+    <clipPath id="b-conjunction-4-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-4-big)"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="B — Conjunction, 16px">
+  <defs>
+    <clipPath id="b-conjunction-5-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-5-big)"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row"><span class="tag">mono</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="B — Conjunction, 512px">
+  <defs>
+    <mask id="b-conjunction-6-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-6-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="B — Conjunction, 192px">
+  <defs>
+    <mask id="b-conjunction-7-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-7-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="B — Conjunction, 32px">
+  <defs>
+    <mask id="b-conjunction-8-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-8-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="B — Conjunction, 16px">
+  <defs>
+    <mask id="b-conjunction-9-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-9-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row uses"><span class="tag">in use</span>
+    <span class="lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="B — Conjunction, 26px">
+  <defs>
+    <clipPath id="b-conjunction-10-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-10-big)"/>
+</svg><span>OurWorld</span></span>
+    <span class="lockup mono"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="B — Conjunction, 26px">
+  <defs>
+    <mask id="b-conjunction-11-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-11-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><span>OurWorld</span></span>
+    <span class="tab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="B — Conjunction, 16px">
+  <defs>
+    <clipPath id="b-conjunction-12-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-12-big)"/>
+</svg><span>OurWorld</span></span>
+  </div>
+</div><div class="panel night">
+  <h3>Night</h3>
+  <div class="row"><span class="tag">colour</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="B — Conjunction, 512px">
+  <defs>
+    <clipPath id="b-conjunction-13-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-13-big)"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="B — Conjunction, 192px">
+  <defs>
+    <clipPath id="b-conjunction-14-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-14-big)"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="B — Conjunction, 32px">
+  <defs>
+    <clipPath id="b-conjunction-15-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-15-big)"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="B — Conjunction, 16px">
+  <defs>
+    <clipPath id="b-conjunction-16-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-16-big)"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row"><span class="tag">mono</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="B — Conjunction, 512px">
+  <defs>
+    <mask id="b-conjunction-17-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-17-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="B — Conjunction, 192px">
+  <defs>
+    <mask id="b-conjunction-18-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-18-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="B — Conjunction, 32px">
+  <defs>
+    <mask id="b-conjunction-19-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-19-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="B — Conjunction, 16px">
+  <defs>
+    <mask id="b-conjunction-20-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-20-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row uses"><span class="tag">in use</span>
+    <span class="lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="B — Conjunction, 26px">
+  <defs>
+    <clipPath id="b-conjunction-21-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-21-big)"/>
+</svg><span>OurWorld</span></span>
+    <span class="lockup mono"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="B — Conjunction, 26px">
+  <defs>
+    <mask id="b-conjunction-22-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="42.5" cy="23.5" r="16" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="currentColor" mask="url(#b-conjunction-22-gap)"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="currentColor"/>
+</svg><span>OurWorld</span></span>
+    <span class="tab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="B — Conjunction, 16px">
+  <defs>
+    <clipPath id="b-conjunction-23-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-23-big)"/>
+</svg><span>OurWorld</span></span>
+  </div>
+</div></div>
+<div class="row icons"><span class="tag">home screen</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="180" height="180">
+  <defs>
+    <radialGradient id="b-conjunction-ic180-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#b-conjunction-ic180-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="b-conjunction-ic180-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-ic180-big)"/>
+  </svg>
+</svg><figcaption>app icon 180</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="64" height="64">
+  <defs>
+    <radialGradient id="b-conjunction-ic64-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#b-conjunction-ic64-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="b-conjunction-ic64-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-ic64-big)"/>
+  </svg>
+</svg><figcaption>app icon 64</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="32" height="32">
+  <defs>
+    <radialGradient id="b-conjunction-ic32-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#b-conjunction-ic32-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="b-conjunction-ic32-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-ic32-big)"/>
+  </svg>
+</svg><figcaption>app icon 32</figcaption></figure></div>
+</section><section id="c-o-planet">
+<h2>C — The O is a world</h2>
+<p class="why">The "O" of OurWorld drawn as an orbit seen from above, with a small world sitting on it. The simplest of the three; it also works as the first letter of the name.</p>
+<p class="files">Files: <code>c-o-planet.svg</code> · <code>c-o-planet-mono.svg</code> · <code>c-o-planet-icon.svg</code></p>
+<div class="panels"><div class="panel paper">
+  <h3>Paper</h3>
+  <div class="row"><span class="tag">colour</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="C — The O is a world, 512px">
+  <defs>
+    <mask id="c-o-planet-2-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-2-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="C — The O is a world, 192px">
+  <defs>
+    <mask id="c-o-planet-3-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-3-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="C — The O is a world, 32px">
+  <defs>
+    <mask id="c-o-planet-4-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-4-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="C — The O is a world, 16px">
+  <defs>
+    <mask id="c-o-planet-5-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-5-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row"><span class="tag">mono</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="C — The O is a world, 512px">
+  <defs>
+    <mask id="c-o-planet-6-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-6-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="C — The O is a world, 192px">
+  <defs>
+    <mask id="c-o-planet-7-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-7-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="C — The O is a world, 32px">
+  <defs>
+    <mask id="c-o-planet-8-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-8-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="C — The O is a world, 16px">
+  <defs>
+    <mask id="c-o-planet-9-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-9-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row uses"><span class="tag">in use</span>
+    <span class="lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="C — The O is a world, 26px">
+  <defs>
+    <mask id="c-o-planet-10-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-10-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><span>OurWorld</span></span>
+    <span class="lockup mono"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="C — The O is a world, 26px">
+  <defs>
+    <mask id="c-o-planet-11-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-11-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><span>OurWorld</span></span>
+    <span class="tab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="C — The O is a world, 16px">
+  <defs>
+    <mask id="c-o-planet-12-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-12-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><span>OurWorld</span></span>
+  </div>
+</div><div class="panel night">
+  <h3>Night</h3>
+  <div class="row"><span class="tag">colour</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="C — The O is a world, 512px">
+  <defs>
+    <mask id="c-o-planet-13-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-13-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="C — The O is a world, 192px">
+  <defs>
+    <mask id="c-o-planet-14-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-14-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="C — The O is a world, 32px">
+  <defs>
+    <mask id="c-o-planet-15-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-15-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="C — The O is a world, 16px">
+  <defs>
+    <mask id="c-o-planet-16-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-16-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row"><span class="tag">mono</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="C — The O is a world, 512px">
+  <defs>
+    <mask id="c-o-planet-17-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-17-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>512</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="192" height="192" role="img" aria-label="C — The O is a world, 192px">
+  <defs>
+    <mask id="c-o-planet-18-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-18-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>192</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" role="img" aria-label="C — The O is a world, 32px">
+  <defs>
+    <mask id="c-o-planet-19-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-19-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>32</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="C — The O is a world, 16px">
+  <defs>
+    <mask id="c-o-planet-20-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-20-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><figcaption>16</figcaption></figure></div>
+  <div class="row uses"><span class="tag">in use</span>
+    <span class="lockup"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="C — The O is a world, 26px">
+  <defs>
+    <mask id="c-o-planet-21-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-21-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><span>OurWorld</span></span>
+    <span class="lockup mono"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26" role="img" aria-label="C — The O is a world, 26px">
+  <defs>
+    <mask id="c-o-planet-22-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="10" mask="url(#c-o-planet-22-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="currentColor"/>
+</svg><span>OurWorld</span></span>
+    <span class="tab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" role="img" aria-label="C — The O is a world, 16px">
+  <defs>
+    <mask id="c-o-planet-23-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-23-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+</svg><span>OurWorld</span></span>
+  </div>
+</div></div>
+<div class="row icons"><span class="tag">home screen</span><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="180" height="180">
+  <defs>
+    <radialGradient id="c-o-planet-ic180-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#c-o-planet-ic180-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <mask id="c-o-planet-ic180-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-ic180-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+  </svg>
+</svg><figcaption>app icon 180</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="64" height="64">
+  <defs>
+    <radialGradient id="c-o-planet-ic64-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#c-o-planet-ic64-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <mask id="c-o-planet-ic64-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-ic64-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+  </svg>
+</svg><figcaption>app icon 64</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="32" height="32">
+  <defs>
+    <radialGradient id="c-o-planet-ic32-sky" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#2A2C5C"/>
+      <stop offset="0.55" stop-color="#1F2144"/>
+      <stop offset="1" stop-color="#14152B"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#c-o-planet-ic32-sky)"/>
+  <circle cx="96" cy="104" r="5" fill="#EDE8DF" opacity="0.7"/>
+  <circle cx="420" cy="118" r="4" fill="#F7D774" opacity="0.8"/>
+  <circle cx="404" cy="420" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+  <defs>
+    <mask id="c-o-planet-ic32-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47.61" cy="17.95" r="12.5" fill="#000"/>
+    </mask>
+  </defs>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="#2F8F83" stroke-width="10" mask="url(#c-o-planet-ic32-ring)"/>
+  <circle cx="47.61" cy="17.95" r="8.6" fill="#D9467A"/>
+  </svg>
+</svg><figcaption>app icon 32</figcaption></figure></div>
+</section>
+</main>
+</body>
+</html>
