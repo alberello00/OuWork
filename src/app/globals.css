@@ -60,6 +60,8 @@
   --animate-sheet-up: sheet-up 320ms var(--ease-soft) both;
   --animate-panel-in: panel-in 320ms var(--ease-soft) both;
   --animate-drift: drift 14s ease-in-out infinite;
+  --animate-planet-out: planet-out 240ms var(--ease-soft) both;
+  --animate-planet-in: planet-in 460ms var(--ease-soft) both;
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -76,6 +78,19 @@
   @keyframes panel-in {
     from { transform: translateX(100%); }
     to { transform: translateX(0); }
+  }
+  @keyframes planet-out {
+    from { opacity: 1; scale: 1; }
+    to { opacity: 0; scale: 0.82; }
+  }
+  @keyframes planet-in {
+    0% { opacity: 0; scale: 0.4; }
+    70% { opacity: 1; scale: 1.06; }
+    100% { opacity: 1; scale: 1; }
+  }
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
   @keyframes drift {
     0%, 100% { transform: translate3d(0, 0, 0); }
@@ -257,6 +272,15 @@ button:not(:disabled),
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
+  }
+  /* planets leaving or arriving in the universe keep a plain fade */
+  .animate-planet-out {
+    animation: fade-out 200ms linear both !important;
+  }
+  /* longhands, so the per-planet delay set inline is kept */
+  .animate-planet-in {
+    animation-name: fade-in !important;
+    animation-duration: 240ms !important;
   }
 }
 

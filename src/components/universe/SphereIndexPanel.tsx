@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight, LayoutGrid } from 'lucide-react';
+import { ArrowRight, LayoutGrid, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { itemTitle } from '@/components/items/ItemCard';
 import { NewBadge } from '@/components/items/NewBadge';
@@ -23,11 +23,12 @@ interface Props {
   sphereById: Map<string, Sphere>;
   profileById: Map<string, Profile>;
   onEnter: (sphereId: string) => void;
+  onDelete: (sphere: Sphere) => void;
   onClose: () => void;
 }
 
 /** "Sphere index" (frames 7:2 / 14:2): side panel on desktop, sheet on mobile. */
-export function SphereIndexPanel({ galaxyId, sphere, subs, items, isPrivate, sphereById, profileById, onEnter, onClose }: Props) {
+export function SphereIndexPanel({ galaxyId, sphere, subs, items, isPrivate, sphereById, profileById, onEnter, onDelete, onClose }: Props) {
   if (!sphere) return null;
   const newCount = items.filter((i) => i.is_new).length;
   const href = `/g/${galaxyId}/s/${sphere.id}`;
@@ -94,6 +95,11 @@ export function SphereIndexPanel({ galaxyId, sphere, subs, items, isPrivate, sph
             <LayoutGrid size={15} aria-hidden />
             {copy.nav.notes}
           </Link>
+          {!sphere.is_inbox ? (
+            <Button size="icon" aria-label={copy.spheres.deleteSphere} title={copy.spheres.deleteSphere} onClick={() => onDelete(sphere)} className="text-danger">
+              <Trash2 size={16} aria-hidden />
+            </Button>
+          ) : null}
         </div>
       </PanelContent>
     </Dialog>

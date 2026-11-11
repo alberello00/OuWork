@@ -1,6 +1,6 @@
 'use client';
 
-import { Copy, Download, Link2, LogOut, Trash2, UserMinus } from 'lucide-react';
+import { Copy, Download, Link2, LogOut, Sparkles, Trash2, UserMinus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -19,6 +19,8 @@ interface Props {
   galaxy: GalaxyWithMembers;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** opens the setup survey; shown to the owner while the galaxy is not set up (RF14.2) */
+  onSetup?: () => void;
   /** extra section rendered at the end (export, phase 6) */
   children?: React.ReactNode;
 }
@@ -34,7 +36,7 @@ function Section({ title, hint, children }: { title: string; hint?: string; chil
 }
 
 /** Rename, members, invite links, leave/delete (RF1.2, RF1.3). */
-export function GalaxySettingsDialog({ galaxy, open, onOpenChange, children }: Props) {
+export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, children }: Props) {
   const router = useRouter();
   const { userId } = useSession();
   const isOwner = galaxy.owner_id === userId;
@@ -128,6 +130,15 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, children }: P
                 {copy.common.save}
               </Button>
             </form>
+          </Section>
+        ) : null}
+
+        {isOwner && !galaxy.setup_completed_at && onSetup ? (
+          <Section title={copy.settings.setup} hint={copy.settings.setupHint}>
+            <Button onClick={() => { onOpenChange(false); onSetup(); }}>
+              <Sparkles size={15} aria-hidden />
+              {copy.setup.emptyCta[galaxy.is_personal ? 'solo' : 'shared']}
+            </Button>
           </Section>
         ) : null}
 

@@ -65,6 +65,7 @@ function invalidateContent(qc: ReturnType<typeof useQueryClient>) {
   void qc.invalidateQueries({ queryKey: ['stats'] });
   void qc.invalidateQueries({ queryKey: ['items'] });
   void qc.invalidateQueries({ queryKey: ['links'] });
+  void qc.invalidateQueries({ queryKey: ['search'] });
 }
 
 export function useCreateSphere(galaxyId: string) {

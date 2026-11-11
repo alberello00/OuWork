@@ -26,7 +26,7 @@ export function GalaxySwitcher() {
   return (
     <>
       <Dropdown>
-        <DropdownTrigger className="inline-flex h-11 min-w-0 max-w-[52vw] items-center gap-2 rounded-pill border border-border bg-card px-3.5 text-[13px] font-medium hover:bg-surface-2 sm:max-w-xs">
+        <DropdownTrigger data-tour="galaxy-switcher" className="inline-flex h-11 min-w-0 max-w-[52vw] items-center gap-2 rounded-pill border border-border bg-card px-3.5 text-[13px] font-medium hover:bg-surface-2 sm:max-w-xs">
           <span className="truncate">{current?.name ?? copy.nav.allGalaxies}</span>
           <ChevronDown size={15} aria-hidden className="shrink-0 text-text-muted" />
         </DropdownTrigger>

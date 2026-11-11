@@ -4,6 +4,23 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-11 | Tutorial | Il tutorial gira solo sull'universo di una galassia; "Replay" porta lì da qualsiasi pagina | Un tour che naviga tra home, universo e tela: molto più fragile, e l'utente perderebbe il punto in cui si trovava |
+| 2026-11-11 | Tutorial | Parte quando l'universo è "tranquillo" (pianeti a schermo, nessun dialog o menu, nessun pianeta in arrivo) per tre controlli di fila | Coordinare a mano sondaggio e tutorial con stato condiviso: più accoppiamento; così qualsiasi dialog futuro ha la precedenza |
+| 2026-11-11 | Tutorial | La scheda è un Radix Dialog senza overlay proprio; lo spotlight è un riquadro con `box-shadow` enorme | Focus trap, Esc e ripristino del focus scritti a mano; una libreria di tour (dipendenza da chiedere, RF15.6) |
+| 2026-11-11 | Tutorial | Passi 4 e 5 (card, "Only me") come spiegazione sull'universo: spotlight su un pianeta, o scheda centrata se non c'è nulla da indicare | Aprire una sfera durante il tour; saltarli del tutto: sono le due cose meno scopribili da soli |
+| 2026-11-11 | Tutorial | Anche Esc e "Skip" segnano il tutorial come fatto; `complete_tutorial()` tiene la prima data | Riproporlo finché non viene completato: insistente |
+| 2026-11-11 | Setup | "Start from scratch" chiama la stessa RPC con zero sfere | Una seconda RPC `skip_galaxy_setup`: stessa verifica owner/idempotenza duplicata |
+| 2026-11-11 | Setup | "Maybe later" è ricordato in `localStorage` per galassia; il database resta la fonte di verità del setup | Una colonna "rimandato": stato in più per un dettaglio di cortesia |
+| 2026-11-11 | Setup | Tipo preselezionato: "Just me" sulla personale, "Couple" fino a 2 membri, "Friends" da 3 | Nessuna preselezione: una galassia condivisa appena creata ha sempre un solo membro, e l'app nasce per due |
+| 2026-11-11 | Setup | Etichette degli interessi e nomi delle sfere stanno in `copy.ts`; emoji, colore preferito e ordine per tipo in `galaxySetup.ts` | Tutto in `galaxySetup.ts`: i testi non sarebbero traducibili |
+| 2026-11-11 | Setup | Le sfere proposte seguono l'ordine del tipo di galassia, non l'ordine dei clic; i colori preferiti si adattano evitando il sage di Random | Ordine dei clic: lo stesso insieme di risposte darebbe galassie diverse (RF14.4 chiede determinismo) |
+| 2026-11-11 | Setup | Errore identico (`42501`) per galassia inesistente, non membro e membro non owner | Errori distinti: rivelerebbero l'esistenza di una galassia a chi non ne fa parte |
+| 2026-11-11 | Setup | La RPC è `security definer` e ripete la lista dei colori di palette | `security invoker`: richiederebbe il privilegio di scrittura sulle colonne di stato, che il client non deve avere |
+| 2026-11-11 | Setup | Niente toast "Galaxy created." dopo "New galaxy": si entra subito nel sondaggio | Tenerlo: copriva i pulsanti del sondaggio per qualche secondo |
+| 2026-11-11 | Seed | Il seed inserisce le cinque sfere demo in tutte le galassie demo e le segna come configurate | Chiamare la RPC dal seed: servirebbe simulare una sessione utente |
+| 2026-11-11 | Universo | Il menu del pianeta (clic destro / pressione prolungata) offre Open, Edit e Delete, non solo Delete; anche le colonne di Notes hanno Edit + Delete | Un menu con una sola voce distruttiva: facile da toccare per sbaglio, e "Edit" mancava comunque dall'universo |
+| 2026-11-11 | Universo | Pressione prolungata gestita a mano (520 ms, tolleranza 10 px) oltre all'evento `contextmenu` | Solo `contextmenu`: Safari su iOS non lo emette |
+| 2026-11-11 | Universo | Il pianeta eliminato resta come "fantasma" per 260 ms e poi sparisce | Aspettare la fine dell'animazione prima di chiamare la RPC: l'eliminazione sembrerebbe lenta e l'animazione partirebbe prima della conferma del database |
 | 2026-11-10 | Novità | Il banner si chiude esplicitamente ("Got it" / ×), che aggiorna `last_seen_at` di tutte le mie galassie | Aggiornarlo a ogni apertura: il banner sparirebbe prima di essere letto |
 | 2026-11-10 | Ricerca | Ricerca lato database (`ILIKE` + trigram, già filtrata dalle RLS) con debounce 180 ms, non sui dati in cache | Filtrare in cache: dovrebbe scaricare tutti gli elementi di tutte le galassie |
 | 2026-11-10 | PWA | Service worker "solo rete" | Cache offline: rischio di servire contenuti privati dopo un logout o da un dispositivo condiviso |

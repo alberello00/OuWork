@@ -12,6 +12,7 @@ Autore: Albi (Alberto). Progetto personale, non un prodotto: privilegia la sempl
 | `docs/requisiti-graphic-design.md` | Prima di qualsiasi lavoro di UI. Gli ID `RDx.y` descrivono stile, stati, movimento e accessibilità. |
 | `docs/architettura.md`             | Stack, modello dati, regole di sicurezza (RLS), piano a fasi.                                       |
 | `docs/figma.md`                    | Mappa dei frame Figma (node-id) e design token già estratti.                                        |
+| `docs/requisiti-mvp2.md`           | Prima di qualsiasi lavoro sull'MVP2. Gli ID `RF12`–`RF16` sono la fonte di verità, con vincoli e piano (fasi 7–10). |
 
 Se un requisito e il prototipo Figma si contraddicono, scegli l’opzione più coerente con la visione e annotala in docs/decisioni.md
 
@@ -92,7 +93,7 @@ docs/
 
 Hai piena autonomia per costruire l'MVP. Albi non è presente durante il lavoro: non fermarti a chiedere conferme per scelte reversibili.
 
-- **Procedi fase dopo fase** seguendo il piano in `docs/architettura.md`, senza aspettare approvazioni tra una fase e l'altra.
+- **Procedi fase dopo fase** seguendo il piano in `docs/architettura.md`, senza aspettare approvazioni tra una fase e l'altra. Per l'**MVP2** il piano a fasi è quello di `docs/requisiti-mvp2.md` (fasi 7–10), con i suoi vincoli sui dati di produzione.
 - **Decidi tu** su dettagli di implementazione, librerie minori, struttura dei componenti, copy e piccole ambiguità tra requisiti e Figma. Ogni decisione non ovvia va in `docs/decisioni.md` (data, contesto, scelta, alternative scartate).
 - **Un branch per fase** `feat/fase-N-<nome>`, commit piccoli e frequenti. A fine fase merge in `develop` (crealo se manca). Non toccare `main`.
 - **Gate di fine fase** (obbligatorio): `pnpm lint && pnpm typecheck && pnpm test && supabase test db` verdi + verifica nel browser (desktop e 390px, tema chiaro e scuro). Se un gate fallisce correggi, non andare avanti con test rossi.

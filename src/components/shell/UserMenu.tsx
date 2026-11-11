@@ -1,14 +1,16 @@
 'use client';
 
-import { LogOut } from 'lucide-react';
+import { GraduationCap, LogOut } from 'lucide-react';
 import { signOut } from '@/app/(auth)/login/actions';
 import { Avatar } from '@/components/ui/Avatar';
 import { Dropdown, DropdownContent, DropdownItem, DropdownLabel, DropdownTrigger } from '@/components/ui/Dropdown';
 import { copy } from '@/lib/copy';
+import { useTutorial } from '@/components/tutorial/TutorialProvider';
 import { useSession } from './SessionProvider';
 
 export function UserMenu() {
   const { profile } = useSession();
+  const tutorial = useTutorial();
   return (
     <Dropdown>
       <DropdownTrigger
@@ -21,6 +23,10 @@ export function UserMenu() {
         <DropdownLabel>
           {profile.display_name} · @{profile.username}
         </DropdownLabel>
+        <DropdownItem onSelect={() => tutorial.start()}>
+          <GraduationCap size={15} aria-hidden className="text-text-muted" />
+          {copy.tutorial.replay}
+        </DropdownItem>
         <DropdownItem onSelect={() => void signOut()}>
           <LogOut size={15} aria-hidden className="text-text-muted" />
           {copy.nav.signOut}

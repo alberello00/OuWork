@@ -63,14 +63,14 @@ isOneToOne: false
                   ]
                 },"galaxies": {
                   Row: {
-                    "created_at": string,"id": string,"is_personal": boolean,"name": string,"owner_id": string
+                    "created_at": string,"id": string,"is_personal": boolean,"name": string,"owner_id": string,"setup_answers": Json | null,"setup_completed_at": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"id"?: string,"is_personal"?: boolean,"name": string,"owner_id"?: string
+                    "created_at"?: string,"id"?: string,"is_personal"?: boolean,"name": string,"owner_id"?: string,"setup_answers"?: Json | null,"setup_completed_at"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"id"?: string,"is_personal"?: boolean,"name"?: string,"owner_id"?: string
+                    "created_at"?: string,"id"?: string,"is_personal"?: boolean,"name"?: string,"owner_id"?: string,"setup_answers"?: Json | null,"setup_completed_at"?: string | null
                   }
                   Relationships: [
                     {
@@ -261,14 +261,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "avatar_path": string | null,"color": string,"created_at": string,"display_name": string,"id": string,"username": string
+                    "avatar_path": string | null,"color": string,"created_at": string,"display_name": string,"id": string,"tutorial_completed_at": string | null,"username": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name": string,"id": string,"username": string
+                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name": string,"id": string,"tutorial_completed_at"?: string | null,"username": string
                   }
                   Update: {
-                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name"?: string,"id"?: string,"username"?: string
+                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name"?: string,"id"?: string,"tutorial_completed_at"?: string | null,"username"?: string
                   }
                   Relationships: [
                     
@@ -371,6 +371,31 @@ isOneToOne: false
           Functions: {
             "accept_invite":
 { Args: { "_token": string }; Returns: string
+                           },
+"complete_galaxy_setup":
+{ Args: { "_answers": Json,"_galaxy_id": string,"_spheres": Json }; Returns: {
+              "color": string,
+"created_at": string,
+"created_by": string | null,
+"emoji": string,
+"galaxy_id": string,
+"id": string,
+"is_inbox": boolean,
+"is_private": boolean,
+"name": string,
+"parent_id": string | null,
+"updated_at": string,
+"x": number,
+"y": number
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "spheres"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
+"complete_tutorial":
+{ Args: Record<PropertyKey, never>; Returns: string
                            },
 "delete_sphere":
 { Args: { "_move_to"?: string,"_sphere_id": string }; Returns: undefined

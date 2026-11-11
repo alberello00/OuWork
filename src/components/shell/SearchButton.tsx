@@ -9,6 +9,7 @@ export function SearchButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-keyshortcuts="Meta+K Control+K"
+      data-tour="search"
       className="inline-flex h-11 items-center gap-2 rounded-pill border border-border bg-card px-3.5 text-[13px] text-text-muted hover:text-text max-sm:hidden sm:min-w-56"
     >
       <Search size={15} aria-hidden />

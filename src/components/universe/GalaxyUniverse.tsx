@@ -2,14 +2,17 @@
 
 import '@xyflow/react/dist/base.css';
 import { Background, BackgroundVariant, Panel, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, type OnNodeDrag } from '@xyflow/react';
-import { LayoutGrid, Plus, Settings, Shuffle } from 'lucide-react';
+import { LayoutGrid, Plus, Settings, Shuffle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { CanvasControls } from '@/components/canvas/CanvasControls';
 import { GalaxySettingsDialog } from '@/components/galaxies/GalaxySettingsDialog';
+import { GalaxySetupDialog } from '@/components/galaxies/GalaxySetupDialog';
 import { NewsBanner } from '@/components/news/NewsBanner';
+import { useSession } from '@/components/shell/SessionProvider';
+import { DeleteSphereDialog } from '@/components/spheres/DeleteSphereDialog';
 import { SphereFormDialog } from '@/components/spheres/SphereFormDialog';
 import { AvatarStack } from '@/components/ui/AvatarStack';
 import { Button } from '@/components/ui/Button';
@@ -17,25 +20,46 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { copy } from '@/lib/copy';
 import { useLinks } from '@/lib/queries/links';
 import { useMoveSpheres } from '@/lib/queries/spheres';
-import type { Item } from '@/lib/queries/types';
+import type { Item, Sphere } from '@/lib/queries/types';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { sphereDiameter, sphereVar } from '@/lib/tokens';
+import { cn } from '@/lib/utils';
 import { arrangeSpheres, sphereLinkCounts } from '@/lib/universeLayout';
 import { Legend } from './Legend';
-import { PlanetNode, type PlanetNodeType } from './PlanetNode';
+import { PlanetMenu } from './PlanetMenu';
+import { ARRIVE_DELAY_MS, ARRIVE_STAGGER_MS, PlanetNode, type PlanetNodeType } from './PlanetNode';
 import { SphereEdge, type SphereEdgeType } from './SphereEdge';
 import { SphereIndexPanel } from './SphereIndexPanel';
 
 const nodeTypes = { planet: PlanetNode };
 const edgeTypes = { sphere: SphereEdge };
 const ENTER_MS = 420;
+const LEAVE_MS = 260;
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+/** "Maybe later" on the setup survey: do not reopen it by itself on this device (RF14.2). */
+const laterKey = (galaxyId: string) => `ow:setup-later:${galaxyId}`;
+function setupPostponed(galaxyId: string) {
+  try {
+    return window.localStorage.getItem(laterKey(galaxyId)) === '1';
+  } catch {
+    return false;
+  }
+}
+function postponeSetup(galaxyId: string) {
+  try {
+    window.localStorage.setItem(laterKey(galaxyId), '1');
+  } catch {
+    // private mode: the survey will simply open again next time
+  }
+}
+
 function UniverseInner({ galaxyId }: { galaxyId: string }) {
   const data = useGalaxyData(galaxyId);
+  const { userId } = useSession();
   const flow = useReactFlow();
   const router = useRouter();
   const pathname = usePathname();
@@ -45,6 +69,29 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [entering, setEntering] = useState<{ color: string } | null>(null);
+  const [menu, setMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [editing, setEditing] = useState<Sphere | null>(null);
+  const [deleting, setDeleting] = useState<Sphere | null>(null);
+  // planets that were just deleted stay on screen while they fade out (RF12.3)
+  const [leaving, setLeaving] = useState<string[]>([]);
+  const longPressAt = useRef(0);
+  // setup survey (RF14): opens by itself once for the owner of a galaxy that is not set up
+  const [setupOpen, setSetupOpen] = useState(false);
+  const [arriving, setArriving] = useState<string[]>([]);
+  const refit = useRef(false);
+  const galaxyRow = data.galaxy;
+  const needsSetup = !!galaxyRow && !galaxyRow.setup_completed_at;
+  const isOwner = galaxyRow?.owner_id === userId;
+  const setupOffered = useRef(false);
+  useEffect(() => {
+    if (setupOffered.current || !needsSetup || !isOwner) return;
+    setupOffered.current = true;
+    if (!setupPostponed(galaxyId)) setSetupOpen(true);
+  }, [needsSetup, isOwner, galaxyId]);
+  const openMenu = useCallback((id: string, x: number, y: number, longPress?: boolean) => {
+    if (longPress) longPressAt.current = Date.now();
+    setMenu({ id, x, y });
+  }, []);
   const selectedId = params.get('sphere');
 
   const setSelected = useCallback(
@@ -101,7 +148,11 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   useEffect(() => {
     setNodes((current) => {
       const prev = new Map(current.map((n) => [n.id, n]));
-      return topLevel.map((s) => {
+      const alive = new Set(topLevel.map((s) => s.id));
+      const ghosts = leaving
+        .filter((id) => !alive.has(id) && prev.has(id))
+        .map((id) => ({ ...prev.get(id)!, selected: false, draggable: false, data: { ...prev.get(id)!.data, leaving: true } }));
+      const live = topLevel.map((s) => {
         const items = itemsByTop.get(s.id) ?? [];
         const size = sphereDiameter(items.length);
         const old = prev.get(s.id);
@@ -121,11 +172,24 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
               return { sphere: m, count: mi.length, newCount: mi.filter((i) => i.is_new).length };
             }),
             onMoon: (subId: string) => enter(s.id, subId),
+            onMenu: openMenu,
+            leaving: leaving.includes(s.id),
+            arriveIndex: arriving.includes(s.id) ? arriving.indexOf(s.id) : undefined,
           },
         };
       });
+      return [...live, ...ghosts];
     });
-  }, [topLevel, allItems, sphereById, childrenOf, itemsByTop, selectedId, setNodes, enter]);
+  }, [topLevel, allItems, sphereById, childrenOf, itemsByTop, selectedId, setNodes, enter, openMenu, leaving, arriving]);
+
+  const onSphereDeleted = useCallback(
+    (id: string) => {
+      setLeaving((l) => [...l, id]);
+      setTimeout(() => setLeaving((l) => l.filter((x) => x !== id)), LEAVE_MS);
+      if (selectedId === id) setSelected(null);
+    },
+    [selectedId, setSelected]
+  );
 
   const edges: SphereEdgeType[] = useMemo(() => {
     const itemTop = new Map<string, string>();
@@ -154,6 +218,21 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
     });
   }, [nodes, initialized, flow, params]);
 
+  // after the setup survey: show the whole new galaxy while the planets come in (RF14.7)
+  useEffect(() => {
+    if (!refit.current || !initialized || !arriving.length || !arriving.every((id) => nodes.some((n) => n.id === id))) return;
+    refit.current = false;
+    void flow.fitView({ padding: 0.25, maxZoom: 1.1, duration: prefersReducedMotion() ? 0 : ARRIVE_DELAY_MS });
+  }, [nodes, initialized, arriving, flow]);
+
+  const onSetupDone = useCallback((ids: string[]) => {
+    setSetupOpen(false);
+    if (!ids.length) return;
+    refit.current = true;
+    setArriving(ids);
+    setTimeout(() => setArriving([]), ARRIVE_DELAY_MS + ids.length * ARRIVE_STAGGER_MS + 900);
+  }, []);
+
   const onNodeDragStart: OnNodeDrag<PlanetNodeType> = useCallback((_, n) => void dragging.current.add(n.id), []);
   const onNodeDragStop: OnNodeDrag<PlanetNodeType> = useCallback(
     (_, n) => {
@@ -177,6 +256,8 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
     });
   }
 
+  const onlyInbox = data.topLevel.length > 0 && data.topLevel.every((s) => s.is_inbox);
+
   if (data.isLoading) return <main className="universe-bg flex-1" />;
   if (!data.galaxy) {
     return (
@@ -187,6 +268,8 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   }
   const galaxy = data.galaxy;
   const selected = selectedId ? data.sphereById.get(selectedId) : undefined;
+  const owner = galaxy.members.find((m) => m.user_id === galaxy.owner_id)?.profile;
+  const voice = galaxy.is_personal ? 'solo' : 'shared';
 
   return (
     <main className="universe-bg relative flex min-h-0 flex-1 flex-col">
@@ -201,7 +284,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             <LayoutGrid size={15} aria-hidden /><span className="max-sm:sr-only">{copy.nav.notes}</span>
           </Link>
           <Button size="icon" aria-label={copy.universe.newSphere} onClick={() => setCreating(true)}><Plus size={17} aria-hidden /></Button>
-          <Button size="icon" aria-label={copy.nav.settings} onClick={() => setSettingsOpen(true)}><Settings size={17} aria-hidden /></Button>
+          <Button size="icon" aria-label={copy.nav.settings} data-tour="settings" onClick={() => setSettingsOpen(true)}><Settings size={17} aria-hidden /></Button>
         </div>
         <div className="pointer-events-auto w-full sm:max-w-xl">
           <NewsBanner galaxyId={galaxyId} />
@@ -218,7 +301,10 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             onNodesChange={onNodesChange}
             onNodeDragStart={onNodeDragStart}
             onNodeDragStop={onNodeDragStop}
-            onNodeClick={(_, n) => setSelected(n.id)}
+            onNodeClick={(_, n) => {
+              // the tap that ends a long press must not also open the panel
+              if (Date.now() - longPressAt.current > 700) setSelected(n.id);
+            }}
             onNodeDoubleClick={(_, n) => enter(n.id)}
             onPaneClick={() => selectedId && setSelected(null)}
             nodesConnectable={false}
@@ -229,11 +315,39 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             className="!bg-transparent"
           >
             <Background variant={BackgroundVariant.Dots} gap={28} size={1} color="var(--color-dot-grid)" className="dark:opacity-0" />
-            <Panel position="bottom-left" className="!mb-5 !ml-3"><CanvasControls /></Panel>
-            <Panel position="bottom-center" className="!mb-5 max-md:hidden"><Legend showMoonsHint={data.spheres.some((s) => s.parent_id)} /></Panel>
+            {/* with Random alone the empty-state card takes this room: nothing to zoom on a phone, nothing to explain */}
+            <Panel position="bottom-left" className={cn('!mb-5 !ml-3', onlyInbox && 'max-sm:hidden')}><CanvasControls /></Panel>
+            <Panel position="bottom-center" className={cn('!mb-5 max-md:hidden', onlyInbox && 'hidden')}><Legend showMoonsHint={data.spheres.some((s) => s.parent_id)} /></Panel>
           </ReactFlow>
         </div>
         {!data.topLevel.length ? <EmptyState emoji="🪐" title={copy.universe.galaxyEmpty} className="absolute inset-0" /> : null}
+        {onlyInbox && !setupOpen ? (
+          // RF13.3: a warm nudge under the lonely Random, never in the way of the canvas
+          <div className="pointer-events-none absolute inset-x-0 top-[calc(50%+92px)] flex justify-center px-4 animate-fade-in">
+            <div data-tour="empty-universe" className="pointer-events-auto w-full max-w-sm rounded-login border border-border bg-card/95 p-4 text-center shadow-card backdrop-blur">
+              {needsSetup && !isOwner ? (
+                <>
+                  <p className="font-heading text-[20px] leading-tight">{copy.setup.waitingTitle(owner?.display_name ?? '…')}</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-text-muted">{copy.setup.waitingBody}</p>
+                  <Button className="mt-3" onClick={() => setCreating(true)}><Plus size={15} aria-hidden />{copy.universe.newSphere}</Button>
+                </>
+              ) : (
+                <>
+                  <p className="font-heading text-[20px] leading-tight">{copy.setup.emptyTitle[voice]}</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-text-muted">{copy.setup.emptyBody}</p>
+                  {needsSetup ? (
+                    <div className="mt-3 flex flex-col items-center gap-1">
+                      <Button variant="primary" onClick={() => setSetupOpen(true)}><Sparkles size={15} aria-hidden />{copy.setup.emptyCta[voice]}</Button>
+                      <Button variant="ghost" size="sm" className="h-11 text-text-muted" onClick={() => setCreating(true)}>{copy.setup.emptyManual}</Button>
+                    </div>
+                  ) : (
+                    <Button variant="primary" className="mt-3" onClick={() => setCreating(true)}><Plus size={15} aria-hidden />{copy.universe.newSphere}</Button>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {entering ? (
@@ -249,9 +363,43 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
         sphereById={data.sphereById}
         profileById={data.profileById}
         onEnter={(id) => { setSelected(null); enter(id); }}
+        onDelete={setDeleting}
         onClose={() => setSelected(null)}
       />
-      <GalaxySettingsDialog galaxy={galaxy} open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <PlanetMenu
+        sphere={menu ? data.sphereById.get(menu.id) : undefined}
+        at={menu}
+        onClose={() => setMenu(null)}
+        onOpen={(s) => enter(s.id)}
+        onEdit={setEditing}
+        onDelete={setDeleting}
+      />
+      {editing ? (
+        <SphereFormDialog galaxyId={galaxyId} spheres={data.spheres} open onOpenChange={(o) => !o && setEditing(null)} sphere={editing} />
+      ) : null}
+      {deleting ? (
+        <DeleteSphereDialog
+          sphere={deleting}
+          spheres={data.spheres}
+          itemCount={itemsByTop.get(deleting.id)?.length ?? 0}
+          open
+          onOpenChange={(o) => !o && setDeleting(null)}
+          onDeleted={() => onSphereDeleted(deleting.id)}
+        />
+      ) : null}
+      <GalaxySettingsDialog galaxy={galaxy} open={settingsOpen} onOpenChange={setSettingsOpen} onSetup={() => setSetupOpen(true)} />
+      {needsSetup && isOwner ? (
+        <GalaxySetupDialog
+          galaxy={galaxy}
+          existingCount={data.topLevel.filter((s) => !s.is_inbox).length}
+          open={setupOpen}
+          onOpenChange={(o) => {
+            setSetupOpen(o);
+            if (!o) postponeSetup(galaxyId);
+          }}
+          onDone={onSetupDone}
+        />
+      ) : null}
       <SphereFormDialog
         galaxyId={galaxyId}
         spheres={data.spheres}

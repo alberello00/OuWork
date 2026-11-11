@@ -11,8 +11,11 @@
 --   * alberto: private note "Anniversary surprise" (Places → Italy)
 --   * lola:    private sphere "Gift ideas" with the note "For Alberto's birthday"
 --
--- Profiles, "Just me" galaxies, memberships and default spheres are created by
--- the database triggers, exactly as in production.
+-- Profiles, "Just me" galaxies, memberships and the Random sphere are created
+-- by the database triggers, exactly as in production. Since MVP2 a new galaxy
+-- starts with Random only (RF13): the five demo spheres of the Figma prototype
+-- are inserted here, and every demo galaxy is marked as already set up so the
+-- demo users never get the setup survey.
 
 -- ── users ──────────────────────────────────────────────────────────────────
 insert into auth.users (
@@ -83,6 +86,21 @@ begin
   update public.galaxy_members
   set last_seen_at = now() - interval '12 hours'
   where user_id = lola;
+
+  -- the Figma layout: five spheres around the centre, Random among them
+  insert into public.spheres (galaxy_id, name, color, emoji, x, y, created_by)
+  select g.id, d.name, d.color, d.emoji, d.x, d.y, g.owner_id
+  from public.galaxies g
+  cross join (values
+    ('Places',         'amber',    '📍',    0, -260, 1),
+    ('Music',          'lavender', '🎵',  225, -130, 2),
+    ('Movies & Shows', 'coral',    '🎬',  225,  130, 3),
+    ('Ideas',          'sky',      '💡',    0,  260, 4),
+    ('Memories',       'rose',     '📸', -225,  130, 5)
+  ) as d (name, color, emoji, x, y, ord)
+  order by g.created_at, d.ord;
+  update public.spheres set x = -225, y = -130 where is_inbox;
+  update public.galaxies set setup_completed_at = created_at;
 
   select id into s_places   from public.spheres where galaxy_id = g_us and name = 'Places';
   select id into s_music    from public.spheres where galaxy_id = g_us and name = 'Music';
@@ -185,6 +203,9 @@ begin
     (s_friends_places, 'note', 'Hike on Monte Baldo', E'Cable car from Malcesine, then the ridge.', 340, 60, alberto, now() - interval '12 days', now() - interval '12 days');
 end;
 $$;
+
+-- The demo users already know the app: no first-login tutorial for them (RF15).
+update public.profiles set tutorial_completed_at = created_at;
 
 -- Everything older than each member's last visit has already been seen, so the
 -- NEW badges and the "since your last visit" banner show only recent items.

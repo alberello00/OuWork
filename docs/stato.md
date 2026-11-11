@@ -1,6 +1,6 @@
 # OurWorld — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fase 1)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 9; fase 10 in attesa della scelta del logo)._
 
 ## Riepilogo
 
@@ -13,21 +13,37 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | 4 — Tela della sfera | ✅ fatta | `feat/fase-4-canvas` → `develop` |
 | 5 — Universi | ✅ fatta | `feat/fase-5-universe` → `develop` |
 | 6 — Novità, ricerca, export, PWA | ✅ fatta | `feat/fase-6-news-search` → `develop` |
+| **MVP2** (`docs/requisiti-mvp2.md`) | | |
+| 7 — Eliminare una sfera da ovunque (RF12) | ✅ fatta | `feat/fase-7-delete-anywhere` → `develop` |
+| 8 — Galassie vuote + sondaggio iniziale (RF13, RF14) | ✅ fatta | `feat/fase-8-onboarding-survey` → `develop` |
+| 9 — Tutorial (RF15) | ✅ fatta | `feat/fase-9-tutorial` → `develop` |
+| 10 — Nuovo logo (RF16) | ⏸ proposte pronte in `docs/logo/`, **serve la scelta di Albi** | `feat/fase-10-logo` |
 
-## Prossimi passi (servono Albi e le sue credenziali)
+> Le fasi dell'MVP2 sono su `develop`: **non** sono ancora su `main` né sul database remoto (servono l'ok di Albi).
 
-1. **Supabase remoto**: creare il progetto (piano free), `supabase link`, `supabase db push`. In Auth: signup disabilitato, conferma email disabilitata (già così in `config.toml` per il locale).
-2. **Vercel**: importare il repo, impostare `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (solo server).
-3. **Primo account**: non esiste registrazione pubblica. Crearlo dalla dashboard Supabase (Auth → Add user, email `<username>@users.ourworld.local`, `user_metadata.username`): i trigger creano profilo e "Just me". Da lì si creano galassie e link d'invito.
-4. Merge `develop` → `main` quando Albi ha rivisto il lavoro.
-5. Confronto con i frame Figma (non fatto: limite del piano Starter del Figma MCP, vedi problemi noti della fase 2).
+## Online (11 novembre 2026)
+
+| Cosa | Dove |
+| ---- | ---- |
+| Sito | https://ouniverse-albertotrashaj31-1532s-projects.vercel.app (Vercel, progetto `ouniverse`, produzione da `main`, funzioni a Francoforte `fra1`) |
+| Database | Supabase, organizzazione "OurWorld", progetto `ouniverse` (ref `uchewllvnkxdigrcalys`, eu-central-1, piano free) |
+
+- Migrazioni applicate con `supabase db push --remote` (nessun seed demo online).
+- Auth remota: registrazione pubblica **disattivata**, conferma email disattivata (solo queste due voci portate da `config.toml`).
+- Vercel: variabili `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`; protezione Vercel solo sulle preview, la produzione è pubblica (l'accesso lo regola il login dell'app). Node 22.
+- La password del database remoto sta solo in `.env.local` (`SUPABASE_DB_PASSWORD`), non versionata.
+- I test pgTAP **non** si lanciano sul database remoto: `00_setup.test.sql` installa funzioni di test (anche una che crea utenti) e lo fa con commit.
+
+**Da fare a mano**
+- `SUPABASE_SERVICE_ROLE_KEY` su Vercel (tipo *Sensitive*, solo Production e Preview): serve per creare account dagli inviti. Non è passata dalla conversazione con Claude.
+- Ogni push su `main` ripubblica il sito; `develop` produce preview protette.
 
 ## Come provarlo
 
 ```bash
 supabase start -x logflare,vector,edge-runtime,imgproxy,supavisor,studio,mailpit   # serve Docker
 supabase db reset        # migrazioni + seed demo
-supabase test db         # 310 test pgTAP
+supabase test db         # 359 test pgTAP
 pnpm dev
 ```
 
@@ -137,3 +153,57 @@ Verificato nel browser: banner (6 novità da Lola e Giulia in 2 galassie) e moda
 **Problemi noti**
 - Il service worker non mette nulla in cache: l'app non funziona offline (scelta voluta per la privacy).
 - Le immagini nell'export sono riferite con il loro path nello storage, non incluse nel file.
+
+## Fase 7 — Eliminare una sfera da ovunque (MVP2, RF12)
+
+**Fatto**
+- "Delete" raggiungibile da tre nuovi punti, sempre con lo stesso `DeleteSphereDialog` e la stessa RPC `delete_sphere` (nessuna nuova logica di eliminazione): cestino nel pannello "Sphere index"; menu contestuale del pianeta (clic destro su desktop, pressione prolungata ~0,5 s su touch) con Open / Edit / Delete; menu ⋯ nell'intestazione di ogni colonna di Notes (Edit / Delete).
+- Random non mostra mai "Delete" (resta modificabile).
+- Dopo l'eliminazione dall'universo il pianeta resta in scena 260 ms e si dissolve rimpicciolendosi; con `prefers-reduced-motion` solo dissolvenza. Il pannello si chiude se riguardava quella sfera.
+- L'eliminazione invalida sfere, conteggi, elementi, collegamenti e ora anche la ricerca (le novità derivano dagli elementi).
+- RF12.4: le sfere private altrui non arrivano al client (RLS), quindi non hanno alcun menu; nessun buco emerso, nessun nuovo test pgTAP (RF12.5).
+
+Verificato nel browser (desktop chiaro, 390 px scuro con touch, reduced motion): menu contestuale, cestino nel pannello con annulla/conferma, eliminazione con spostamento in Random e con "Delete them too", colonna Notes, pressione prolungata che non apre anche il pannello, alberto non vede "Gift ideas" di lola.
+
+**Problemi noti**
+- Il menu contestuale del pianeta non si apre da tastiera: da tastiera si elimina dal pannello "Sphere index" o da Notes.
+- Ambiente: dopo `supabase link` al progetto remoto, `supabase/.temp/storage-version` torna all'immagine di default (segfault su questo Mac) e compare `supabase/.temp/storage-migration`, incompatibile con il pin `v1.60.0`: `supabase db reset` fallisce e lascia il database locale vuoto. Rimedio: riscrivere `v1.60.0` in `storage-version`, togliere `storage-migration`, rilanciare il reset.
+
+## Fase 8 — Galassie vuote e sondaggio iniziale (MVP2, RF13 + RF14)
+
+**Fatto**
+- Migrazione `20261111182018_mvp2_galaxy_setup.sql` (solo additiva): colonne `galaxies.setup_completed_at` e `setup_answers`; backfill `now()` per tutte le galassie esistenti; `handle_new_galaxy` crea solo la membership dell'owner e Random (sage, 🎲, al centro), anche per la "Just me"; RPC `complete_galaxy_setup(galaxy_id, answers, spheres)`. **Nessuna sfera o elemento esistente viene toccato.**
+- La RPC è transazionale, solo per l'owner, una volta sola (la seconda chiamata fallisce con `setup_already_completed` senza duplicati), valida nomi (1–40), emoji (1–16), colori di palette, posizioni, massimo 10 sfere; un array vuoto è "Start from scratch". Le due colonne non sono scrivibili dal client (privilegi per colonna) e si leggono solo da membri (RLS già esistente).
+- Sondaggio in 3 passi (`GalaxySetupDialog`, schermo intero su mobile): chi siete (preselezionato dal tipo di galassia), interessi a chip + "Something else" (nome + emoji), anteprima dei pianeti modificabili (nome, emoji, colore) o rimovibili. Mappatura deterministica interesse → sfera in `src/lib/galaxySetup.ts`, colori senza ripetizioni finché la palette basta, posizioni ad anello attorno a Random con la stessa geometria di "Reorganize".
+- Si apre da solo alla prima apertura per l'owner (anche subito dopo "New galaxy"); "Maybe later" lo rimanda (riapribile dallo stato vuoto e dalle impostazioni), "Start from scratch" chiude il setup senza creare nulla.
+- Universo con la sola Random: scheda di benvenuto sotto il pianeta; per gli altri membri "<owner> is setting up this galaxy" con la possibilità di creare sfere a mano.
+- Alla chiusura i pianeti nuovi compaiono uno dopo l'altro (solo dissolvenza con `prefers-reduced-motion`).
+- Seed: le cinque sfere demo del Figma sono inserite esplicitamente e le galassie demo sono già "configurate". Test pgTAP: `11_galaxy_setup.test.sql` (owner, altro membro, non membro, anon, doppia chiamata, validazioni) e conteggi aggiornati in `02`; 347 asserzioni.
+
+Verificato nel browser (desktop chiaro, 390 px chiaro e scuro, reduced motion): alberto non vede alcun sondaggio sulle galassie demo; nuova galassia → sondaggio → 4 pianeti con modifiche salvate; "Maybe later" e riapertura da stato vuoto e impostazioni; lola (membro) vede il messaggio d'attesa e crea una sfera a mano; "Start from scratch"; utente nuovo da invito (`nina`): nessun sondaggio sulla galassia in cui entra, sondaggio con "Just me" preselezionato sulla sua galassia personale.
+
+**Mancante / da decidere con Albi**
+- La migrazione **non è ancora sul database remoto** e `develop` non è su `main`: servono il tuo ok (`supabase db push --remote`, poi merge).
+
+**Problemi noti**
+- "Maybe later" è ricordato per dispositivo (`localStorage`): su un altro dispositivo il sondaggio si riapre una volta.
+- Se qualcuno crea sfere a mano prima del setup, quelle nuove del sondaggio occupano le posizioni libere dell'anello ma non spostano le esistenti: può servire un "Reorganize".
+- La prova nel browser lascia nel DB locale l'utente `nina` e alcune galassie di prova (spariscono con `supabase db reset`).
+- Docker Desktop si è bloccato durante un `supabase db reset` (disco quasi pieno, 3,7 GB liberi): è stato necessario chiuderlo forzatamente e riavviarlo. Nessun volume toccato.
+
+## Fase 9 — Tutorial al primo login (MVP2, RF15)
+
+**Fatto**
+- Migrazione `20261111190235_mvp2_tutorial.sql` (solo additiva): `profiles.tutorial_completed_at`, backfill `now()` per gli utenti esistenti, RPC `complete_tutorial()` (idempotente, tiene la prima data). La colonna non è scrivibile dal client. Test `12_tutorial.test.sql`; 359 asserzioni in tutto.
+- Tutorial a coach-mark con spotlight sull'interfaccia reale, scritto a mano (nessuna libreria): `src/lib/tutorial.ts` (passi, scelta dei bersagli, posizionamento, con test), `components/tutorial/TutorialProvider` + `TutorialOverlay`.
+- 7 passi (6 per chi non è owner di una galassia condivisa): galassie e sfere → entrare in una sfera → "+" e Random → card/collegamenti/annotazioni → "Only me" → novità e ricerca → invitare qualcuno. Se il bersaglio non è a schermo il passo si salta o diventa una scheda centrata senza spotlight (es. "Only me" punta al pianeta privato solo se ne vedi uno).
+- Ordine (RF15.2): parte da solo sull'universo di una galassia quando non c'è nient'altro davanti; il sondaggio (un dialog) e la comparsa dei pianeti vengono sempre prima. Chi arriva da un invito in una galassia già configurata lo vede subito.
+- Next / Back / Skip, avanzamento, Esc; focus intrappolato e ripristinato (Radix Dialog), annuncio del passo per screen reader, pulsanti da 44 px. A 390 px la scheda sta sopra la barra in basso e il FAB, mai fuori schermo.
+- Completare, saltare o chiudere con Esc segnano il tutorial come fatto. "Replay tutorial" nel menu utente (da qualsiasi pagina: porta all'universo di una galassia e riparte).
+
+Verificato nel browser: alberto non vede né sondaggio né tutorial; replay da home con 7 passi, Tab che resta nella scheda, Back, Esc; lola in tema scuro (6 passi, spotlight sul suo pianeta privato); utente nuovo da invito a 390 px (parte da solo, 6 passi, tutti a schermo, non ritorna dopo il ricaricamento); utente nuovo che apre per prima la sua "Just me": sondaggio → pianeti → tutorial sui pianeti appena creati; "Skip" segna il profilo.
+
+**Problemi noti**
+- Il tutorial vive solo sull'universo di una galassia: i passi su card, collegamenti e "Only me" sono spiegati lì e non dentro una tela.
+- `tutorial_completed_at` è leggibile (come il resto del profilo) da chi condivide una galassia con l'utente.
+- In tema chiaro l'oscuramento attorno allo spotlight è leggero (stesso token `overlay` dei dialog).
