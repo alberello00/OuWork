@@ -13,14 +13,28 @@ export interface Placed {
 export function arrangeSpheres(spheres: { id: string; count: number; isInbox: boolean }[]): Placed[] {
   const sorted = [...spheres].sort((a, b) => Number(a.isInbox) - Number(b.isInbox) || b.count - a.count);
   if (!sorted.length) return [];
-  const out: Placed[] = [{ id: sorted[0]!.id, x: 0, y: 0 }];
-  const rest = sorted.slice(1);
+  return [{ id: sorted[0]!.id, x: 0, y: 0 }, ...placeOnRings(sorted.slice(1), sorted[0]!.count)];
+}
+
+/**
+ * Galaxy setup (RF14.4): the new, still empty spheres go on rings around the
+ * sphere in the centre (Random), with the same geometry as "Reorganize".
+ * `skip` leaves the first ring slots free for spheres that are already there.
+ */
+export function ringAroundCenter(ids: string[], skip = 0): Placed[] {
+  const slots = [...Array.from({ length: skip }, (_, i) => ({ id: `skip:${i}`, count: 0 })), ...ids.map((id) => ({ id, count: 0 }))];
+  return placeOnRings(slots, 0).slice(skip);
+}
+
+/** Rings of 6, 12, 18… spheres around a centre sphere holding `centerCount` items. */
+function placeOnRings(rest: { id: string; count: number }[], centerCount: number): Placed[] {
+  const out: Placed[] = [];
   let ring = 1;
   let i = 0;
   while (i < rest.length) {
     const capacity = 6 * ring;
     const slice = rest.slice(i, i + capacity);
-    const biggest = Math.max(...slice.map((s) => sphereDiameter(s.count)), sphereDiameter(sorted[0]!.count));
+    const biggest = Math.max(...slice.map((s) => sphereDiameter(s.count)), sphereDiameter(centerCount));
     const radius = ring * (biggest + 90);
     slice.forEach((s, k) => {
       const angle = -Math.PI / 2 + (k / slice.length) * Math.PI * 2 + (ring % 2 ? 0 : Math.PI / slice.length);

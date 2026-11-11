@@ -1,5 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { arrangeSpheres, sphereLinkCounts } from './universeLayout';
+import { arrangeSpheres, ringAroundCenter, sphereLinkCounts } from './universeLayout';
+
+describe('ringAroundCenter', () => {
+  it('uses the same ring as Reorganize, leaving the centre to Random', () => {
+    const ids = ['a', 'b', 'c', 'd'];
+    const viaReorganize = arrangeSpheres([{ id: 'inbox', count: 0, isInbox: false }, ...ids.map((id) => ({ id, count: 0, isInbox: false }))]).slice(1);
+    expect(ringAroundCenter(ids)).toEqual(viaReorganize);
+    expect(ringAroundCenter(ids).some((p) => p.x === 0 && p.y === 0)).toBe(false);
+  });
+
+  it('places 10 spheres on distinct points and can skip taken slots', () => {
+    const ten = ringAroundCenter(Array.from({ length: 10 }, (_, i) => String(i)));
+    expect(new Set(ten.map((p) => `${p.x}:${p.y}`)).size).toBe(10);
+    const all = ringAroundCenter(['x', 'y', 'z']);
+    expect(ringAroundCenter(['z'], 2)).toEqual([all[2]]);
+  });
+});
 
 describe('arrangeSpheres', () => {
   it('puts the biggest sphere in the middle and the inbox last', () => {

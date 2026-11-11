@@ -20,11 +20,15 @@ export type PlanetNodeData = {
   onMenu: (sphereId: string, x: number, y: number, longPress?: boolean) => void;
   /** just deleted: fading away (RF12.3) */
   leaving?: boolean;
+  /** just created by the setup survey: appears after the ones before it (RF14.7) */
+  arriveIndex?: number;
 };
 export type PlanetNodeType = Node<PlanetNodeData, 'planet'>;
 
 const SHOW_MOONS_ZOOM = 0.9;
 const zoomedIn = (s: { transform: [number, number, number] }) => s.transform[2] >= SHOW_MOONS_ZOOM;
+export const ARRIVE_DELAY_MS = 350;
+export const ARRIVE_STAGGER_MS = 110;
 const LONG_PRESS_MS = 520;
 const LONG_PRESS_SLOP = 10;
 
@@ -45,8 +49,8 @@ export const PlanetNode = memo(function PlanetNode({ data, selected, dragging }:
 
   return (
     <div
-      className={cn('group relative flex select-none flex-col items-center [-webkit-touch-callout:none]', data.leaving && 'pointer-events-none animate-planet-out')}
-      style={{ width: size }}
+      className={cn('group relative flex select-none flex-col items-center [-webkit-touch-callout:none]', data.leaving && 'pointer-events-none animate-planet-out', data.arriveIndex !== undefined && !data.leaving && 'animate-planet-in')}
+      style={{ width: size, animationDelay: data.arriveIndex !== undefined && !data.leaving ? `${ARRIVE_DELAY_MS + data.arriveIndex * ARRIVE_STAGGER_MS}ms` : undefined }}
       onContextMenu={(e) => {
         e.preventDefault();
         cancelPress();
