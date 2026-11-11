@@ -4,6 +4,15 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-11 | Setup | "Start from scratch" chiama la stessa RPC con zero sfere | Una seconda RPC `skip_galaxy_setup`: stessa verifica owner/idempotenza duplicata |
+| 2026-11-11 | Setup | "Maybe later" è ricordato in `localStorage` per galassia; il database resta la fonte di verità del setup | Una colonna "rimandato": stato in più per un dettaglio di cortesia |
+| 2026-11-11 | Setup | Tipo preselezionato: "Just me" sulla personale, "Couple" fino a 2 membri, "Friends" da 3 | Nessuna preselezione: una galassia condivisa appena creata ha sempre un solo membro, e l'app nasce per due |
+| 2026-11-11 | Setup | Etichette degli interessi e nomi delle sfere stanno in `copy.ts`; emoji, colore preferito e ordine per tipo in `galaxySetup.ts` | Tutto in `galaxySetup.ts`: i testi non sarebbero traducibili |
+| 2026-11-11 | Setup | Le sfere proposte seguono l'ordine del tipo di galassia, non l'ordine dei clic; i colori preferiti si adattano evitando il sage di Random | Ordine dei clic: lo stesso insieme di risposte darebbe galassie diverse (RF14.4 chiede determinismo) |
+| 2026-11-11 | Setup | Errore identico (`42501`) per galassia inesistente, non membro e membro non owner | Errori distinti: rivelerebbero l'esistenza di una galassia a chi non ne fa parte |
+| 2026-11-11 | Setup | La RPC è `security definer` e ripete la lista dei colori di palette | `security invoker`: richiederebbe il privilegio di scrittura sulle colonne di stato, che il client non deve avere |
+| 2026-11-11 | Setup | Niente toast "Galaxy created." dopo "New galaxy": si entra subito nel sondaggio | Tenerlo: copriva i pulsanti del sondaggio per qualche secondo |
+| 2026-11-11 | Seed | Il seed inserisce le cinque sfere demo in tutte le galassie demo e le segna come configurate | Chiamare la RPC dal seed: servirebbe simulare una sessione utente |
 | 2026-11-11 | Universo | Il menu del pianeta (clic destro / pressione prolungata) offre Open, Edit e Delete, non solo Delete; anche le colonne di Notes hanno Edit + Delete | Un menu con una sola voce distruttiva: facile da toccare per sbaglio, e "Edit" mancava comunque dall'universo |
 | 2026-11-11 | Universo | Pressione prolungata gestita a mano (520 ms, tolleranza 10 px) oltre all'evento `contextmenu` | Solo `contextmenu`: Safari su iOS non lo emette |
 | 2026-11-11 | Universo | Il pianeta eliminato resta come "fantasma" per 260 ms e poi sparisce | Aspettare la fine dell'animazione prima di chiamare la RPC: l'eliminazione sembrerebbe lenta e l'animazione partirebbe prima della conferma del database |

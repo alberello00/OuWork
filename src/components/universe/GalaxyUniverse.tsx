@@ -23,6 +23,7 @@ import { useMoveSpheres } from '@/lib/queries/spheres';
 import type { Item, Sphere } from '@/lib/queries/types';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { sphereDiameter, sphereVar } from '@/lib/tokens';
+import { cn } from '@/lib/utils';
 import { arrangeSpheres, sphereLinkCounts } from '@/lib/universeLayout';
 import { Legend } from './Legend';
 import { PlanetMenu } from './PlanetMenu';
@@ -255,6 +256,8 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
     });
   }
 
+  const onlyInbox = data.topLevel.length > 0 && data.topLevel.every((s) => s.is_inbox);
+
   if (data.isLoading) return <main className="universe-bg flex-1" />;
   if (!data.galaxy) {
     return (
@@ -265,7 +268,6 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   }
   const galaxy = data.galaxy;
   const selected = selectedId ? data.sphereById.get(selectedId) : undefined;
-  const onlyInbox = data.topLevel.length > 0 && data.topLevel.every((s) => s.is_inbox);
   const owner = galaxy.members.find((m) => m.user_id === galaxy.owner_id)?.profile;
   const voice = galaxy.is_personal ? 'solo' : 'shared';
 
@@ -313,8 +315,9 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             className="!bg-transparent"
           >
             <Background variant={BackgroundVariant.Dots} gap={28} size={1} color="var(--color-dot-grid)" className="dark:opacity-0" />
-            <Panel position="bottom-left" className="!mb-5 !ml-3"><CanvasControls /></Panel>
-            <Panel position="bottom-center" className="!mb-5 max-md:hidden"><Legend showMoonsHint={data.spheres.some((s) => s.parent_id)} /></Panel>
+            {/* with Random alone the empty-state card takes this room: nothing to zoom on a phone, nothing to explain */}
+            <Panel position="bottom-left" className={cn('!mb-5 !ml-3', onlyInbox && 'max-sm:hidden')}><CanvasControls /></Panel>
+            <Panel position="bottom-center" className={cn('!mb-5 max-md:hidden', onlyInbox && 'hidden')}><Legend showMoonsHint={data.spheres.some((s) => s.parent_id)} /></Panel>
           </ReactFlow>
         </div>
         {!data.topLevel.length ? <EmptyState emoji="🪐" title={copy.universe.galaxyEmpty} className="absolute inset-0" /> : null}

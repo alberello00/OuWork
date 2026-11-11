@@ -1,6 +1,6 @@
 # OurWorld — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 7)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 8)._
 
 ## Riepilogo
 
@@ -15,7 +15,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, f
 | 6 — Novità, ricerca, export, PWA | ✅ fatta | `feat/fase-6-news-search` → `develop` |
 | **MVP2** (`docs/requisiti-mvp2.md`) | | |
 | 7 — Eliminare una sfera da ovunque (RF12) | ✅ fatta | `feat/fase-7-delete-anywhere` → `develop` |
-| 8 — Galassie vuote + sondaggio iniziale (RF13, RF14) | ⏳ | `feat/fase-8-onboarding-survey` |
+| 8 — Galassie vuote + sondaggio iniziale (RF13, RF14) | ✅ fatta | `feat/fase-8-onboarding-survey` → `develop` |
 | 9 — Tutorial (RF15) | ⏳ | `feat/fase-9-tutorial` |
 | 10 — Nuovo logo (RF16) | ⏳ | `feat/fase-10-logo` |
 
@@ -43,7 +43,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, f
 ```bash
 supabase start -x logflare,vector,edge-runtime,imgproxy,supavisor,studio,mailpit   # serve Docker
 supabase db reset        # migrazioni + seed demo
-supabase test db         # 310 test pgTAP
+supabase test db         # 347 test pgTAP
 pnpm dev
 ```
 
@@ -168,3 +168,25 @@ Verificato nel browser (desktop chiaro, 390 px scuro con touch, reduced motion):
 **Problemi noti**
 - Il menu contestuale del pianeta non si apre da tastiera: da tastiera si elimina dal pannello "Sphere index" o da Notes.
 - Ambiente: dopo `supabase link` al progetto remoto, `supabase/.temp/storage-version` torna all'immagine di default (segfault su questo Mac) e compare `supabase/.temp/storage-migration`, incompatibile con il pin `v1.60.0`: `supabase db reset` fallisce e lascia il database locale vuoto. Rimedio: riscrivere `v1.60.0` in `storage-version`, togliere `storage-migration`, rilanciare il reset.
+
+## Fase 8 — Galassie vuote e sondaggio iniziale (MVP2, RF13 + RF14)
+
+**Fatto**
+- Migrazione `20261111182018_mvp2_galaxy_setup.sql` (solo additiva): colonne `galaxies.setup_completed_at` e `setup_answers`; backfill `now()` per tutte le galassie esistenti; `handle_new_galaxy` crea solo la membership dell'owner e Random (sage, 🎲, al centro), anche per la "Just me"; RPC `complete_galaxy_setup(galaxy_id, answers, spheres)`. **Nessuna sfera o elemento esistente viene toccato.**
+- La RPC è transazionale, solo per l'owner, una volta sola (la seconda chiamata fallisce con `setup_already_completed` senza duplicati), valida nomi (1–40), emoji (1–16), colori di palette, posizioni, massimo 10 sfere; un array vuoto è "Start from scratch". Le due colonne non sono scrivibili dal client (privilegi per colonna) e si leggono solo da membri (RLS già esistente).
+- Sondaggio in 3 passi (`GalaxySetupDialog`, schermo intero su mobile): chi siete (preselezionato dal tipo di galassia), interessi a chip + "Something else" (nome + emoji), anteprima dei pianeti modificabili (nome, emoji, colore) o rimovibili. Mappatura deterministica interesse → sfera in `src/lib/galaxySetup.ts`, colori senza ripetizioni finché la palette basta, posizioni ad anello attorno a Random con la stessa geometria di "Reorganize".
+- Si apre da solo alla prima apertura per l'owner (anche subito dopo "New galaxy"); "Maybe later" lo rimanda (riapribile dallo stato vuoto e dalle impostazioni), "Start from scratch" chiude il setup senza creare nulla.
+- Universo con la sola Random: scheda di benvenuto sotto il pianeta; per gli altri membri "<owner> is setting up this galaxy" con la possibilità di creare sfere a mano.
+- Alla chiusura i pianeti nuovi compaiono uno dopo l'altro (solo dissolvenza con `prefers-reduced-motion`).
+- Seed: le cinque sfere demo del Figma sono inserite esplicitamente e le galassie demo sono già "configurate". Test pgTAP: `11_galaxy_setup.test.sql` (owner, altro membro, non membro, anon, doppia chiamata, validazioni) e conteggi aggiornati in `02`; 347 asserzioni.
+
+Verificato nel browser (desktop chiaro, 390 px chiaro e scuro, reduced motion): alberto non vede alcun sondaggio sulle galassie demo; nuova galassia → sondaggio → 4 pianeti con modifiche salvate; "Maybe later" e riapertura da stato vuoto e impostazioni; lola (membro) vede il messaggio d'attesa e crea una sfera a mano; "Start from scratch"; utente nuovo da invito (`nina`): nessun sondaggio sulla galassia in cui entra, sondaggio con "Just me" preselezionato sulla sua galassia personale.
+
+**Mancante / da decidere con Albi**
+- La migrazione **non è ancora sul database remoto** e `develop` non è su `main`: servono il tuo ok (`supabase db push --remote`, poi merge).
+
+**Problemi noti**
+- "Maybe later" è ricordato per dispositivo (`localStorage`): su un altro dispositivo il sondaggio si riapre una volta.
+- Se qualcuno crea sfere a mano prima del setup, quelle nuove del sondaggio occupano le posizioni libere dell'anello ma non spostano le esistenti: può servire un "Reorganize".
+- La prova nel browser lascia nel DB locale l'utente `nina` e alcune galassie di prova (spariscono con `supabase db reset`).
+- Docker Desktop si è bloccato durante un `supabase db reset` (disco quasi pieno, 3,7 GB liberi): è stato necessario chiuderlo forzatamente e riavviarlo. Nessun volume toccato.

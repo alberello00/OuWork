@@ -81,7 +81,6 @@ export const copy = {
     createHint: 'A galaxy is a space you share with a few people. You can invite them right after.',
     nameLabel: 'Name',
     namePlaceholder: 'e.g. Book club',
-    created: 'Galaxy created.',
     renamed: 'Galaxy renamed.',
     deleted: 'Galaxy deleted.',
     left: 'You left the galaxy.',
