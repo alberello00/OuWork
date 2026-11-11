@@ -71,7 +71,7 @@ export const PlanetNode = memo(function PlanetNode({ data, selected, dragging }:
       <Handle type="target" position={Position.Top} isConnectable={false} className="!pointer-events-none !left-1/2 !top-1/2 !opacity-0" />
       <Handle type="source" position={Position.Top} isConnectable={false} className="!pointer-events-none !left-1/2 !top-1/2 !opacity-0" />
       <div className={cn(!dragging && 'animate-drift')} style={{ animationDelay: delay }}>
-        <div className={cn('rounded-full transition-transform duration-200 group-hover:scale-[1.04]', selected && 'ring-2 ring-offset-4 ring-offset-transparent ring-[var(--color-new-bg)]')}>
+        <div data-tour={cn(sphere.is_inbox ? 'planet-inbox' : 'planet', isPrivate && 'planet-private')} className={cn('rounded-full transition-transform duration-200 group-hover:scale-[1.04]', selected && 'ring-2 ring-offset-4 ring-offset-transparent ring-[var(--color-new-bg)]')}>
           <Planet color={sphere.color} emoji={sphere.emoji} size={size} empty={count === 0} isPrivate={isPrivate} hasNews={newCount > 0} />
         </div>
         {close

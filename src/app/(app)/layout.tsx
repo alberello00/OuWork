@@ -13,13 +13,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('id, username, display_name, color')
+    .select('id, username, display_name, color, tutorial_completed_at')
     .eq('id', user.id)
     .single();
   if (!profile) redirect('/login');
 
   return (
-    <SessionProvider session={{ userId: user.id, profile }}>
+    <SessionProvider
+      session={{
+        userId: user.id,
+        profile: { id: profile.id, username: profile.username, display_name: profile.display_name, color: profile.color },
+        tutorialCompletedAt: profile.tutorial_completed_at,
+      }}
+    >
       <AppProviders>
         <AppShell>{children}</AppShell>
       </AppProviders>

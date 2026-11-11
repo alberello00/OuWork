@@ -6,6 +6,8 @@ import type { Profile } from '@/lib/queries/types';
 interface Session {
   userId: string;
   profile: Profile;
+  /** null until the first-login tutorial has been finished or skipped (RF15.1) */
+  tutorialCompletedAt: string | null;
 }
 
 const SessionContext = createContext<Session | null>(null);

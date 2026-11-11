@@ -261,14 +261,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "avatar_path": string | null,"color": string,"created_at": string,"display_name": string,"id": string,"username": string
+                    "avatar_path": string | null,"color": string,"created_at": string,"display_name": string,"id": string,"tutorial_completed_at": string | null,"username": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name": string,"id": string,"username": string
+                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name": string,"id": string,"tutorial_completed_at"?: string | null,"username": string
                   }
                   Update: {
-                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name"?: string,"id"?: string,"username"?: string
+                    "avatar_path"?: string | null,"color"?: string,"created_at"?: string,"display_name"?: string,"id"?: string,"tutorial_completed_at"?: string | null,"username"?: string
                   }
                   Relationships: [
                     
@@ -394,6 +394,9 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"complete_tutorial":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
 "delete_sphere":
 { Args: { "_move_to"?: string,"_sphere_id": string }; Returns: undefined
                            },
