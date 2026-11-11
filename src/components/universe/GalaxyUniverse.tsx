@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { CanvasControls } from '@/components/canvas/CanvasControls';
 import { GalaxySettingsDialog } from '@/components/galaxies/GalaxySettingsDialog';
 import { NewsBanner } from '@/components/news/NewsBanner';
+import { DeleteSphereDialog } from '@/components/spheres/DeleteSphereDialog';
 import { SphereFormDialog } from '@/components/spheres/SphereFormDialog';
 import { AvatarStack } from '@/components/ui/AvatarStack';
 import { Button } from '@/components/ui/Button';
@@ -17,11 +18,12 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { copy } from '@/lib/copy';
 import { useLinks } from '@/lib/queries/links';
 import { useMoveSpheres } from '@/lib/queries/spheres';
-import type { Item } from '@/lib/queries/types';
+import type { Item, Sphere } from '@/lib/queries/types';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { sphereDiameter, sphereVar } from '@/lib/tokens';
 import { arrangeSpheres, sphereLinkCounts } from '@/lib/universeLayout';
 import { Legend } from './Legend';
+import { PlanetMenu } from './PlanetMenu';
 import { PlanetNode, type PlanetNodeType } from './PlanetNode';
 import { SphereEdge, type SphereEdgeType } from './SphereEdge';
 import { SphereIndexPanel } from './SphereIndexPanel';
@@ -29,6 +31,7 @@ import { SphereIndexPanel } from './SphereIndexPanel';
 const nodeTypes = { planet: PlanetNode };
 const edgeTypes = { sphere: SphereEdge };
 const ENTER_MS = 420;
+const LEAVE_MS = 260;
 
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -45,6 +48,16 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [entering, setEntering] = useState<{ color: string } | null>(null);
+  const [menu, setMenu] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [editing, setEditing] = useState<Sphere | null>(null);
+  const [deleting, setDeleting] = useState<Sphere | null>(null);
+  // planets that were just deleted stay on screen while they fade out (RF12.3)
+  const [leaving, setLeaving] = useState<string[]>([]);
+  const longPressAt = useRef(0);
+  const openMenu = useCallback((id: string, x: number, y: number, longPress?: boolean) => {
+    if (longPress) longPressAt.current = Date.now();
+    setMenu({ id, x, y });
+  }, []);
   const selectedId = params.get('sphere');
 
   const setSelected = useCallback(
@@ -101,7 +114,11 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   useEffect(() => {
     setNodes((current) => {
       const prev = new Map(current.map((n) => [n.id, n]));
-      return topLevel.map((s) => {
+      const alive = new Set(topLevel.map((s) => s.id));
+      const ghosts = leaving
+        .filter((id) => !alive.has(id) && prev.has(id))
+        .map((id) => ({ ...prev.get(id)!, selected: false, draggable: false, data: { ...prev.get(id)!.data, leaving: true } }));
+      const live = topLevel.map((s) => {
         const items = itemsByTop.get(s.id) ?? [];
         const size = sphereDiameter(items.length);
         const old = prev.get(s.id);
@@ -121,11 +138,23 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
               return { sphere: m, count: mi.length, newCount: mi.filter((i) => i.is_new).length };
             }),
             onMoon: (subId: string) => enter(s.id, subId),
+            onMenu: openMenu,
+            leaving: leaving.includes(s.id),
           },
         };
       });
+      return [...live, ...ghosts];
     });
-  }, [topLevel, allItems, sphereById, childrenOf, itemsByTop, selectedId, setNodes, enter]);
+  }, [topLevel, allItems, sphereById, childrenOf, itemsByTop, selectedId, setNodes, enter, openMenu, leaving]);
+
+  const onSphereDeleted = useCallback(
+    (id: string) => {
+      setLeaving((l) => [...l, id]);
+      setTimeout(() => setLeaving((l) => l.filter((x) => x !== id)), LEAVE_MS);
+      if (selectedId === id) setSelected(null);
+    },
+    [selectedId, setSelected]
+  );
 
   const edges: SphereEdgeType[] = useMemo(() => {
     const itemTop = new Map<string, string>();
@@ -218,7 +247,10 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             onNodesChange={onNodesChange}
             onNodeDragStart={onNodeDragStart}
             onNodeDragStop={onNodeDragStop}
-            onNodeClick={(_, n) => setSelected(n.id)}
+            onNodeClick={(_, n) => {
+              // the tap that ends a long press must not also open the panel
+              if (Date.now() - longPressAt.current > 700) setSelected(n.id);
+            }}
             onNodeDoubleClick={(_, n) => enter(n.id)}
             onPaneClick={() => selectedId && setSelected(null)}
             nodesConnectable={false}
@@ -249,8 +281,30 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
         sphereById={data.sphereById}
         profileById={data.profileById}
         onEnter={(id) => { setSelected(null); enter(id); }}
+        onDelete={setDeleting}
         onClose={() => setSelected(null)}
       />
+      <PlanetMenu
+        sphere={menu ? data.sphereById.get(menu.id) : undefined}
+        at={menu}
+        onClose={() => setMenu(null)}
+        onOpen={(s) => enter(s.id)}
+        onEdit={setEditing}
+        onDelete={setDeleting}
+      />
+      {editing ? (
+        <SphereFormDialog galaxyId={galaxyId} spheres={data.spheres} open onOpenChange={(o) => !o && setEditing(null)} sphere={editing} />
+      ) : null}
+      {deleting ? (
+        <DeleteSphereDialog
+          sphere={deleting}
+          spheres={data.spheres}
+          itemCount={itemsByTop.get(deleting.id)?.length ?? 0}
+          open
+          onOpenChange={(o) => !o && setDeleting(null)}
+          onDeleted={() => onSphereDeleted(deleting.id)}
+        />
+      ) : null}
       <GalaxySettingsDialog galaxy={galaxy} open={settingsOpen} onOpenChange={setSettingsOpen} />
       <SphereFormDialog
         galaxyId={galaxyId}

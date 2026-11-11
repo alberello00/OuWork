@@ -1,7 +1,7 @@
 'use client';
 
 import { Handle, Position, useStore, type Node, type NodeProps } from '@xyflow/react';
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { NewBadge } from '@/components/items/NewBadge';
 import type { Sphere } from '@/lib/queries/types';
 import { universe } from '@/lib/tokens';
@@ -16,11 +16,17 @@ export type PlanetNodeData = {
   isPrivate: boolean;
   moons: { sphere: Sphere; count: number; newCount: number }[];
   onMoon: (sphereId: string) => void;
+  /** right click / long press: open the planet menu at these viewport coordinates */
+  onMenu: (sphereId: string, x: number, y: number, longPress?: boolean) => void;
+  /** just deleted: fading away (RF12.3) */
+  leaving?: boolean;
 };
 export type PlanetNodeType = Node<PlanetNodeData, 'planet'>;
 
 const SHOW_MOONS_ZOOM = 0.9;
 const zoomedIn = (s: { transform: [number, number, number] }) => s.transform[2] >= SHOW_MOONS_ZOOM;
+const LONG_PRESS_MS = 520;
+const LONG_PRESS_SLOP = 10;
 
 /** Sphere-planet in the galaxy universe, with its sub-spheres as moons up close. */
 export const PlanetNode = memo(function PlanetNode({ data, selected, dragging }: NodeProps<PlanetNodeType>) {
@@ -29,8 +35,35 @@ export const PlanetNode = memo(function PlanetNode({ data, selected, dragging }:
   const orbit = size / 2 + universe.moonDiameter / 2 + 10;
   const delay = `${-hashUnit(sphere.id) * 14}s`;
 
+  // long press on touch screens opens the same menu as a right click (iOS has no contextmenu event)
+  const press = useRef<{ timer: ReturnType<typeof setTimeout>; x: number; y: number } | null>(null);
+  const cancelPress = () => {
+    if (press.current) clearTimeout(press.current.timer);
+    press.current = null;
+  };
+  useEffect(() => cancelPress, []);
+
   return (
-    <div className="group relative flex flex-col items-center" style={{ width: size }}>
+    <div
+      className={cn('group relative flex select-none flex-col items-center [-webkit-touch-callout:none]', data.leaving && 'pointer-events-none animate-planet-out')}
+      style={{ width: size }}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        cancelPress();
+        data.onMenu(sphere.id, e.clientX, e.clientY);
+      }}
+      onPointerDown={(e) => {
+        if (e.pointerType === 'mouse') return;
+        cancelPress();
+        const { clientX: x, clientY: y } = e;
+        press.current = { x, y, timer: setTimeout(() => { press.current = null; data.onMenu(sphere.id, x, y, true); }, LONG_PRESS_MS) };
+      }}
+      onPointerMove={(e) => {
+        if (press.current && Math.hypot(e.clientX - press.current.x, e.clientY - press.current.y) > LONG_PRESS_SLOP) cancelPress();
+      }}
+      onPointerUp={cancelPress}
+      onPointerCancel={cancelPress}
+    >
       <Handle type="target" position={Position.Top} isConnectable={false} className="!pointer-events-none !left-1/2 !top-1/2 !opacity-0" />
       <Handle type="source" position={Position.Top} isConnectable={false} className="!pointer-events-none !left-1/2 !top-1/2 !opacity-0" />
       <div className={cn(!dragging && 'animate-drift')} style={{ animationDelay: delay }}>

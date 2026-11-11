@@ -1,6 +1,6 @@
 # OurWorld — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fase 1)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 7)._
 
 ## Riepilogo
 
@@ -13,6 +13,13 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | 4 — Tela della sfera | ✅ fatta | `feat/fase-4-canvas` → `develop` |
 | 5 — Universi | ✅ fatta | `feat/fase-5-universe` → `develop` |
 | 6 — Novità, ricerca, export, PWA | ✅ fatta | `feat/fase-6-news-search` → `develop` |
+| **MVP2** (`docs/requisiti-mvp2.md`) | | |
+| 7 — Eliminare una sfera da ovunque (RF12) | ✅ fatta | `feat/fase-7-delete-anywhere` → `develop` |
+| 8 — Galassie vuote + sondaggio iniziale (RF13, RF14) | ⏳ | `feat/fase-8-onboarding-survey` |
+| 9 — Tutorial (RF15) | ⏳ | `feat/fase-9-tutorial` |
+| 10 — Nuovo logo (RF16) | ⏳ | `feat/fase-10-logo` |
+
+> Le fasi dell'MVP2 sono su `develop`: **non** sono ancora su `main` né sul database remoto (servono l'ok di Albi).
 
 ## Online (11 novembre 2026)
 
@@ -146,3 +153,18 @@ Verificato nel browser: banner (6 novità da Lola e Giulia in 2 galassie) e moda
 **Problemi noti**
 - Il service worker non mette nulla in cache: l'app non funziona offline (scelta voluta per la privacy).
 - Le immagini nell'export sono riferite con il loro path nello storage, non incluse nel file.
+
+## Fase 7 — Eliminare una sfera da ovunque (MVP2, RF12)
+
+**Fatto**
+- "Delete" raggiungibile da tre nuovi punti, sempre con lo stesso `DeleteSphereDialog` e la stessa RPC `delete_sphere` (nessuna nuova logica di eliminazione): cestino nel pannello "Sphere index"; menu contestuale del pianeta (clic destro su desktop, pressione prolungata ~0,5 s su touch) con Open / Edit / Delete; menu ⋯ nell'intestazione di ogni colonna di Notes (Edit / Delete).
+- Random non mostra mai "Delete" (resta modificabile).
+- Dopo l'eliminazione dall'universo il pianeta resta in scena 260 ms e si dissolve rimpicciolendosi; con `prefers-reduced-motion` solo dissolvenza. Il pannello si chiude se riguardava quella sfera.
+- L'eliminazione invalida sfere, conteggi, elementi, collegamenti e ora anche la ricerca (le novità derivano dagli elementi).
+- RF12.4: le sfere private altrui non arrivano al client (RLS), quindi non hanno alcun menu; nessun buco emerso, nessun nuovo test pgTAP (RF12.5).
+
+Verificato nel browser (desktop chiaro, 390 px scuro con touch, reduced motion): menu contestuale, cestino nel pannello con annulla/conferma, eliminazione con spostamento in Random e con "Delete them too", colonna Notes, pressione prolungata che non apre anche il pannello, alberto non vede "Gift ideas" di lola.
+
+**Problemi noti**
+- Il menu contestuale del pianeta non si apre da tastiera: da tastiera si elimina dal pannello "Sphere index" o da Notes.
+- Ambiente: dopo `supabase link` al progetto remoto, `supabase/.temp/storage-version` torna all'immagine di default (segfault su questo Mac) e compare `supabase/.temp/storage-migration`, incompatibile con il pin `v1.60.0`: `supabase db reset` fallisce e lascia il database locale vuoto. Rimedio: riscrivere `v1.60.0` in `storage-version`, togliere `storage-migration`, rilanciare il reset.

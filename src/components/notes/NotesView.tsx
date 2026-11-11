@@ -1,15 +1,20 @@
 'use client';
 
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Avatar } from '@/components/ui/Avatar';
 import { NewBadge } from '@/components/items/NewBadge';
 import { PrivateBadge } from '@/components/items/PrivateBadge';
 import { itemTitle } from '@/components/items/ItemCard';
+import { DeleteSphereDialog } from '@/components/spheres/DeleteSphereDialog';
 import { SphereChip } from '@/components/spheres/SphereChip';
 import { SphereDot } from '@/components/spheres/SphereDot';
+import { SphereFormDialog } from '@/components/spheres/SphereFormDialog';
+import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@/components/ui/Dropdown';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { copy } from '@/lib/copy';
-import type { Item } from '@/lib/queries/types';
+import type { Item, Sphere } from '@/lib/queries/types';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { sphereVar } from '@/lib/tokens';
 import { timeAgo } from '@/lib/utils';
@@ -21,6 +26,8 @@ const PER_SPHERE = 5;
 export function NotesView({ galaxyId }: { galaxyId: string }) {
   const data = useGalaxyData(galaxyId);
   const openItem = useOpenItem();
+  const [editing, setEditing] = useState<Sphere | null>(null);
+  const [deleting, setDeleting] = useState<Sphere | null>(null);
 
   if (data.isLoading) return <main className="flex-1 p-8 text-[13px] text-text-muted">{copy.common.loading}</main>;
   if (!data.galaxy) return <EmptyState emoji="🌌" title={copy.galaxies.emptyTitle} className="flex-1" />;
@@ -55,6 +62,17 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
                   {isSpherePrivate(sphere, data.sphereById) ? <PrivateBadge /> : null}
                   {newCount ? <NewBadge count={newCount} /> : null}
                   <span className="text-[11.5px] text-text-muted">{items.length}</span>
+                  <Dropdown>
+                    <DropdownTrigger aria-label={copy.spheres.actions(sphere.name)} className="-mr-2.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
+                      <MoreHorizontal size={18} aria-hidden />
+                    </DropdownTrigger>
+                    <DropdownContent align="end">
+                      <DropdownItem onSelect={() => setEditing(sphere)}><Pencil size={15} aria-hidden />{copy.spheres.edit}</DropdownItem>
+                      {!sphere.is_inbox ? (
+                        <DropdownItem onSelect={() => setDeleting(sphere)} className="text-danger"><Trash2 size={15} aria-hidden />{copy.common.delete}</DropdownItem>
+                      ) : null}
+                    </DropdownContent>
+                  </Dropdown>
                 </header>
 
                 {subs.length ? (
@@ -105,6 +123,19 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
           })}
         </div>
       </div>
+      {editing ? (
+        <SphereFormDialog galaxyId={galaxyId} spheres={data.spheres} open onOpenChange={(o) => !o && setEditing(null)} sphere={editing} />
+      ) : null}
+      {deleting ? (
+        <DeleteSphereDialog
+          sphere={deleting}
+          spheres={data.spheres}
+          itemCount={data.items.filter((i) => i.sphere_id === deleting.id || data.sphereById.get(i.sphere_id)?.parent_id === deleting.id).length}
+          open
+          onOpenChange={(o) => !o && setDeleting(null)}
+          onDeleted={() => setDeleting(null)}
+        />
+      ) : null}
     </main>
   );
 }
