@@ -14,13 +14,22 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 10 novembre 2026 (fine fa
 | 5 — Universi | ✅ fatta | `feat/fase-5-universe` → `develop` |
 | 6 — Novità, ricerca, export, PWA | ✅ fatta | `feat/fase-6-news-search` → `develop` |
 
-## Prossimi passi (servono Albi e le sue credenziali)
+## Online (11 novembre 2026)
 
-1. **Supabase remoto**: creare il progetto (piano free), `supabase link`, `supabase db push`. In Auth: signup disabilitato, conferma email disabilitata (già così in `config.toml` per il locale).
-2. **Vercel**: importare il repo, impostare `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (solo server).
-3. **Primo account**: non esiste registrazione pubblica. Crearlo dalla dashboard Supabase (Auth → Add user, email `<username>@users.ourworld.local`, `user_metadata.username`): i trigger creano profilo e "Just me". Da lì si creano galassie e link d'invito.
-4. Merge `develop` → `main` quando Albi ha rivisto il lavoro.
-5. Confronto con i frame Figma (non fatto: limite del piano Starter del Figma MCP, vedi problemi noti della fase 2).
+| Cosa | Dove |
+| ---- | ---- |
+| Sito | https://ouniverse-albertotrashaj31-1532s-projects.vercel.app (Vercel, progetto `ouniverse`, produzione da `main`, funzioni a Francoforte `fra1`) |
+| Database | Supabase, organizzazione "OurWorld", progetto `ouniverse` (ref `uchewllvnkxdigrcalys`, eu-central-1, piano free) |
+
+- Migrazioni applicate con `supabase db push --remote` (nessun seed demo online).
+- Auth remota: registrazione pubblica **disattivata**, conferma email disattivata (solo queste due voci portate da `config.toml`).
+- Vercel: variabili `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`; protezione Vercel solo sulle preview, la produzione è pubblica (l'accesso lo regola il login dell'app). Node 22.
+- La password del database remoto sta solo in `.env.local` (`SUPABASE_DB_PASSWORD`), non versionata.
+- I test pgTAP **non** si lanciano sul database remoto: `00_setup.test.sql` installa funzioni di test (anche una che crea utenti) e lo fa con commit.
+
+**Da fare a mano**
+- `SUPABASE_SERVICE_ROLE_KEY` su Vercel (tipo *Sensitive*, solo Production e Preview): serve per creare account dagli inviti. Non è passata dalla conversazione con Claude.
+- Ogni push su `main` ripubblica il sito; `develop` produce preview protette.
 
 ## Come provarlo
 
