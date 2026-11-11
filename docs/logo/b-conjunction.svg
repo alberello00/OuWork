@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <clipPath id="b-conjunction-big"><circle cx="26" cy="37" r="20"/></clipPath>
+  </defs>
+  <circle cx="26" cy="37" r="20" fill="#2F8F83"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#D9467A"/>
+  <circle cx="42.5" cy="23.5" r="13" fill="#F7D774" clip-path="url(#b-conjunction-big)"/>
+</svg>
