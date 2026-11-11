@@ -9,8 +9,14 @@ select is((select count(*)::int from public.profiles where username in ('ann', '
 select is((select count(*)::int from public.galaxies where is_personal and name = 'Just me'
            and owner_id in (tests.uid('ann'), tests.uid('bob'), tests.uid('cat'))), 3,
   'every user gets a personal "Just me" galaxy');
-select is((select count(*)::int from public.spheres where galaxy_id = tests.personal_galaxy('cat')), 6,
-  'a new galaxy gets the six default spheres');
+select is((select count(*)::int from public.spheres where galaxy_id = tests.personal_galaxy('cat')), 1,
+  'a new galaxy starts with a single sphere (RF13.1)');
+select results_eq(
+  $$ select color, emoji, x, y from public.spheres where galaxy_id = tests.personal_galaxy('cat') $$,
+  $$ values ('sage'::text, '🎲'::text, 0::double precision, 0::double precision) $$,
+  'Random is sage, 🎲, in the centre');
+select is((select setup_completed_at from public.galaxies where id = tests.personal_galaxy('cat')), null,
+  'a new galaxy is not set up yet (RF13.2)');
 select is((select name from public.spheres where galaxy_id = tests.personal_galaxy('cat') and is_inbox), 'Random',
   'Random is the inbox');
 select is((select role from public.galaxy_members
@@ -52,8 +58,13 @@ select lives_ok($$ insert into public.galaxies (name) values ('Book club') retur
   'any user can create a galaxy (INSERT ... RETURNING works)');
 select is((select owner_id from public.galaxies where name = 'Book club'), tests.uid('bob'),
   'the creator is the owner');
-select is((select count(*)::int from public.spheres s join public.galaxies g on g.id = s.galaxy_id where g.name = 'Book club'), 6,
-  'default spheres are visible to the creator');
+select is((select count(*)::int from public.spheres s join public.galaxies g on g.id = s.galaxy_id where g.name = 'Book club'), 1,
+  'Random is visible to the creator');
+select is((select setup_completed_at from public.galaxies where name = 'Book club'), null,
+  'a galaxy created by a user starts not set up');
+select throws_ok(
+  $$ insert into public.galaxies (name, setup_completed_at) values ('Skipper', now()) $$,
+  '42501', null, 'setup_completed_at cannot be set on insert');
 select throws_ok(
   $$ insert into public.galaxies (name, owner_id) values ('Forged', 'a0000000-0000-4000-8000-000000000001') $$,
   '42501', null, 'owner_id cannot be forged');
