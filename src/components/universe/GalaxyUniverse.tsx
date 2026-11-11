@@ -284,7 +284,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
             <LayoutGrid size={15} aria-hidden /><span className="max-sm:sr-only">{copy.nav.notes}</span>
           </Link>
           <Button size="icon" aria-label={copy.universe.newSphere} onClick={() => setCreating(true)}><Plus size={17} aria-hidden /></Button>
-          <Button size="icon" aria-label={copy.nav.settings} onClick={() => setSettingsOpen(true)}><Settings size={17} aria-hidden /></Button>
+          <Button size="icon" aria-label={copy.nav.settings} data-tour="settings" onClick={() => setSettingsOpen(true)}><Settings size={17} aria-hidden /></Button>
         </div>
         <div className="pointer-events-auto w-full sm:max-w-xl">
           <NewsBanner galaxyId={galaxyId} />

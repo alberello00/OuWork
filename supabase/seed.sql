@@ -204,6 +204,9 @@ begin
 end;
 $$;
 
+-- The demo users already know the app: no first-login tutorial for them (RF15).
+update public.profiles set tutorial_completed_at = created_at;
+
 -- Everything older than each member's last visit has already been seen, so the
 -- NEW badges and the "since your last visit" banner show only recent items.
 insert into public.item_views (user_id, item_id, seen_at)

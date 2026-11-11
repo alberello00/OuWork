@@ -4,6 +4,11 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-11 | Tutorial | Il tutorial gira solo sull'universo di una galassia; "Replay" porta lì da qualsiasi pagina | Un tour che naviga tra home, universo e tela: molto più fragile, e l'utente perderebbe il punto in cui si trovava |
+| 2026-11-11 | Tutorial | Parte quando l'universo è "tranquillo" (pianeti a schermo, nessun dialog o menu, nessun pianeta in arrivo) per tre controlli di fila | Coordinare a mano sondaggio e tutorial con stato condiviso: più accoppiamento; così qualsiasi dialog futuro ha la precedenza |
+| 2026-11-11 | Tutorial | La scheda è un Radix Dialog senza overlay proprio; lo spotlight è un riquadro con `box-shadow` enorme | Focus trap, Esc e ripristino del focus scritti a mano; una libreria di tour (dipendenza da chiedere, RF15.6) |
+| 2026-11-11 | Tutorial | Passi 4 e 5 (card, "Only me") come spiegazione sull'universo: spotlight su un pianeta, o scheda centrata se non c'è nulla da indicare | Aprire una sfera durante il tour; saltarli del tutto: sono le due cose meno scopribili da soli |
+| 2026-11-11 | Tutorial | Anche Esc e "Skip" segnano il tutorial come fatto; `complete_tutorial()` tiene la prima data | Riproporlo finché non viene completato: insistente |
 | 2026-11-11 | Setup | "Start from scratch" chiama la stessa RPC con zero sfere | Una seconda RPC `skip_galaxy_setup`: stessa verifica owner/idempotenza duplicata |
 | 2026-11-11 | Setup | "Maybe later" è ricordato in `localStorage` per galassia; il database resta la fonte di verità del setup | Una colonna "rimandato": stato in più per un dettaglio di cortesia |
 | 2026-11-11 | Setup | Tipo preselezionato: "Just me" sulla personale, "Couple" fino a 2 membri, "Friends" da 3 | Nessuna preselezione: una galassia condivisa appena creata ha sempre un solo membro, e l'app nasce per due |

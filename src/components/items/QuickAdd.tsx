@@ -165,11 +165,13 @@ export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: 
   );
 }
 
-export function AddFab({ onClick, className }: { onClick: () => void; className?: string }) {
+/** `tour`: this is the "+" the tutorial points at (RF15.3). */
+export function AddFab({ onClick, className, tour }: { onClick: () => void; className?: string; tour?: boolean }) {
   return (
     <button
       type="button"
       aria-label={copy.nav.add}
+      data-tour={tour ? 'add' : undefined}
       onClick={onClick}
       className={cn(
         'inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent-strong text-on-accent shadow-accent',

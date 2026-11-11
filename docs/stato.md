@@ -1,6 +1,6 @@
 # OurWorld — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 8)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 9; fase 10 in attesa della scelta del logo)._
 
 ## Riepilogo
 
@@ -16,8 +16,8 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, f
 | **MVP2** (`docs/requisiti-mvp2.md`) | | |
 | 7 — Eliminare una sfera da ovunque (RF12) | ✅ fatta | `feat/fase-7-delete-anywhere` → `develop` |
 | 8 — Galassie vuote + sondaggio iniziale (RF13, RF14) | ✅ fatta | `feat/fase-8-onboarding-survey` → `develop` |
-| 9 — Tutorial (RF15) | ⏳ | `feat/fase-9-tutorial` |
-| 10 — Nuovo logo (RF16) | ⏳ | `feat/fase-10-logo` |
+| 9 — Tutorial (RF15) | ✅ fatta | `feat/fase-9-tutorial` → `develop` |
+| 10 — Nuovo logo (RF16) | ⏸ proposte pronte in `docs/logo/`, **serve la scelta di Albi** | `feat/fase-10-logo` |
 
 > Le fasi dell'MVP2 sono su `develop`: **non** sono ancora su `main` né sul database remoto (servono l'ok di Albi).
 
@@ -43,7 +43,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, f
 ```bash
 supabase start -x logflare,vector,edge-runtime,imgproxy,supavisor,studio,mailpit   # serve Docker
 supabase db reset        # migrazioni + seed demo
-supabase test db         # 347 test pgTAP
+supabase test db         # 359 test pgTAP
 pnpm dev
 ```
 
@@ -190,3 +190,20 @@ Verificato nel browser (desktop chiaro, 390 px chiaro e scuro, reduced motion): 
 - Se qualcuno crea sfere a mano prima del setup, quelle nuove del sondaggio occupano le posizioni libere dell'anello ma non spostano le esistenti: può servire un "Reorganize".
 - La prova nel browser lascia nel DB locale l'utente `nina` e alcune galassie di prova (spariscono con `supabase db reset`).
 - Docker Desktop si è bloccato durante un `supabase db reset` (disco quasi pieno, 3,7 GB liberi): è stato necessario chiuderlo forzatamente e riavviarlo. Nessun volume toccato.
+
+## Fase 9 — Tutorial al primo login (MVP2, RF15)
+
+**Fatto**
+- Migrazione `20261111190235_mvp2_tutorial.sql` (solo additiva): `profiles.tutorial_completed_at`, backfill `now()` per gli utenti esistenti, RPC `complete_tutorial()` (idempotente, tiene la prima data). La colonna non è scrivibile dal client. Test `12_tutorial.test.sql`; 359 asserzioni in tutto.
+- Tutorial a coach-mark con spotlight sull'interfaccia reale, scritto a mano (nessuna libreria): `src/lib/tutorial.ts` (passi, scelta dei bersagli, posizionamento, con test), `components/tutorial/TutorialProvider` + `TutorialOverlay`.
+- 7 passi (6 per chi non è owner di una galassia condivisa): galassie e sfere → entrare in una sfera → "+" e Random → card/collegamenti/annotazioni → "Only me" → novità e ricerca → invitare qualcuno. Se il bersaglio non è a schermo il passo si salta o diventa una scheda centrata senza spotlight (es. "Only me" punta al pianeta privato solo se ne vedi uno).
+- Ordine (RF15.2): parte da solo sull'universo di una galassia quando non c'è nient'altro davanti; il sondaggio (un dialog) e la comparsa dei pianeti vengono sempre prima. Chi arriva da un invito in una galassia già configurata lo vede subito.
+- Next / Back / Skip, avanzamento, Esc; focus intrappolato e ripristinato (Radix Dialog), annuncio del passo per screen reader, pulsanti da 44 px. A 390 px la scheda sta sopra la barra in basso e il FAB, mai fuori schermo.
+- Completare, saltare o chiudere con Esc segnano il tutorial come fatto. "Replay tutorial" nel menu utente (da qualsiasi pagina: porta all'universo di una galassia e riparte).
+
+Verificato nel browser: alberto non vede né sondaggio né tutorial; replay da home con 7 passi, Tab che resta nella scheda, Back, Esc; lola in tema scuro (6 passi, spotlight sul suo pianeta privato); utente nuovo da invito a 390 px (parte da solo, 6 passi, tutti a schermo, non ritorna dopo il ricaricamento); utente nuovo che apre per prima la sua "Just me": sondaggio → pianeti → tutorial sui pianeti appena creati; "Skip" segna il profilo.
+
+**Problemi noti**
+- Il tutorial vive solo sull'universo di una galassia: i passi su card, collegamenti e "Only me" sono spiegati lì e non dentro una tela.
+- `tutorial_completed_at` è leggibile (come il resto del profilo) da chi condivide una galassia con l'utente.
+- In tema chiaro l'oscuramento attorno allo spotlight è leggero (stesso token `overlay` dei dialog).

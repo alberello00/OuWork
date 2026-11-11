@@ -315,6 +315,47 @@ export const copy = {
       podcasts: { label: 'Podcasts', sphere: 'Podcasts' },
     },
   },
+  tutorial: {
+    label: 'Welcome tour',
+    replay: 'Replay tutorial',
+    skip: 'Skip',
+    next: 'Next',
+    done: 'Got it',
+    progress: (n: number, total: number) => `${n} of ${total}`,
+    announce: (n: number, total: number, title: string) => `Step ${n} of ${total}: ${title}`,
+    steps: {
+      galaxies: {
+        title: 'Welcome to your universe',
+        body: 'A galaxy is a place you share with a few people. Every planet in it is a sphere: one theme, one little world. You switch galaxies from here.',
+      },
+      enter: {
+        title: 'Step inside a sphere',
+        body: 'Click a planet for a quick look, double-click to go in.',
+        bodyTouch: 'Tap a planet for a quick look, then “Open sphere” to go in.',
+      },
+      add: {
+        title: 'Add anything, from anywhere',
+        body: 'The + keeps a note, a link or a picture in seconds. Not sure where it belongs? It waits in Random until you find it a home.',
+      },
+      canvas: {
+        title: 'Every sphere is a canvas',
+        body: 'Inside, your things are cards: move them around, connect them to each other, and decorate with drawings, arrows and stickers.',
+      },
+      private: {
+        title: 'Some things are just yours',
+        body: 'Switch on “Only me” for a single item or a whole sphere and nobody else in the galaxy will see it. Look for the little lock.',
+      },
+      news: {
+        title: 'Never miss what is new',
+        body: 'A yellow NEW marks what others added since your last visit. And search finds anything, anywhere: press ⌘K.',
+        bodyTouch: 'A yellow NEW marks what others added since your last visit. And search finds anything, anywhere.',
+      },
+      invite: {
+        title: 'Better together',
+        body: 'Open the galaxy settings to create an invite link and bring someone in.',
+      },
+    },
+  },
   search: {
     placeholder: 'Search notes, links and pictures…',
     shortcut: '⌘K',
