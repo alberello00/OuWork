@@ -174,12 +174,12 @@ export function AddFab({ onClick, className, tour }: { onClick: () => void; clas
       data-tour={tour ? 'add' : undefined}
       onClick={onClick}
       className={cn(
-        'inline-flex h-14 w-14 items-center justify-center rounded-full bg-accent-strong text-on-accent shadow-accent',
-        'transition-transform duration-200 hover:scale-105 active:scale-95',
+        'inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent-strong text-on-accent shadow-card-lifted',
+        'transition-[filter] duration-150 hover:brightness-110',
         className
       )}
     >
-      <Plus size={26} aria-hidden />
+      <Plus size={22} aria-hidden />
     </button>
   );
 }
