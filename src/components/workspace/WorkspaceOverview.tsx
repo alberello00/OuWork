@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutGrid, Network, Plus, Settings, Sparkles, StickyNote } from 'lucide-react';
+import { Eye, LayoutGrid, Network, Plus, Settings, Sparkles, StickyNote } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { copy } from '@/lib/copy';
 import { useMoveSpheres } from '@/lib/queries/spheres';
+import { useRole } from '@/lib/queries/useCanEdit';
 import type { Item, Sphere } from '@/lib/queries/types';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { cn } from '@/lib/utils';
@@ -51,6 +52,7 @@ export function WorkspaceOverview({ galaxyId }: { galaxyId: string }) {
   const [editing, setEditing] = useState<Sphere | null>(null);
   const [deleting, setDeleting] = useState<Sphere | null>(null);
   const [setupOpen, setSetupOpen] = useState(false);
+  const { canEdit } = useRole(galaxyId);
 
   const view = params.get('view') === 'map' ? 'map' : 'boards';
   const galaxyRow = data.galaxy;
@@ -115,10 +117,17 @@ export function WorkspaceOverview({ galaxyId }: { galaxyId: string }) {
             <Settings size={14} aria-hidden />
             <span className="max-sm:sr-only">{copy.nav.settingsShort}</span>
           </Button>
-          <Button size="sm" variant="primary" onClick={() => setCreating(true)}>
-            <Plus size={14} aria-hidden />
-            {copy.universe.newSphere}
-          </Button>
+          {canEdit ? (
+            <Button size="sm" variant="primary" onClick={() => setCreating(true)}>
+              <Plus size={14} aria-hidden />
+              {copy.universe.newSphere}
+            </Button>
+          ) : (
+            <span title={copy.common.readOnlyHint} className="inline-flex h-8 items-center gap-1.5 rounded-pill border border-border bg-surface-2 px-2.5 text-[12px] font-medium text-text-muted">
+              <Eye size={14} aria-hidden />
+              {copy.common.readOnly}
+            </span>
+          )}
         </div>
         <div role="tablist" aria-label={copy.nav.universe} className="mt-3 flex gap-4">
           {([['boards', copy.universe.tabBoards, LayoutGrid], ['map', copy.universe.tabMap, Network]] as const).map(([id, label, Icon]) => (
@@ -143,13 +152,13 @@ export function WorkspaceOverview({ galaxyId }: { galaxyId: string }) {
       {view === 'map' ? (
         <div className="paper-sky relative min-h-[420px] flex-1">
           <div className="absolute inset-0">
-            <BoardMap galaxyId={galaxyId} topLevel={data.topLevel} spheres={data.spheres} items={data.items} itemsByTop={itemsByTop} sphereById={data.sphereById} />
+            <BoardMap galaxyId={galaxyId} canEdit={canEdit} topLevel={data.topLevel} spheres={data.spheres} items={data.items} itemsByTop={itemsByTop} sphereById={data.sphereById} />
           </div>
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto px-4 pb-28 pt-4 sm:px-6">
           <NewsBanner galaxyId={galaxyId} className="mb-4 max-w-3xl" />
-          {onlyInbox ? (
+          {onlyInbox && canEdit ? (
             <div data-tour="empty-workspace" className="mb-4 max-w-xl rounded-card border border-border bg-card p-4">
               {needsSetup && !isOwner ? (
                 <>
@@ -183,6 +192,7 @@ export function WorkspaceOverview({ galaxyId }: { galaxyId: string }) {
                 profileById={data.profileById}
                 onEdit={setEditing}
                 onDelete={setDeleting}
+                canEdit={canEdit}
               />
             ))}
           </ul>

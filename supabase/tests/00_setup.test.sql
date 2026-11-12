@@ -125,7 +125,7 @@ begin
   insert into public.galaxies (id, name, owner_id) values (g, 'Shared', ann);
   update public.galaxy_members set joined_at = now() - interval '10 days' where galaxy_id = g;
   insert into public.galaxy_members (galaxy_id, user_id, role, joined_at)
-  values (g, bob, 'member', now() - interval '10 days');
+  values (g, bob, 'editor', now() - interval '10 days');
 
   insert into public.spheres (id, galaxy_id, parent_id, name, is_private, created_by) values
     ('20000000-0000-4000-8000-000000000001', g, null, 'Trips', false, ann),

@@ -27,13 +27,15 @@ interface Props {
   isPrivate: boolean;
   activeSub: string | null;
   onSubChange: (id: string | null) => void;
+  /** viewers get no edit / delete / sub-board menu (RW3) */
+  canEdit: boolean;
   /** view switch (canvas / list), rendered at the right */
   children?: React.ReactNode;
 }
 
 /** Name, sub-sphere chips that filter (RF2.6), and sphere actions. */
 export function SphereHeader(props: Props) {
-  const { galaxyId, sphere, parent, spheres, subSpheres, countOf, newCount, totalCount, isPrivate, activeSub, onSubChange, children } = props;
+  const { galaxyId, sphere, parent, spheres, subSpheres, countOf, newCount, totalCount, isPrivate, activeSub, onSubChange, canEdit, children } = props;
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [addingSub, setAddingSub] = useState(false);
@@ -63,7 +65,7 @@ export function SphereHeader(props: Props) {
           </p>
         </div>
         {children}
-        <Dropdown>
+        {canEdit ? <Dropdown>
           <DropdownTrigger aria-label={copy.spheres.edit} className="inline-flex h-9 w-9 items-center justify-center rounded-pill hover:bg-surface-2 max-sm:h-11 max-sm:w-11">
             <MoreHorizontal size={17} aria-hidden />
           </DropdownTrigger>
@@ -76,7 +78,7 @@ export function SphereHeader(props: Props) {
               <DropdownItem onSelect={() => setDeleting(true)} className="text-danger"><Trash2 size={15} aria-hidden />{copy.common.delete}</DropdownItem>
             ) : null}
           </DropdownContent>
-        </Dropdown>
+        </Dropdown> : null}
       </div>
 
       {subSpheres.length ? (

@@ -50,10 +50,12 @@ interface Props {
   isNew: (id: string) => boolean;
   focusId: string | null;
   onOpenItem: (id: string) => void;
+  /** viewers pan, zoom and open cards; no tools, no dragging (RW3) */
+  canEdit: boolean;
 }
 
 function CanvasInner(props: Props) {
-  const { galaxyId, target, targetPrivate, scopeIds, items, sphereById, profileById, isNew, focusId, onOpenItem } = props;
+  const { galaxyId, target, targetPrivate, scopeIds, items, sphereById, profileById, isNew, focusId, onOpenItem, canEdit } = props;
   const { resolvedTheme } = useTheme();
   const flow = useReactFlow();
   const wrapper = useRef<HTMLDivElement>(null);
@@ -213,7 +215,7 @@ function CanvasInner(props: Props) {
 
   const drawing = tool === 'pen' || tool === 'arrow' || tool === 'sticker';
   const placing = tool === 'note' || tool === 'link' || tool === 'image';
-  const hint = placing ? copy.canvas.placeHint : tool === 'connector' ? (connectFrom ? copy.canvas.connectSecond : copy.canvas.connectFirst) : !items.length ? copy.canvas.empty : null;
+  const hint = placing ? copy.canvas.placeHint : tool === 'connector' ? (connectFrom ? copy.canvas.connectSecond : copy.canvas.connectFirst) : !items.length && canEdit ? copy.canvas.empty : null;
 
   return (
     <div ref={wrapper} className="relative h-full w-full">
@@ -230,7 +232,7 @@ function CanvasInner(props: Props) {
         onNodeMouseLeave={() => setHovered(null)}
         onPaneClick={onPaneClick}
         nodesConnectable={false}
-        nodesDraggable={!drawing}
+        nodesDraggable={canEdit && !drawing}
         panOnDrag={!drawing}
         zoomOnDoubleClick={false}
         minZoom={0.15}
@@ -240,11 +242,11 @@ function CanvasInner(props: Props) {
         className={cn('!bg-bg', placing && '[&_.react-flow__pane]:!cursor-crosshair')}
       >
         <Background variant={BackgroundVariant.Dots} gap={canvas.gridGap} size={1} color="var(--color-dot-grid)" />
-        <AnnotationLayer annotations={annotations} profileById={profileById} interactive={!drawing} draft={draft} />
+        <AnnotationLayer annotations={annotations} profileById={profileById} interactive={canEdit && !drawing} draft={draft} />
         {drawing ? (
           <DrawingOverlay tool={tool} color={color} size={size} emoji={emoji} sphereId={target.id} onDraft={setDraft} onCommit={commit} />
         ) : null}
-        <Panel position="top-left" className="!m-3">
+        {canEdit ? <Panel position="top-left" className="!m-3">
           <CanvasToolbar
             tool={tool}
             onTool={(t) => { setTool(t); setConnectFrom(null); }}
@@ -256,7 +258,7 @@ function CanvasInner(props: Props) {
             onEmoji={setEmoji}
             onPhoto={() => photoInput.current?.click()}
           />
-        </Panel>
+        </Panel> : null}
         <Panel position="bottom-right" className="!m-3 flex flex-col items-end gap-2">
           <MiniMap
             pannable

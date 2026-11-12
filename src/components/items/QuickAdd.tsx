@@ -10,6 +10,8 @@ import { Dialog, SheetContent } from '@/components/ui/Dialog';
 import { FieldError } from '@/components/ui/Input';
 import { Switch } from '@/components/ui/Switch';
 import { copy } from '@/lib/copy';
+import { useSession } from '@/components/shell/SessionProvider';
+import { canEditRole, roleOf } from '@/lib/permissions';
 import { useGalaxies } from '@/lib/queries/galaxies';
 import { useItems } from '@/lib/queries/items';
 import { useSpheres } from '@/lib/queries/spheres';
@@ -31,7 +33,11 @@ const LAST_GALAXY_KEY = 'ouwork:last-workspace';
 export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const params = useParams<{ galaxyId?: string; sphereId?: string }>();
   const router = useRouter();
-  const { data: galaxies = [] } = useGalaxies();
+  const { data: allGalaxies = [] } = useGalaxies();
+  const { userId } = useSession();
+  // RW3: viewers cannot add, so their workspaces are not offered
+  const galaxies = useMemo(() => allGalaxies.filter((g) => canEditRole(roleOf(g, userId))), [allGalaxies, userId]);
+  const here = params.galaxyId && galaxies.some((g) => g.id === params.galaxyId) ? params.galaxyId : null;
   const [galaxyId, setGalaxyId] = useState<string | null>(null);
   const [sphereId, setSphereId] = useState<string | null>(null);
   const [type, setType] = useState<ItemType>('note');
@@ -45,11 +51,11 @@ export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: 
     if (!open || !galaxies.length) return;
     let last: string | null = null;
     try { last = window.localStorage.getItem(LAST_GALAXY_KEY); } catch { /* storage unavailable */ }
-    const pick = params.galaxyId ?? (galaxies.some((g) => g.id === last) ? last : galaxies[0]!.id);
+    const pick = here ?? (galaxies.some((g) => g.id === last) ? last : galaxies[0]!.id);
     setGalaxyId(pick);
-    setSphereId(params.galaxyId ? (params.sphereId ?? null) : null);
+    setSphereId(here ? (params.sphereId ?? null) : null);
     setError(null);
-  }, [open, galaxies, params.galaxyId, params.sphereId]);
+  }, [open, galaxies, here, params.sphereId]);
 
   const { data: spheres = [] } = useSpheres(galaxyId);
   const { data: items = [] } = useItems(galaxyId);
@@ -115,7 +121,7 @@ export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: 
 
           <ItemFields type={type} draft={draft} onChange={setDraft} autoFocus />
 
-          {!params.galaxyId && galaxies.length > 1 ? (
+          {!here && galaxies.length > 1 ? (
             <div>
               <p className="mb-1.5 text-[12px] font-medium text-text-muted">{copy.items.galaxy}</p>
               <div className="flex flex-wrap gap-1.5">
@@ -126,8 +132,8 @@ export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: 
                     aria-pressed={g.id === galaxyId}
                     onClick={() => { setGalaxyId(g.id); setSphereId(null); }}
                     className={cn(
-                      'min-h-9 rounded-pill border px-3 text-[12px] font-medium',
-                      g.id === galaxyId ? 'border-text bg-text text-bg' : 'border-border bg-surface-2'
+                      'min-h-8 rounded-pill border px-2.5 text-[12px] font-medium max-sm:min-h-10',
+                      g.id === galaxyId ? 'border-accent bg-accent-soft text-accent' : 'border-border bg-card'
                     )}
                   >
                     {g.name}

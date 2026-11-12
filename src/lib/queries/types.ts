@@ -29,9 +29,13 @@ export interface LinkPreview {
   description?: string | null;
 }
 
+/** Membership role (RW3.1). */
+export type Role = 'owner' | 'editor' | 'viewer';
+export type InviteRole = Exclude<Role, 'owner'>;
+
 export interface Member {
   user_id: string;
-  role: 'owner' | 'member';
+  role: Role;
   joined_at: string;
   last_seen_at: string | null;
   profile: Profile;

@@ -62,7 +62,7 @@ select is_empty($$ select * from public.galaxies where name = 'Shared' $$, 'stil
 select is(public.accept_invite('tok-valid'), '10000000-0000-4000-8000-000000000001'::uuid, 'a logged-in user accepts a valid invite');
 select isnt_empty($$ select * from public.galaxies where name = 'Shared' $$, 'the galaxy is now visible');
 select is((select role from public.galaxy_members where user_id = tests.uid('cat') and galaxy_id = '10000000-0000-4000-8000-000000000001'),
-  'member', 'the invitee joins as plain member');
+  'editor', 'the invitee joins with the default role, editor (RW3.2)');
 select is_empty($$ select * from public.items where is_private $$, 'the new member sees no private items');
 
 select tests.login('dan');

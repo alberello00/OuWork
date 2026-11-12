@@ -8,6 +8,7 @@ import { ItemCard } from '@/components/items/ItemCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { copy } from '@/lib/copy';
 import { useMarkSphereSeen } from '@/lib/queries/spheres';
+import { useRole } from '@/lib/queries/useCanEdit';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { useOpenItem } from '@/lib/useOpenItem';
 import { cn } from '@/lib/utils';
@@ -28,6 +29,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
   const params = useSearchParams();
   const openItem = useOpenItem();
   const markSphereSeen = useMarkSphereSeen();
+  const { canEdit } = useRole(galaxyId);
   const activeSub = params.get('sub');
   const viewParam = params.get('view');
   // canvas by default on larger screens, list on phones (RD8.4)
@@ -106,6 +108,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
         isPrivate={isSpherePrivate(sphere, data.sphereById)}
         activeSub={activeSub}
         onSubChange={setSub}
+        canEdit={canEdit}
       >
         {viewSwitch}
       </SphereHeader>
@@ -123,6 +126,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
               isNew={isNew}
               focusId={params.get('focus')}
               onOpenItem={openItem}
+              canEdit={canEdit}
             />
           </div>
         </div>

@@ -22,6 +22,8 @@ const edgeTypes = { board: BoardEdge };
 
 interface Props {
   galaxyId: string;
+  /** viewers can look and open boards, not move them (RW3) */
+  canEdit: boolean;
   topLevel: Sphere[];
   spheres: Sphere[];
   items: Item[];
@@ -29,7 +31,7 @@ interface Props {
   sphereById: Map<string, Sphere>;
 }
 
-function MapInner({ galaxyId, topLevel, spheres, items, itemsByTop, sphereById }: Props) {
+function MapInner({ galaxyId, canEdit, topLevel, spheres, items, itemsByTop, sphereById }: Props) {
   const flow = useReactFlow();
   const router = useRouter();
   const moveSpheres = useMoveSpheres(galaxyId);
@@ -108,6 +110,7 @@ function MapInner({ galaxyId, topLevel, spheres, items, itemsByTop, sphereById }
       onNodeDragStop={onNodeDragStop}
       onNodeDoubleClick={(_, n) => router.push(`/w/${galaxyId}/b/${n.id}`)}
       nodesConnectable={false}
+      nodesDraggable={canEdit}
       zoomOnDoubleClick={false}
       minZoom={0.2}
       maxZoom={2}
@@ -116,10 +119,12 @@ function MapInner({ galaxyId, topLevel, spheres, items, itemsByTop, sphereById }
     >
       <Background variant={BackgroundVariant.Dots} gap={22} size={1} color="var(--color-dot-grid)" />
       <Panel position="top-left" className="!m-3 flex items-center gap-2">
-        <Button size="sm" onClick={reorganize} disabled={moveSpheres.isPending}>
-          <Shuffle size={14} aria-hidden />
-          {copy.universe.reorganize}
-        </Button>
+        {canEdit ? (
+          <Button size="sm" onClick={reorganize} disabled={moveSpheres.isPending}>
+            <Shuffle size={14} aria-hidden />
+            {copy.universe.reorganize}
+          </Button>
+        ) : null}
         <span className="rounded-pill bg-card/90 px-2 py-1 text-[11px] text-text-muted max-md:hidden">{copy.universe.mapHint}</span>
       </Panel>
       <Panel position="bottom-right" className="!m-3"><CanvasControls /></Panel>
