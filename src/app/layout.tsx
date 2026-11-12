@@ -1,34 +1,23 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, DM_Sans } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { ServiceWorker } from '@/components/shell/ServiceWorker';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import './globals.css';
 
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-fraunces',
-  display: 'swap',
-  axes: ['SOFT', 'WONK', 'opsz'],
-});
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-  axes: ['opsz'],
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
+const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'OuWork',
-  description: 'Our little universe: notes, links and pictures, shared in galaxies.',
+  description: 'Boards for teams: notes, links and images on shared canvases, with history and an AI assistant.',
   icons: { icon: '/icon.svg', apple: '/icon-192.png' },
   appleWebApp: { capable: true, title: 'OuWork', statusBarStyle: 'black-translucent' },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F3EDE2' },
-    { media: '(prefers-color-scheme: dark)', color: '#14152B' },
+    { media: '(prefers-color-scheme: light)', color: '#FAFAFA' },
+    { media: '(prefers-color-scheme: dark)', color: '#111317' },
   ],
   viewportFit: 'cover',
 };
@@ -40,10 +29,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${fraunces.variable} ${dmSans.variable}`}>
+      <body className={`${inter.variable} ${mono.variable}`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

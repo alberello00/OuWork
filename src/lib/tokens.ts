@@ -11,8 +11,6 @@ export const SPHERE_COLORS = [
   'sky',
   'lavender',
   'rose',
-  'terracotta',
-  'moss',
   'plum',
 ] as const;
 export type SphereColor = (typeof SPHERE_COLORS)[number];
@@ -49,7 +47,7 @@ export const SPHERE_EMOJIS = [
   '💬', '🧾', '📚', '📝', '❓', '🎙️', '📊', '🚀', '🐞', '✨',
 ] as const;
 
-export const radius = { card: 12, pill: 99, login: 20 } as const;
+export const radius = { card: 8, pill: 6, login: 12 } as const;
 
 /** Canvas geometry shared by cards, edges and annotations. */
 export const canvas = {
@@ -70,4 +68,4 @@ export function sphereDiameter(itemCount: number): number {
   return Math.round(Math.min(universe.maxDiameter, d));
 }
 
-export const durations = { micro: 200, scene: 420 } as const;
+export const durations = { micro: 160, scene: 200 } as const;

@@ -33,14 +33,14 @@ export const TEMPLATES: Record<TemplateId, BoardTemplate[]> = {
     { key: 'sources', emoji: '📚', color: 'teal' },
     { key: 'interviews', emoji: '🎙️', color: 'lavender' },
     { key: 'findings', emoji: '💡', color: 'sky' },
-    { key: 'report', emoji: '📝', color: 'moss' },
+    { key: 'report', emoji: '📝', color: 'plum' },
   ],
   clientProject: [
     { key: 'brief', emoji: '📋', color: 'sky' },
     { key: 'deliverables', emoji: '📦', color: 'teal' },
     { key: 'meetings', emoji: '🗓️', color: 'lavender' },
     { key: 'feedback', emoji: '💬', color: 'coral' },
-    { key: 'billing', emoji: '🧾', color: 'moss' },
+    { key: 'billing', emoji: '🧾', color: 'amber' },
   ],
   blank: [],
 };
