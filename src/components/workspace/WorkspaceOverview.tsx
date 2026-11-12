@@ -105,7 +105,7 @@ export function WorkspaceOverview({ galaxyId }: { galaxyId: string }) {
     <main className="flex min-h-0 flex-1 flex-col">
       <div className="border-b border-border bg-card px-4 pt-4 sm:px-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <h1 className="min-w-0 flex-1 truncate text-[20px] leading-tight">{galaxy.name}</h1>
+          <h1 className="min-w-0 flex-1 truncate text-[20px] leading-tight max-sm:basis-full">{galaxy.name}</h1>
           <AvatarStack members={galaxy.members} size={24} max={5} />
           <Link href={`/w/${galaxyId}/notes`} className="inline-flex h-9 items-center gap-2 rounded-pill border border-border bg-card px-3 text-[12px] font-medium hover:bg-surface-2 lg:hidden">
             <StickyNote size={14} aria-hidden />

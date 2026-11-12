@@ -30,7 +30,7 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
   const [deleting, setDeleting] = useState<Sphere | null>(null);
 
   if (data.isLoading) return <main className="flex-1 p-8 text-[13px] text-text-muted">{copy.common.loading}</main>;
-  if (!data.galaxy) return <EmptyState emoji="🌌" title={copy.galaxies.emptyTitle} className="flex-1" />;
+  if (!data.galaxy) return <EmptyState emoji="🔒" title={copy.galaxies.emptyTitle} className="flex-1" />;
 
   // inbox last, as in the prototype
   const columns = [...data.topLevel.filter((s) => !s.is_inbox), ...data.topLevel.filter((s) => s.is_inbox)];
@@ -38,10 +38,10 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
   return (
     <main className="flex-1 bg-bg px-3 pb-28 pt-5 sm:px-6">
       <div className="mx-auto max-w-6xl">
-        <h1 className="text-[28px] leading-tight">{copy.notes.title}</h1>
+        <h1 className="text-[20px] leading-tight">{copy.notes.title}</h1>
         <p className="mt-1 text-[13px] text-text-muted">{copy.notes.subtitle}</p>
 
-        <div className="mt-5 gap-4 [column-fill:_balance] sm:columns-2 lg:columns-3">
+        <div className="mt-4 gap-3 [column-fill:_balance] sm:columns-2 lg:columns-3">
           {columns.map((sphere) => {
             const subs = data.childrenOf(sphere.id);
             const scope = new Set([sphere.id, ...subs.map((s) => s.id)]);
@@ -51,19 +51,19 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
             return (
               <section
                 key={sphere.id}
-                className="mb-4 break-inside-avoid overflow-hidden rounded-card border border-border bg-card shadow-card"
-                style={{ borderTop: `5px solid ${sphereVar(sphere.color)}` }}
+                className="mb-3 break-inside-avoid overflow-hidden rounded-card border border-border bg-card"
+                style={{ borderTop: `3px solid ${sphereVar(sphere.color)}` }}
               >
                 <header className="flex items-center gap-2.5 px-4 pt-3.5">
-                  <SphereDot color={sphere.color} emoji={sphere.emoji} size={28} />
+                  <SphereDot color={sphere.color} emoji={sphere.emoji} size={24} />
                   <Link href={href} className="min-w-0 flex-1 hover:underline">
-                    <h2 className="truncate text-[20px] leading-tight">{sphere.name}</h2>
+                    <h2 className="truncate text-[14px] leading-tight">{sphere.name}</h2>
                   </Link>
                   {isSpherePrivate(sphere, data.sphereById) ? <PrivateBadge /> : null}
                   {newCount ? <NewBadge count={newCount} /> : null}
                   <span className="text-[11.5px] text-text-muted">{items.length}</span>
                   <Dropdown>
-                    <DropdownTrigger aria-label={copy.spheres.actions(sphere.name)} className="-mr-2.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
+                    <DropdownTrigger aria-label={copy.spheres.actions(sphere.name)} className="-mr-2 inline-flex h-8 w-8 shrink-0 max-sm:h-11 max-sm:w-11 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
                       <MoreHorizontal size={18} aria-hidden />
                     </DropdownTrigger>
                     <DropdownContent align="end">

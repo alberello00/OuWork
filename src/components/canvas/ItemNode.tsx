@@ -11,7 +11,6 @@ export type ItemNodeData = {
   item: Item;
   sphere: Sphere | undefined;
   author: Profile | undefined;
-  tilt: number;
   dimmed: boolean;
 };
 export type ItemNodeType = Node<ItemNodeData, 'item'>;
@@ -25,8 +24,8 @@ export const ItemNode = memo(function ItemNode({ data, selected, dragging }: Nod
     <div
       style={{ width: canvas.cardWidth }}
       className={cn(
-        'transition-[transform,opacity] duration-200',
-        dragging && 'rotate-[1.5deg] scale-[1.02] [&>*]:shadow-card-lifted',
+        'transition-opacity duration-150',
+        dragging && '[&>*]:shadow-card-lifted',
         data.dimmed && 'opacity-45'
       )}
     >
@@ -37,8 +36,7 @@ export const ItemNode = memo(function ItemNode({ data, selected, dragging }: Nod
         sphere={data.sphere}
         author={data.author}
         compact={compact}
-        tilt={data.tilt}
-        className={cn(selected && 'outline outline-2 outline-offset-2 outline-text')}
+        className={cn(selected && 'outline outline-2 outline-offset-1 outline-accent')}
       />
       <Handle type="source" position={Position.Right} isConnectable={false} className="!pointer-events-none !opacity-0" />
     </div>

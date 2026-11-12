@@ -41,9 +41,3 @@ export function hashUnit(id: string): number {
   }
   return ((h >>> 0) % 10000) / 10000;
 }
-
-/** Polaroid tilt between -7° and 7°, never almost straight (figma.md). */
-export function tiltFor(id: string): number {
-  const u = hashUnit(id) * 2 - 1;
-  return Math.round((Math.sign(u) || 1) * (1 + Math.abs(u) * 6) * 10) / 10;
-}

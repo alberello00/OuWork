@@ -48,7 +48,7 @@ export function DialogContent({ title, description, hideTitle, className, childr
         )}
       >
         <DialogPrimitive.Title
-          className={cn('font-heading pr-10 text-[22px] leading-tight', hideTitle && 'sr-only')}
+          className={cn('pr-10 text-[16px] font-semibold leading-tight', hideTitle && 'sr-only')}
         >
           {title}
         </DialogPrimitive.Title>
@@ -80,7 +80,7 @@ export function PanelContent({ title, hideTitle, className, children }: ContentP
         )}
       >
         <DialogPrimitive.Title
-          className={cn('font-heading px-5 pt-5 pr-14 text-[22px] leading-tight', hideTitle && 'sr-only')}
+          className={cn('px-5 pt-5 pr-14 text-[16px] font-semibold leading-tight', hideTitle && 'sr-only')}
         >
           {title}
         </DialogPrimitive.Title>
@@ -107,7 +107,7 @@ export function SheetContent({ title, hideTitle, className, children }: ContentP
       >
         <div aria-hidden className="mx-auto mb-3 h-1 w-10 rounded-pill bg-border sm:hidden" />
         <DialogPrimitive.Title
-          className={cn('font-heading pr-10 text-[22px] leading-tight', hideTitle && 'sr-only')}
+          className={cn('pr-10 text-[16px] font-semibold leading-tight', hideTitle && 'sr-only')}
         >
           {title}
         </DialogPrimitive.Title>

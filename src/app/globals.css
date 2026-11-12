@@ -60,15 +60,6 @@
   --color-sphere-ink: #18181B;
   --color-on-user: #FFFFFF;
 
-  /* legacy tokens of the old universe views, mapped to the neutral scale */
-  --color-night-1: var(--color-n-3);
-  --color-night-2: var(--color-n-2);
-  --color-night-3: var(--color-n-2);
-  --color-night-text: var(--color-n-10);
-  --color-night-muted: var(--color-n-7);
-  --color-night-border: var(--color-n-4);
-  --color-night-surface: var(--color-n-3);
-
   /* ── Shadows: borders do the work, shadows only lift floating layers ── */
   --shadow-card: 0 1px 2px rgba(24, 24, 27, 0.05);
   --shadow-card-lifted: 0 4px 12px rgba(24, 24, 27, 0.12);
@@ -82,9 +73,6 @@
   --animate-pop-in: pop-in 160ms var(--ease-soft) both;
   --animate-sheet-up: sheet-up 200ms var(--ease-soft) both;
   --animate-panel-in: panel-in 200ms var(--ease-soft) both;
-  --animate-drift: none;
-  --animate-planet-out: planet-out 160ms var(--ease-soft) both;
-  --animate-planet-in: planet-in 180ms var(--ease-soft) both;
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -101,14 +89,6 @@
   @keyframes panel-in {
     from { transform: translateX(100%); }
     to { transform: translateX(0); }
-  }
-  @keyframes planet-out {
-    from { opacity: 1; scale: 1; }
-    to { opacity: 0; scale: 0.97; }
-  }
-  @keyframes planet-in {
-    from { opacity: 0; scale: 0.97; }
-    to { opacity: 1; scale: 1; }
   }
   @keyframes fade-out {
     from { opacity: 1; }
@@ -159,7 +139,7 @@
   --color-surface-2: var(--color-n-4);
   --color-card: var(--color-n-3);
   --color-border: var(--color-n-4);
-  --color-dot-grid: var(--color-n-4);
+  --color-dot-grid: var(--color-n-5);
   --color-text: var(--color-n-9);
   --color-accent: #8B8DF8;
   --color-accent-strong: #4F46E5;
@@ -239,9 +219,7 @@ button:not(:disabled),
 }
 
 /* neutral dot grid (RW2.5), shared by the canvas and the overview */
-.night-sky,
-.paper-sky,
-.universe-bg {
+.paper-sky {
   background-color: var(--color-bg);
   background-image: radial-gradient(var(--color-dot-grid) 1px, transparent 1px);
   background-size: 22px 22px;
@@ -296,14 +274,5 @@ button:not(:disabled),
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
-  }
-  /* planets leaving or arriving in the universe keep a plain fade */
-  .animate-planet-out {
-    animation: fade-out 200ms linear both !important;
-  }
-  /* longhands, so the per-planet delay set inline is kept */
-  .animate-planet-in {
-    animation-name: fade-in !important;
-    animation-duration: 240ms !important;
   }
 }

@@ -1,13 +1,13 @@
 # OuWork — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fine fase W0)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fase W1: tutto fatto tranne il logo, in attesa della scelta di Albi)._
 
 ## Riepilogo
 
 | Fase | Stato | Branch |
 | ---- | ----- | ------ |
 | W0 — Separazione da OurWorld, rebrand (RW1) | ✅ fatta | `feat/w0-separazione` → `develop` |
-| W1 — Design professionale (RW2) | ⏳ prossima; le proposte di logo richiedono la scelta di Albi | `feat/w1-design` |
+| W1 — Design professionale (RW2) | ⏸ fatta tranne il logo: proposte in `docs/logo/`, **serve la scelta di Albi** | `feat/w1-design` |
 | W2 — Ruoli + Realtime (RW3, RW4) | da fare | `feat/w2-ruoli-realtime` |
 | W3 — Activity log, versioni, collegamenti (RW5–RW7) | da fare | `feat/w3-tracciamento` |
 | W4 — Infrastruttura AI + bacchetta sulle note (RW8) | da fare | `feat/w4-ai-note` |
@@ -74,3 +74,31 @@ Verificato nel browser (Chrome headless pilotato da script; desktop chiaro e scu
 - Su questo Mac l'immagine storage di default della CLI va in segfault: lo stack usa `storage-api v1.60.0` tramite `supabase/.temp/storage-version` (file non versionato, da ricreare se si clona altrove e il problema si ripresenta).
 - Disco quasi pieno: all'inizio della sessione c'erano 190 MB liberi. Sono state rimosse cinque immagini Docker `supabase/storage-api` non usate (5 GB, riscaricabili); container, volumi e immagini di altri progetti non sono stati toccati. Con meno di qualche GB libero Docker tende a bloccarsi.
 - La verifica nel browser lascia nel database locale eventuali workspace di prova (spariscono con `supabase db reset`).
+
+## Fase W1 — Design professionale (RW2)
+
+**Fatto**
+
+- **Token (RW2.1)**: tema chiaro predefinito, scuro grigio-ardesia; scala di neutri `--color-n-1…10` per tema; un solo accento indaco; colori semantici errore / successo / avviso / info con varianti tenui; ombre solo per i livelli flottanti. Palette dei board ridotta a 8 colori più spenti, usati come etichetta (migrazione `20261112170000_w1_board_palette.sql`, test pgTAP sul colore tolto).
+- **Tipografia (RW2.2)**: Inter ovunque, JetBrains Mono per codice e zoom; niente serif; 14 px desktop / 16 px mobile.
+- **Overview (RW2.3)**: griglia di board con miniatura della tela, barra colore, sub-board, conteggio, ultimi editor, ultima modifica, menu Edit/Delete; tab **Map** con board rettangolari, linee di spessore ∝ collegamenti, trascinamento salvato, "Auto-arrange", doppio clic per aprire. Niente pianeti, stelle, fluttuazione o glow.
+- **Card (RW2.4)**: raggio 8 px, bordo sottile, etichetta colore a sinistra, nessuna inclinazione; immagini non più polaroid.
+- **Tela (RW2.5)**: griglia a puntini neutra; toolbar flottante select · note · link · image · connector · pen · arrow · sticker; sticker da lavoro ✅ ❗ ❓ 💡 🔥 👍 📌; zoom con percentuale e minimappa in basso a destra; collegamenti che partono dal lato giusto della card.
+- **Movimento (RW2.6)**: 140–200 ms, nessuna transizione di scena; `prefers-reduced-motion` riduce tutto a ~0.
+- **Layout (RW2.7)**: sidebar (logo, switcher dei workspace, Overview, Notes, elenco board con sub-board, conteggi e punto "novità", utente e tema) da 1024 px; barra in alto con breadcrumb, ricerca ⌘K e "Add item". Su mobile: barra in basso con ricerca, "+" e tema.
+- **Login e invito** con un'illustrazione sobria (card collegate sulla griglia) al posto del cielo notturno.
+- **Template (RW2.9)** già fatti in W0; il tutorial gira sull'overview con passi e copy aggiornati.
+- **Logo (RW2.8)**: tre proposte in `docs/logo/` (`preview.html`, generate da `generate.py`).
+
+Gate: lint, typecheck, 53 test unitari, 360 asserzioni pgTAP, `pnpm build` verdi.
+Verificato nel browser (Chrome headless pilotato da script): home, overview, Map, tela (connector che crea un collegamento, Note che apre il dialog al clic, sticker), vista elenco, dettaglio item, Notes, ricerca ⌘K, desktop chiaro e scuro, 390 px chiaro e scuro; tutorial completo (6 passi) per un utente che non l'aveva visto, che non ricompare dopo il ricaricamento.
+
+**Mancante**
+
+- **Logo**: in attesa della scelta. L'interfaccia usa un segnaposto (quadrato indaco con "O"); `public/icon.svg`, le PNG 192/512 e il manifest vanno aggiornati dopo la scelta.
+- Barra in alto: "presenza dei membri" e "bacchetta del livello corrente" arrivano con W2 (presenza) e W4–W6 (AI). Voci Activity e Digest della sidebar con W3 e W6.
+
+**Problemi noti**
+
+- Le miniature dei board disegnano solo gli item, non le annotazioni.
+- Disco: durante la build è finito lo spazio (63 MB liberi); recuperati ~600 MB cancellando i profili Chrome temporanei delle prove (nello scratchpad della sessione). Ora 4,7 GB liberi.

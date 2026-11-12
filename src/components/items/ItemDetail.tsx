@@ -143,7 +143,7 @@ export function ItemDetail({ item, items, spheres, sphereById, profileById, onOp
                 <img src={item.preview.image} alt="" referrerPolicy="no-referrer" className="aspect-[16/9] w-full rounded-card object-cover" />
               ) : null}
 
-              <h2 className="mt-4 text-[26px] leading-tight">{title}</h2>
+              <h2 className="mt-4 text-[20px] leading-tight">{title}</h2>
 
               {item.type === 'link' && item.url ? (
                 <>
