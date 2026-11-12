@@ -10,6 +10,7 @@ import { useGalaxies } from '@/lib/queries/galaxies';
 import { useSpheres } from '@/lib/queries/spheres';
 import { useMounted } from '@/lib/useMounted';
 import { GalaxySwitcher } from './GalaxySwitcher';
+import { PresenceStack } from './PresenceStack';
 import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
 
@@ -58,6 +59,7 @@ export function TopBar({ children, onAdd }: { children?: React.ReactNode; onAdd:
       </div>
       <Breadcrumb />
       <div className="ml-auto flex items-center gap-1.5">
+        {mounted ? <PresenceStack /> : null}
         {children}
         <Button variant="primary" size="sm" data-tour="add" onClick={onAdd} className="max-sm:hidden">
           <Plus size={14} aria-hidden />

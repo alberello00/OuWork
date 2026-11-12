@@ -3,8 +3,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Toaster } from 'sonner';
+import { pollInterval } from '@/lib/realtime/status';
 
-/** Sync without realtime (RF11.1): polling every 15 s + refetch on focus. */
+/** Query cache. Live updates come from Realtime; polling every 15 s only while it is down (RW4.1). */
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [client] = useState(
     () =>
@@ -12,7 +13,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         defaultOptions: {
           queries: {
             staleTime: 5_000,
-            refetchInterval: 15_000,
+            refetchInterval: () => pollInterval(),
             refetchOnWindowFocus: true,
             retry: 1,
           },

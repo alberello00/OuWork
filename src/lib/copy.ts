@@ -351,6 +351,12 @@ export const copy = {
       },
     },
   },
+  presence: {
+    onBoard: (names: string[]) => `On this board: ${names.join(', ')}`,
+    inWorkspace: (names: string[]) => `In this workspace: ${names.join(', ')}`,
+    offline: 'Reconnecting…',
+    offlineHint: 'Live updates are paused. Changes still sync every 15 seconds.',
+  },
   search: {
     placeholder: 'Search notes, links and images…',
     shortcut: '⌘K',

@@ -6,6 +6,7 @@ import { SearchPalette } from '@/components/search/SearchPalette';
 import { TutorialProvider } from '@/components/tutorial/TutorialProvider';
 import { useModK } from '@/lib/useHotkey';
 import { MobileBar } from './MobileBar';
+import { RealtimeProvider } from './RealtimeProvider';
 import { SearchButton } from './SearchButton';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
@@ -18,6 +19,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   useModK(openSearch);
 
   return (
+    <RealtimeProvider>
     <TutorialProvider>
       <div className="flex min-h-dvh">
         <Sidebar className="max-lg:hidden" />
@@ -32,5 +34,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <SearchPalette open={searching} onOpenChange={setSearching} />
       </div>
     </TutorialProvider>
+    </RealtimeProvider>
   );
 }
