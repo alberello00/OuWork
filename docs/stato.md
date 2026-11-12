@@ -1,13 +1,13 @@
 # OuWork — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fase W1: tutto fatto tranne il logo, in attesa della scelta di Albi)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fine fase W1)._
 
 ## Riepilogo
 
 | Fase | Stato | Branch |
 | ---- | ----- | ------ |
 | W0 — Separazione da OurWorld, rebrand (RW1) | ✅ fatta | `feat/w0-separazione` → `develop` |
-| W1 — Design professionale (RW2) | ⏸ fatta tranne il logo: proposte in `docs/logo/`, **serve la scelta di Albi** | `feat/w1-design` |
+| W1 — Design professionale (RW2) | ✅ fatta (logo A "Linked boards") | `feat/w1-design` → `develop` |
 | W2 — Ruoli + Realtime (RW3, RW4) | da fare | `feat/w2-ruoli-realtime` |
 | W3 — Activity log, versioni, collegamenti (RW5–RW7) | da fare | `feat/w3-tracciamento` |
 | W4 — Infrastruttura AI + bacchetta sulle note (RW8) | da fare | `feat/w4-ai-note` |
@@ -88,14 +88,13 @@ Verificato nel browser (Chrome headless pilotato da script; desktop chiaro e scu
 - **Layout (RW2.7)**: sidebar (logo, switcher dei workspace, Overview, Notes, elenco board con sub-board, conteggi e punto "novità", utente e tema) da 1024 px; barra in alto con breadcrumb, ricerca ⌘K e "Add item". Su mobile: barra in basso con ricerca, "+" e tema.
 - **Login e invito** con un'illustrazione sobria (card collegate sulla griglia) al posto del cielo notturno.
 - **Template (RW2.9)** già fatti in W0; il tutorial gira sull'overview con passi e copy aggiornati.
-- **Logo (RW2.8)**: tre proposte in `docs/logo/` (`preview.html`, generate da `generate.py`).
+- **Logo (RW2.8)**: tre proposte in `docs/logo/`; scelta di Albi: **A "Linked boards"**. Applicato a `Logo.tsx` (segue il tema), `public/icon.svg`, `icon-192.png`, `icon-512.png`; manifest con `theme_color` indaco.
 
 Gate: lint, typecheck, 53 test unitari, 360 asserzioni pgTAP, `pnpm build` verdi.
 Verificato nel browser (Chrome headless pilotato da script): home, overview, Map, tela (connector che crea un collegamento, Note che apre il dialog al clic, sticker), vista elenco, dettaglio item, Notes, ricerca ⌘K, desktop chiaro e scuro, 390 px chiaro e scuro; tutorial completo (6 passi) per un utente che non l'aveva visto, che non ricompare dopo il ricaricamento.
 
 **Mancante**
 
-- **Logo**: in attesa della scelta. L'interfaccia usa un segnaposto (quadrato indaco con "O"); `public/icon.svg`, le PNG 192/512 e il manifest vanno aggiornati dopo la scelta.
 - Barra in alto: "presenza dei membri" e "bacchetta del livello corrente" arrivano con W2 (presenza) e W4–W6 (AI). Voci Activity e Digest della sidebar con W3 e W6.
 
 **Problemi noti**
