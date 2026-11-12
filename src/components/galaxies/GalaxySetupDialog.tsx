@@ -3,7 +3,7 @@
 import { ArrowLeft, Check, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Planet } from '@/components/universe/Planet';
+import { SphereDot } from '@/components/spheres/SphereDot';
 import { Button } from '@/components/ui/Button';
 import { Dialog, DialogContent } from '@/components/ui/Dialog';
 import { Input, Label } from '@/components/ui/Input';
@@ -144,7 +144,7 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
                       onClick={() => setEditingKey(editingKey === s.key ? null : s.key)}
                       className={cn('flex w-full flex-col items-center gap-1.5 rounded-card px-1 py-2.5 transition-colors duration-200', editingKey === s.key ? 'bg-surface-2 ring-2 ring-text' : 'hover:bg-surface-2')}
                     >
-                      <Planet color={s.color} emoji={s.emoji} size={58} glow={false} />
+                      <SphereDot color={s.color} emoji={s.emoji} size={44} />
                       <span className="line-clamp-2 text-center text-[12px] font-medium leading-tight">{s.name || '…'}</span>
                     </button>
                   </li>

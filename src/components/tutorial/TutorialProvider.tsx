@@ -47,8 +47,8 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     if (!waiting) return;
     let quiet = 0;
     const timer = setInterval(() => {
-      const ready = !!findTourTarget('planet') || !!findTourTarget('planet-inbox');
-      const busy = !!document.querySelector('[role="dialog"], [role="menu"], .animate-planet-in');
+      const ready = !!findTourTarget('board') || !!findTourTarget('board-inbox');
+      const busy = !!document.querySelector('[role="dialog"], [role="menu"]');
       quiet = ready && !busy ? quiet + 1 : 0;
       if (quiet < QUIET_CHECKS) return;
       clearInterval(timer);
