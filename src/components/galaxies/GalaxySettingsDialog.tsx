@@ -137,7 +137,7 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
           <Section title={copy.settings.setup} hint={copy.settings.setupHint}>
             <Button onClick={() => { onOpenChange(false); onSetup(); }}>
               <Sparkles size={15} aria-hidden />
-              {copy.setup.emptyCta[galaxy.is_personal ? 'solo' : 'shared']}
+              {copy.setup.emptyCta}
             </Button>
           </Section>
         ) : null}

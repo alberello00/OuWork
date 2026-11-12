@@ -3,13 +3,13 @@ import { isValidPassword, isValidUsername, safeNextPath, usernameToEmail } from 
 
 describe('auth helpers', () => {
   it('builds the synthetic email from a normalised username', () => {
-    expect(usernameToEmail('  Lola ')).toBe('lola@users.ourworld.local');
+    expect(usernameToEmail('  Dana ')).toBe('dana@users.ouwork.local');
   });
 
   it('validates usernames', () => {
     expect(isValidUsername('alberto')).toBe(true);
     expect(isValidUsername('al')).toBe(false);
-    expect(isValidUsername('lola@evil.com')).toBe(false);
+    expect(isValidUsername('dana@evil.com')).toBe(false);
     expect(isValidUsername('with space')).toBe(false);
   });
 

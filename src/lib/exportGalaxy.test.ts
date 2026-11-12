@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { toMarkdown, type ExportData } from './exportGalaxy';
 
 const data: ExportData = {
-  galaxy: { id: 'g', name: 'Lola & Alberto' },
+  galaxy: { id: 'g', name: 'Product Launch' },
   exported_at: '2026-11-10T10:00:00Z',
   members: [{ id: 'a', username: 'alberto', display_name: 'Alberto' }],
   spheres: [
-    { id: 'r', parent_id: null, name: 'Random', emoji: '🎲', color: 'sage', is_private: false, is_inbox: true },
+    { id: 'r', parent_id: null, name: 'Inbox', emoji: '📥', color: 'sage', is_private: false, is_inbox: true },
     { id: 'p', parent_id: null, name: 'Places', emoji: '📍', color: 'amber', is_private: false, is_inbox: false },
     { id: 'i', parent_id: 'p', name: 'Italy', emoji: '🇮🇹', color: 'sage', is_private: false, is_inbox: false },
   ],
@@ -21,7 +21,7 @@ describe('toMarkdown', () => {
   const md = toMarkdown(data);
   it('nests sub-spheres under their parent and puts the inbox last', () => {
     expect(md.indexOf('## 📍 Places')).toBeLessThan(md.indexOf('### 🇮🇹 Italy'));
-    expect(md.indexOf('### 🇮🇹 Italy')).toBeLessThan(md.indexOf('## 🎲 Random'));
+    expect(md.indexOf('### 🇮🇹 Italy')).toBeLessThan(md.indexOf('## 📥 Inbox'));
   });
   it('writes items with author, link and connections', () => {
     expect(md).toContain('#### Procida');

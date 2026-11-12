@@ -40,7 +40,7 @@ export function GalaxySwitcher() {
           <DropdownSeparator />
           {galaxies?.map((g) => (
             <DropdownItem key={g.id} asChild>
-              <Link href={`/g/${g.id}`} aria-current={g.id === current?.id ? 'page' : undefined}>
+              <Link href={`/w/${g.id}`} aria-current={g.id === current?.id ? 'page' : undefined}>
                 <span className="min-w-0 flex-1 truncate font-medium">{g.name}</span>
                 <AvatarStack members={g.members} size={20} />
               </Link>

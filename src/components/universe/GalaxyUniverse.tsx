@@ -125,7 +125,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
 
   const enter = useCallback(
     (sphereId: string, sub?: string) => {
-      const href = `/g/${galaxyId}/s/${sphereId}${sub ? `?sub=${sub}` : ''}`;
+      const href = `/w/${galaxyId}/b/${sphereId}${sub ? `?sub=${sub}` : ''}`;
       const node = flow.getNode(sphereId);
       if (!node || prefersReducedMotion()) {
         router.push(href);
@@ -269,7 +269,6 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
   const galaxy = data.galaxy;
   const selected = selectedId ? data.sphereById.get(selectedId) : undefined;
   const owner = galaxy.members.find((m) => m.user_id === galaxy.owner_id)?.profile;
-  const voice = galaxy.is_personal ? 'solo' : 'shared';
 
   return (
     <main className="universe-bg relative flex min-h-0 flex-1 flex-col">
@@ -280,7 +279,7 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
           <Button size="sm" onClick={reorganize} disabled={moveSpheres.isPending} className="h-11">
             <Shuffle size={14} aria-hidden /><span className="max-sm:sr-only">{copy.universe.reorganize}</span>
           </Button>
-          <Link href={`/g/${galaxyId}/notes`} aria-label={copy.nav.notes} className="inline-flex h-11 items-center gap-2 rounded-pill border border-border bg-card px-3.5 text-[12px] font-medium hover:bg-surface-2">
+          <Link href={`/w/${galaxyId}/notes`} aria-label={copy.nav.notes} className="inline-flex h-11 items-center gap-2 rounded-pill border border-border bg-card px-3.5 text-[12px] font-medium hover:bg-surface-2">
             <LayoutGrid size={15} aria-hidden /><span className="max-sm:sr-only">{copy.nav.notes}</span>
           </Link>
           <Button size="icon" aria-label={copy.universe.newSphere} onClick={() => setCreating(true)}><Plus size={17} aria-hidden /></Button>
@@ -333,11 +332,11 @@ function UniverseInner({ galaxyId }: { galaxyId: string }) {
                 </>
               ) : (
                 <>
-                  <p className="font-heading text-[20px] leading-tight">{copy.setup.emptyTitle[voice]}</p>
+                  <p className="font-heading text-[20px] leading-tight">{copy.setup.emptyTitle}</p>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-text-muted">{copy.setup.emptyBody}</p>
                   {needsSetup ? (
                     <div className="mt-3 flex flex-col items-center gap-1">
-                      <Button variant="primary" onClick={() => setSetupOpen(true)}><Sparkles size={15} aria-hidden />{copy.setup.emptyCta[voice]}</Button>
+                      <Button variant="primary" onClick={() => setSetupOpen(true)}><Sparkles size={15} aria-hidden />{copy.setup.emptyCta}</Button>
                       <Button variant="ghost" size="sm" className="h-11 text-text-muted" onClick={() => setCreating(true)}>{copy.setup.emptyManual}</Button>
                     </div>
                   ) : (

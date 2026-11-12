@@ -45,8 +45,8 @@ export function userVar(color: string | null | undefined): string {
 }
 
 export const SPHERE_EMOJIS = [
-  '📍', '🎵', '🎬', '💡', '📸', '🎲', '✨', '📚', '🍝', '🌿',
-  '✈️', '🏠', '🎁', '🎨', '🧩', '⚽', '🐾', '🌙', '☕', '💌',
+  '📥', '🗺️', '🔎', '🎨', '🛠️', '📣', '💡', '📋', '📦', '🗓️',
+  '💬', '🧾', '📚', '📝', '❓', '🎙️', '📊', '🚀', '🐞', '✨',
 ] as const;
 
 export const radius = { card: 12, pill: 99, login: 20 } as const;

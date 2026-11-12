@@ -44,7 +44,7 @@ export function SphereHeader(props: Props) {
     <div className="border-b border-border bg-bg/90 px-3 py-2.5 backdrop-blur sm:px-5">
       <div className="flex items-center gap-2">
         <Link
-          href={parent ? `/g/${galaxyId}/s/${parent.id}` : `/g/${galaxyId}?from=${sphere.id}`}
+          href={parent ? `/w/${galaxyId}/b/${parent.id}` : `/w/${galaxyId}?from=${sphere.id}`}
           aria-label={copy.common.back}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-pill hover:bg-surface-2"
         >
@@ -102,7 +102,7 @@ export function SphereHeader(props: Props) {
         itemCount={totalCount}
         open={deleting}
         onOpenChange={setDeleting}
-        onDeleted={() => router.push(`/g/${galaxyId}`)}
+        onDeleted={() => router.push(`/w/${galaxyId}`)}
       />
     </div>
   );

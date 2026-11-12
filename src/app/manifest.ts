@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'OurWorld',
-    short_name: 'OurWorld',
+    name: 'OuWork',
+    short_name: 'OuWork',
     description: 'Our little universe: notes, links and pictures, shared in galaxies.',
     start_url: '/',
     display: 'standalone',

@@ -38,7 +38,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
   const [steps, setSteps] = useState<ResolvedStep[] | null>(null);
 
   const galaxy = galaxies?.find((g) => g.id === params.galaxyId);
-  const onUniverse = !!galaxy && pathname === `/g/${galaxy.id}`;
+  const onUniverse = !!galaxy && pathname === `/w/${galaxy.id}`;
   const waiting = (!done || replay) && !steps && onUniverse;
   const isOwner = galaxy?.owner_id === userId;
   const isPersonal = !!galaxy?.is_personal;
@@ -72,7 +72,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     // the tour lives on a universe: go to one if we are somewhere else
     if (!onUniverse) {
       const target = galaxy ?? galaxies?.[0];
-      if (target) router.push(`/g/${target.id}`);
+      if (target) router.push(`/w/${target.id}`);
     }
   }, [onUniverse, galaxy, galaxies, router]);
 

@@ -19,10 +19,10 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'OurWorld',
+  title: 'OuWork',
   description: 'Our little universe: notes, links and pictures, shared in galaxies.',
   icons: { icon: '/icon.svg', apple: '/icon-192.png' },
-  appleWebApp: { capable: true, title: 'OurWorld', statusBarStyle: 'black-translucent' },
+  appleWebApp: { capable: true, title: 'OuWork', statusBarStyle: 'black-translucent' },
 };
 
 export const viewport: Viewport = {
