@@ -37,7 +37,7 @@ begin
     raw_app_meta_data, raw_user_meta_data, created_at, updated_at
   ) values (
     '00000000-0000-0000-0000-000000000000', _id, 'authenticated', 'authenticated',
-    _username || '@users.ourworld.local', '', now(),
+    _username || '@users.ouwork.local', '', now(),
     '{"provider":"email","providers":["email"]}'::jsonb,
     jsonb_build_object('username', _username), now(), now()
   );
