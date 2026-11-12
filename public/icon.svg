@@ -1,15 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#4F46E5"/>
+  <svg x="112" y="112" width="288" height="288" viewBox="0 0 64 64">
   <defs>
-    <radialGradient id="sky" cx="50%" cy="38%" r="70%">
-      <stop offset="0" stop-color="#2A2C5C"/>
-      <stop offset="0.55" stop-color="#1F2144"/>
-      <stop offset="1" stop-color="#14152B"/>
-    </radialGradient>
+    <mask id="a-linked-boards-i-gap" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <rect x="21" y="21" width="42" height="42" rx="11" fill="#000"/>
+    </mask>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#sky)"/>
-  <circle cx="200" cy="256" r="118" fill="#D9467A" opacity="0.94"/>
-  <circle cx="312" cy="256" r="118" fill="#2F8F83" opacity="0.88"/>
-  <circle cx="112" cy="112" r="5" fill="#EDE8DF" opacity="0.7"/>
-  <circle cx="404" cy="132" r="4" fill="#F7D774" opacity="0.8"/>
-  <circle cx="392" cy="402" r="5" fill="#EDE8DF" opacity="0.6"/>
+  <rect x="7" y="7" width="32" height="32" rx="8" fill="none" stroke="#FFFFFF" stroke-width="6" mask="url(#a-linked-boards-i-gap)"/>
+  <rect x="25" y="25" width="34" height="34" rx="8" fill="#FFFFFF"/>
+  </svg>
 </svg>

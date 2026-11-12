@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { copy } from '@/lib/copy';
 import { cn } from '@/lib/utils';
 
-/** Paper / night switch (RF11.4). */
+/** Light / dark switch. Light is the default (RW2.1). */
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -21,7 +21,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       title={dark ? copy.nav.themeLight : copy.nav.themeDark}
       onClick={() => setTheme(dark ? 'light' : 'dark')}
       className={cn(
-        'inline-flex h-11 w-11 items-center justify-center rounded-pill text-text hover:bg-surface-2 transition-colors duration-200',
+        'inline-flex h-11 w-11 items-center justify-center rounded-pill text-text hover:bg-surface-2 transition-colors duration-150',
         className
       )}
     >

@@ -4,6 +4,7 @@ import '@xyflow/react/dist/base.css';
 import {
   Background,
   BackgroundVariant,
+  MiniMap,
   Panel,
   ReactFlow,
   ReactFlowProvider,
@@ -19,17 +20,16 @@ import { toast } from 'sonner';
 import { copy } from '@/lib/copy';
 import { useCreateAnnotation, useAnnotations, type NewAnnotation } from '@/lib/queries/annotations';
 import { useMoveItemOnCanvas } from '@/lib/queries/items';
-import { useLinks } from '@/lib/queries/links';
+import { useCreateLink, useLinks } from '@/lib/queries/links';
 import { isAllowedImage, MAX_UPLOAD_BYTES, uploadImage } from '@/lib/queries/storage';
 import type { Item, ItemType, Profile, Sphere } from '@/lib/queries/types';
 import { canvas, sphereVar } from '@/lib/tokens';
-import { tiltFor } from '@/lib/utils';
-import { AddMenu } from './AddMenu';
+import { cn } from '@/lib/utils';
 import { AnnotationLayer } from './AnnotationLayer';
 import { CanvasAddDialog } from './CanvasAddDialog';
 import { CanvasControls } from './CanvasControls';
-import { CanvasToolbar } from './CanvasToolbar';
-import { DrawingOverlay, type Tool } from './DrawingOverlay';
+import { CanvasToolbar, type CanvasTool } from './CanvasToolbar';
+import { DrawingOverlay } from './DrawingOverlay';
 import { ItemNode, type ItemNodeType } from './ItemNode';
 import { LinkEdge, type LinkEdgeType } from './LinkEdge';
 
@@ -63,13 +63,15 @@ function CanvasInner(props: Props) {
   const itemIds = useMemo(() => new Set(items.map((i) => i.id)), [items]);
   const { data: links = [] } = useLinks(galaxyId, itemIds);
 
-  const [tool, setTool] = useState<Tool>('select');
+  const createLink = useCreateLink();
+  const [tool, setTool] = useState<CanvasTool>('select');
+  // connector tool: the first item picked, waiting for the second
+  const [connectFrom, setConnectFrom] = useState<string | null>(null);
   const [color, setColor] = useState('coral');
   const [size, setSize] = useState(6);
-  const [emoji, setEmoji] = useState('⭐');
+  const [emoji, setEmoji] = useState('✅');
   const [draft, setDraft] = useState<{ kind: string; data: unknown; x: number; y: number } | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
-  const [menu, setMenu] = useState<{ screen: { x: number; y: number }; flow: { x: number; y: number } } | null>(null);
   const [adding, setAdding] = useState<{ type: ItemType; at: { x: number; y: number } } | null>(null);
   const photoInput = useRef<HTMLInputElement>(null);
 
@@ -89,19 +91,18 @@ function CanvasInner(props: Props) {
           id: item.id,
           type: 'item' as const,
           position: keepLocal ? old.position : { x: item.x, y: item.y },
-          selected: old?.selected,
+          selected: item.id === connectFrom || old?.selected,
           width: canvas.cardWidth,
           data: {
             item: { ...item, is_new: isNew(item.id) },
             sphere: sphereById.get(item.sphere_id),
             author: item.created_by ? profileById.get(item.created_by) : undefined,
-            tilt: item.type === 'image' ? tiltFor(item.id) : 0,
             dimmed: false,
           },
         };
       });
     });
-  }, [items, sphereById, profileById, isNew, setNodes]);
+  }, [items, sphereById, profileById, isNew, setNodes, connectFrom]);
 
   const edges: LinkEdgeType[] = useMemo(
     () =>
@@ -155,16 +156,36 @@ function CanvasInner(props: Props) {
     [move]
   );
 
-  const onNodeClick: NodeMouseHandler<ItemNodeType> = useCallback((_, node) => onOpenItem(node.id), [onOpenItem]);
+  const onNodeClick: NodeMouseHandler<ItemNodeType> = useCallback(
+    (_, node) => {
+      if (tool !== 'connector') {
+        onOpenItem(node.id);
+        return;
+      }
+      if (!connectFrom) {
+        setConnectFrom(node.id);
+        return;
+      }
+      if (connectFrom !== node.id) {
+        createLink.mutate(
+          { source_id: connectFrom, target_id: node.id },
+          { onSuccess: () => toast(copy.items.connected), onError: () => toast.error(copy.canvas.connectFailed) }
+        );
+      }
+      setConnectFrom(null);
+      setTool('select');
+    },
+    [tool, connectFrom, createLink, onOpenItem]
+  );
 
+  // note / link / image tools: the next click on the board places the item there
   const onPaneClick = useCallback(
     (e: React.MouseEvent) => {
-      if (tool !== 'select') return;
-      const rect = wrapper.current!.getBoundingClientRect();
-      setMenu({
-        screen: { x: e.clientX - rect.left, y: e.clientY - rect.top },
-        flow: flow.screenToFlowPosition({ x: e.clientX, y: e.clientY }),
-      });
+      if (tool === 'connector') setConnectFrom(null);
+      if (tool !== 'note' && tool !== 'link' && tool !== 'image') return;
+      const at = flow.screenToFlowPosition({ x: e.clientX, y: e.clientY });
+      setAdding({ type: tool, at: { x: Math.round(at.x - canvas.cardWidth / 2), y: Math.round(at.y - 40) } });
+      setTool('select');
     },
     [tool, flow]
   );
@@ -190,7 +211,9 @@ function CanvasInner(props: Props) {
     }
   }
 
-  const drawing = tool !== 'select';
+  const drawing = tool === 'pen' || tool === 'arrow' || tool === 'sticker';
+  const placing = tool === 'note' || tool === 'link' || tool === 'image';
+  const hint = placing ? copy.canvas.placeHint : tool === 'connector' ? (connectFrom ? copy.canvas.connectSecond : copy.canvas.connectFirst) : !items.length ? copy.canvas.empty : null;
 
   return (
     <div ref={wrapper} className="relative h-full w-full">
@@ -214,9 +237,9 @@ function CanvasInner(props: Props) {
         maxZoom={2}
         colorMode={resolvedTheme === 'dark' ? 'dark' : 'light'}
         proOptions={{ hideAttribution: true }}
-        className="!bg-bg"
+        className={cn('!bg-bg', placing && '[&_.react-flow__pane]:!cursor-crosshair')}
       >
-        <Background variant={BackgroundVariant.Dots} gap={canvas.gridGap} size={1.4} color="var(--color-dot-grid)" />
+        <Background variant={BackgroundVariant.Dots} gap={canvas.gridGap} size={1} color="var(--color-dot-grid)" />
         <AnnotationLayer annotations={annotations} profileById={profileById} interactive={!drawing} draft={draft} />
         {drawing ? (
           <DrawingOverlay tool={tool} color={color} size={size} emoji={emoji} sphereId={target.id} onDraft={setDraft} onCommit={commit} />
@@ -224,7 +247,7 @@ function CanvasInner(props: Props) {
         <Panel position="top-left" className="!m-3">
           <CanvasToolbar
             tool={tool}
-            onTool={(t) => { setTool(t); setMenu(null); }}
+            onTool={(t) => { setTool(t); setConnectFrom(null); }}
             color={color}
             onColor={setColor}
             size={size}
@@ -234,25 +257,27 @@ function CanvasInner(props: Props) {
             onPhoto={() => photoInput.current?.click()}
           />
         </Panel>
-        <Panel position="bottom-left" className="!mb-5 !ml-3">
+        <Panel position="bottom-right" className="!m-3 flex flex-col items-end gap-2">
+          <MiniMap
+            pannable
+            zoomable
+            ariaLabel={copy.canvas.minimap}
+            nodeColor="var(--color-n-5)"
+            nodeStrokeWidth={0}
+            nodeBorderRadius={12}
+            bgColor="var(--color-card)"
+            maskColor="color-mix(in srgb, var(--color-n-3) 70%, transparent)"
+            className="!relative !bottom-auto !right-auto !m-0 overflow-hidden rounded-card border border-border shadow-card-lifted max-md:hidden"
+            style={{ width: 168, height: 108 }}
+          />
           <CanvasControls />
         </Panel>
-        {!drawing && !menu ? (
-          <Panel position="bottom-center" className="!mb-6 max-sm:hidden">
-            <span className="rounded-pill border border-border bg-card/90 px-3.5 py-2 text-[11.5px] text-text-muted shadow-card">
-              {items.length ? copy.canvas.hint : copy.canvas.empty}
-            </span>
+        {hint ? (
+          <Panel position="bottom-center" className="!mb-4 max-sm:hidden">
+            <span role="status" className="rounded-pill border border-border bg-card px-3 py-1.5 text-[12px] text-text-muted shadow-card">{hint}</span>
           </Panel>
         ) : null}
       </ReactFlow>
-
-      {menu ? (
-        <AddMenu
-          at={menu.screen}
-          onClose={() => setMenu(null)}
-          onPick={(type) => { setAdding({ type, at: { x: Math.round(menu.flow.x - canvas.cardWidth / 2), y: Math.round(menu.flow.y - 40) } }); setMenu(null); }}
-        />
-      ) : null}
 
       <CanvasAddDialog
         type={adding?.type ?? null}
@@ -281,7 +306,7 @@ function CanvasInner(props: Props) {
   );
 }
 
-/** The sphere canvas (RF5, RF6, RF7.2): cards, links and annotations on an infinite dotted plane. */
+/** The board canvas (RW2.5): cards, links and annotations on a neutral dot grid. */
 export function SphereCanvas(props: Props) {
   return (
     <ReactFlowProvider>

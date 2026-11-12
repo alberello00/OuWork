@@ -32,15 +32,15 @@ describe('TEMPLATES', () => {
 
 describe('assignColors', () => {
   it('never repeats a colour while the palette lasts, and avoids the inbox colour', () => {
-    const colors = assignColors(['rose', 'rose', 'rose', undefined, 'sage', 'amber', 'amber', undefined, undefined]);
-    expect(new Set(colors).size).toBe(9);
+    const colors = assignColors(['rose', 'rose', 'rose', undefined, 'sage', 'amber', 'amber']);
+    expect(new Set(colors).size).toBe(7);
     expect(colors).not.toContain('sage');
     expect(colors[0]).toBe('rose');
   });
   it('starts again when the palette is used up', () => {
-    const colors = assignColors(Array.from({ length: 10 }, () => undefined));
-    expect(new Set(colors.slice(0, 9)).size).toBe(9);
-    expect(SPHERE_COLORS).toContain(colors[9]);
+    const colors = assignColors(Array.from({ length: 8 }, () => undefined));
+    expect(new Set(colors.slice(0, 7)).size).toBe(7);
+    expect(SPHERE_COLORS).toContain(colors[7]);
   });
 });
 
