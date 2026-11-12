@@ -1,5 +1,7 @@
 # OurWorld — Requisiti MVP2
 
+> **Documento ereditato da OurWorld.** Per OuWork vale solo dove non è contraddetto da `docs/requisiti-ouwork.md` (nomenclatura: galassia = workspace, sfera = board, Random = Inbox). I vincoli sui dati di produzione di OurWorld non si applicano.
+
 L'MVP (fasi 0–6, vedi `docs/stato.md`) è finito e il sito è online con dati reali. Questo documento fissa lo scope dell'**MVP2**: gli ID `RF12`–`RF16` sono la fonte di verità, come gli `RFx.y` di `docs/requisiti-funzionali-mvp.md` lo sono per l'MVP. Le regole del `CLAUDE.md` restano valide così come sono.
 
 ## Vincoli specifici dell'MVP2
