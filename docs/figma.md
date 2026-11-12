@@ -1,4 +1,6 @@
-# OurWorld — Riferimenti Figma
+# Riferimenti Figma (prototipo di OurWorld)
+
+> **Solo riferimento storico.** Questo è il prototipo di OurWorld, da cui OuWork è partito. Il design di OuWork è definito da RW2 in `docs/requisiti-ouwork.md`: non usare questi frame né questi token per nuove schermate.
 
 File: **ouniverse — prototype**
 URL: https://www.figma.com/design/MKuQzfWUMfDdfQvOPzZF3v/ouniverse-%E2%80%94-prototype

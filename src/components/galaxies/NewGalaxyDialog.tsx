@@ -20,7 +20,7 @@ export function NewGalaxyDialog({ open, onOpenChange }: { open: boolean; onOpenC
       onSuccess: (galaxy) => {
         setName('');
         onOpenChange(false);
-        if (galaxy) router.push(`/g/${galaxy.id}`);
+        if (galaxy) router.push(`/w/${galaxy.id}`);
       },
     });
   }

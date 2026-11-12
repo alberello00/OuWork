@@ -1,5 +1,7 @@
 # OurWorld — Requisiti funzionali minimi (MVP)
 
+> **Documento ereditato da OurWorld.** Per OuWork vale solo dove non è contraddetto da `docs/requisiti-ouwork.md` (nomenclatura: galassia = workspace, sfera = board, Random = Inbox). I vincoli sui dati di produzione di OurWorld non si applicano.
+
 _Sessione 1 — 9 novembre 2026 · Aggiornato il 10 novembre 2026 dopo la revisione del prototipo Figma "ouniverse"._
 
 ## Visione in una riga

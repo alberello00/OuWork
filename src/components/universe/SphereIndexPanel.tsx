@@ -31,7 +31,7 @@ interface Props {
 export function SphereIndexPanel({ galaxyId, sphere, subs, items, isPrivate, sphereById, profileById, onEnter, onDelete, onClose }: Props) {
   if (!sphere) return null;
   const newCount = items.filter((i) => i.is_new).length;
-  const href = `/g/${galaxyId}/s/${sphere.id}`;
+  const href = `/w/${galaxyId}/b/${sphere.id}`;
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
@@ -91,7 +91,7 @@ export function SphereIndexPanel({ galaxyId, sphere, subs, items, isPrivate, sph
             {copy.universe.openSphere}
             <ArrowRight size={15} aria-hidden />
           </Button>
-          <Link href={`/g/${galaxyId}/notes`} className="inline-flex h-11 items-center gap-2 rounded-pill border border-border px-4 text-[13px] font-medium hover:bg-surface-2">
+          <Link href={`/w/${galaxyId}/notes`} className="inline-flex h-11 items-center gap-2 rounded-pill border border-border px-4 text-[13px] font-medium hover:bg-surface-2">
             <LayoutGrid size={15} aria-hidden />
             {copy.nav.notes}
           </Link>

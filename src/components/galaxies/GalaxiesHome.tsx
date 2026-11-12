@@ -56,7 +56,7 @@ export function GalaxiesHome({ banner }: { banner?: React.ReactNode }) {
               return (
                 <li key={g.id}>
                   <Link
-                    href={`/g/${g.id}`}
+                    href={`/w/${g.id}`}
                     className="group block h-full overflow-hidden rounded-login border border-border bg-card/75 shadow-card backdrop-blur transition-transform duration-200 hover:-translate-y-0.5"
                   >
                     <div className="flex items-start gap-2 px-5 pt-4">

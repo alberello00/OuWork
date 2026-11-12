@@ -27,7 +27,7 @@ export function NewsDialog({ entries, showGalaxy, open, onOpenChange, onDismiss 
           {entries.map(({ item, sphere, topSphere, galaxyName, who, edited }) => (
             <li key={item.id}>
               <Link
-                href={`/g/${item.galaxy_id}/s/${topSphere?.id ?? item.sphere_id}?item=${item.id}&focus=${item.id}`}
+                href={`/w/${item.galaxy_id}/b/${topSphere?.id ?? item.sphere_id}?item=${item.id}&focus=${item.id}`}
                 onClick={() => onOpenChange(false)}
                 className="flex min-h-14 items-center gap-3 py-2.5 hover:bg-surface-2"
               >

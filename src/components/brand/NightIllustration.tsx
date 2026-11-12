@@ -1,11 +1,11 @@
 import { sphereVar } from '@/lib/tokens';
 
 const BUBBLES = [
-  { color: 'amber', emoji: '📍', size: 112, left: '14%', top: '18%', delay: '0s' },
-  { color: 'lavender', emoji: '🎵', size: 78, left: '62%', top: '12%', delay: '-4s' },
-  { color: 'coral', emoji: '🎬', size: 92, left: '58%', top: '52%', delay: '-8s' },
-  { color: 'sky', emoji: '💡', size: 64, left: '22%', top: '62%', delay: '-2s' },
-  { color: 'rose', emoji: '📸', size: 54, left: '42%', top: '36%', delay: '-6s' },
+  { color: 'amber', emoji: '🗺️', size: 112, left: '14%', top: '18%', delay: '0s' },
+  { color: 'lavender', emoji: '🔎', size: 78, left: '62%', top: '12%', delay: '-4s' },
+  { color: 'coral', emoji: '🎨', size: 92, left: '58%', top: '52%', delay: '-8s' },
+  { color: 'sky', emoji: '🛠️', size: 64, left: '22%', top: '62%', delay: '-2s' },
+  { color: 'rose', emoji: '📣', size: 54, left: '42%', top: '36%', delay: '-6s' },
 ] as const;
 
 /** Decorative night sky with a few floating spheres (login, invite). */

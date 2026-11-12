@@ -1,42 +1,23 @@
-# OurWorld — Stato del progetto
+# OuWork — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, fine fase 9; fase 10 in attesa della scelta del logo)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fine fase W0)._
 
 ## Riepilogo
 
 | Fase | Stato | Branch |
 | ---- | ----- | ------ |
-| 0 — Scaffold | ✅ fatta | `main` |
-| 1 — Schema, RLS, test pgTAP, seed | ✅ fatta | `feat/fase-1-db` → `develop` |
-| 2 — Login, inviti, galassie | ✅ fatta | `feat/fase-2-auth` → `develop` |
-| 3 — CRUD sfere/elementi, aggiunta rapida, Notes | ✅ fatta | `feat/fase-3-content` → `develop` |
-| 4 — Tela della sfera | ✅ fatta | `feat/fase-4-canvas` → `develop` |
-| 5 — Universi | ✅ fatta | `feat/fase-5-universe` → `develop` |
-| 6 — Novità, ricerca, export, PWA | ✅ fatta | `feat/fase-6-news-search` → `develop` |
-| **MVP2** (`docs/requisiti-mvp2.md`) | | |
-| 7 — Eliminare una sfera da ovunque (RF12) | ✅ fatta | `feat/fase-7-delete-anywhere` → `develop` |
-| 8 — Galassie vuote + sondaggio iniziale (RF13, RF14) | ✅ fatta | `feat/fase-8-onboarding-survey` → `develop` |
-| 9 — Tutorial (RF15) | ✅ fatta | `feat/fase-9-tutorial` → `develop` |
-| 10 — Nuovo logo (RF16) | ⏸ proposte pronte in `docs/logo/`, **serve la scelta di Albi** | `feat/fase-10-logo` |
+| W0 — Separazione da OurWorld, rebrand (RW1) | ✅ fatta | `feat/w0-separazione` → `develop` |
+| W1 — Design professionale (RW2) | ⏳ prossima; le proposte di logo richiedono la scelta di Albi | `feat/w1-design` |
+| W2 — Ruoli + Realtime (RW3, RW4) | da fare | `feat/w2-ruoli-realtime` |
+| W3 — Activity log, versioni, collegamenti (RW5–RW7) | da fare | `feat/w3-tracciamento` |
+| W4 — Infrastruttura AI + bacchetta sulle note (RW8) | da fare | `feat/w4-ai-note` |
+| W5 — Bacchetta sul board (RW9) | da fare | `feat/w5-ai-board` |
+| W6 — Bacchetta sul workspace e digest (RW10) | da fare | `feat/w6-ai-workspace` |
+| W7 — Portfolio (README, demo) | da fare | `feat/w7-portfolio` |
 
-> Le fasi dell'MVP2 sono su `develop`: **non** sono ancora su `main` né sul database remoto (servono l'ok di Albi).
+## Online
 
-## Online (11 novembre 2026)
-
-| Cosa | Dove |
-| ---- | ---- |
-| Sito | https://ouniverse-albertotrashaj31-1532s-projects.vercel.app (Vercel, progetto `ouniverse`, produzione da `main`, funzioni a Francoforte `fra1`) |
-| Database | Supabase, organizzazione "OurWorld", progetto `ouniverse` (ref `uchewllvnkxdigrcalys`, eu-central-1, piano free) |
-
-- Migrazioni applicate con `supabase db push --remote` (nessun seed demo online).
-- Auth remota: registrazione pubblica **disattivata**, conferma email disattivata (solo queste due voci portate da `config.toml`).
-- Vercel: variabili `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`; protezione Vercel solo sulle preview, la produzione è pubblica (l'accesso lo regola il login dell'app). Node 22.
-- La password del database remoto sta solo in `.env.local` (`SUPABASE_DB_PASSWORD`), non versionata.
-- I test pgTAP **non** si lanciano sul database remoto: `00_setup.test.sql` installa funzioni di test (anche una che crea utenti) e lo fa con commit.
-
-**Da fare a mano**
-- `SUPABASE_SERVICE_ROLE_KEY` su Vercel (tipo *Sensitive*, solo Production e Preview): serve per creare account dagli inviti. Non è passata dalla conversazione con Claude.
-- Ogni push su `main` ripubblica il sito; `develop` produce preview protette.
+Niente. OuWork non ha ancora un progetto Supabase remoto né un progetto Vercel: li crea Albi a mano e passa le variabili d'ambiente (vedi `.env.example`). Fino ad allora si lavora solo sullo stack locale. `main` non è stato toccato dopo la copia.
 
 ## Come provarlo
 
@@ -44,166 +25,52 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 11 novembre 2026 (MVP2, f
 supabase start -x logflare,vector,edge-runtime,imgproxy,supavisor,studio,mailpit   # serve Docker
 supabase db reset        # migrazioni + seed demo
 supabase test db         # 359 test pgTAP
-pnpm dev
+pnpm dev                 # se la porta 3000 è occupata (es. da OurWorld) Next usa la 3001
 ```
 
-Utenti demo (password `ourworld-dev`): `alberto`, `lola` (galassia "Lola & Alberto"), `giulia` (solo "Friends": è il "non membro" per le prove di privacy).
-Contenuti privati da controllare a mano: nota "Anniversary surprise" di alberto (Places → Italy), sfera "Gift ideas" di lola.
+- Stack locale: `project_id = "ouwork"`, API su `http://127.0.0.1:55321`, database sulla porta `55322`. Convive con lo stack locale di OurWorld (porte 543xx).
+- `.env.local` si crea da `.env.example` con le chiavi di `supabase status -o env`; non è versionato.
+- Utenti demo (password `ouwork-dev`): `maya` (owner), `jonas`, `priya`, `tom`, `elena` nel workspace "Product Launch"; `sam` solo in "Website Redesign" (è il "non membro" per le prove di privacy).
+- Contenuti privati da controllare a mano: nota "Pricing — draft numbers" di maya (board Roadmap), board "Scratchpad" di priya.
 
-`.env.local` si genera dalle chiavi dello stack locale (`supabase status -o env`); non è versionato.
+## Punto di partenza (ereditato da OurWorld)
 
-## Fase 1 — Database e privacy
+Al momento della copia OurWorld aveva completato l'MVP (fasi 0–6) e l'MVP2 fino alla fase 9. OuWork eredita quindi, funzionanti:
+
+- login con username e password, account solo da invito, workspace condivisi e personale;
+- board con sub-board a un livello, board e item privati garantiti dalle RLS;
+- item nota / link (anteprima lato server con protezione SSRF) / immagine, dettaglio, spostamento, collegamenti tra item anche di board diversi;
+- tela React Flow con card trascinabili, annotazioni (penna, frecce, sticker), zoom semantico;
+- vista "universo" dei board, vista Notes, ricerca ⌘K, badge NEW e banner "since your last visit", export JSON/Markdown, PWA solo rete;
+- eliminazione di un board da ovunque, setup iniziale del workspace con RPC transazionale e idempotente, tutorial al primo login.
+
+La fase 10 di OurWorld (nuovo logo) non è stata implementata: in OuWork il logo è RW2.8.
+
+## Fase W0 — Separazione e rebrand (RW1)
 
 **Fatto**
 
-- Migrazioni in `supabase/migrations/` (estensioni → tabelle → helper → trigger → RLS → viste/RPC → storage → indici).
-- RLS su tutte le tabelle; privilegi per colonna; `anon` senza alcun accesso (tranne `invite_preview`).
-- Regole di privacy (RF4) garantite dal database: elementi privati, sfere private, sotto-sfere di sfere private, collegamenti, annotazioni, ricerca, conteggi, novità, oggetti in storage.
-- RPC: `search_items`, `mark_seen`, `mark_sphere_seen`, `touch_last_seen`, `invite_preview`, `accept_invite`, `redeem_invite` (solo service role), `delete_sphere`.
-- Viste: `items_feed` (elementi + `is_new` + `since_last_visit`), `sphere_stats` (conteggi visibili).
-- 11 file di test pgTAP, 310 asserzioni, sempre con tre ruoli: autore (`ann`), altro membro (`bob`), non membro (`cat`).
-- Seed demo come nel Figma; tipi TypeScript generati; CI con job per i test del database.
+- **Scope**: `docs/requisiti-ouwork.md` (RW1–RW10, piano W0–W7); `CLAUDE.md` e le regole di `src/` e `supabase/` aggiornati; i documenti ereditati hanno una nota in testa che ne limita la validità. Rimossi dal piano i vincoli sui dati di produzione di OurWorld.
+- **Separazione**: `supabase/config.toml` con `project_id = "ouwork"` e porte proprie; nessun link della CLI a progetti remoti (`supabase/.temp` contiene solo il pin dell'immagine storage); nessun URL o ID del Supabase o del Vercel di OurWorld nel repo; `.env.example` con le nuove variabili (`ANTHROPIC_API_KEY`, `AI_DAILY_TOKEN_LIMIT`, `CRON_SECRET`).
+- **Rebrand (RW1.1)**: nome "OuWork" in `package.json`, metadati, manifest, service worker, copy, README; email sintetiche `<username>@users.ouwork.local`.
+- **Nomenclatura**: tutta la copy parla di Workspace / Board / Sub-board / Item / Inbox con tono asciutto; route `/w/<id>`, `/w/<id>/b/<id>`, `/w/<id>/notes`. Tabelle e nomi nel codice dei dati invariati.
+- **RW1.2**: via seed, copy e sondaggio della coppia. Al loro posto la scelta di un **template** (Product launch, Research project, Client project, Blank) in due passi, con anteprima modificabile, sulla stessa RPC `complete_galaxy_setup` (anticipo di RW2.9).
+- **RW1.3**: nuovo seed "Product Launch" (5 membri, board Roadmap, Research con Interviews e Competitors, Design, Engineering, Marketing, Inbox; 20 item, 13 collegamenti di cui 9 tra board diversi, annotazioni sul Roadmap, una nota e un board privati) più "Website Redesign" con un non membro.
+- **RW1.4**: migrazione `20261112150000_ouwork_rebrand.sql`: il workspace personale si chiama "Personal", il board predefinito "Inbox" (📥).
+
+Gate: lint, typecheck, 53 test unitari, 359 asserzioni pgTAP verdi.
+Verificato nel browser (Chrome headless pilotato da script; desktop chiaro e scuro, 390 px scuro): login, elenco workspace con banner novità, overview di "Product Launch" con board e collegamenti, tela del Roadmap, Notes; `jonas` non vede né la nota privata di maya né il board privato di priya; `sam` non vede "Product Launch"; nuovo workspace → template → anteprima → 5 board creati.
 
 **Mancante / rinviato**
 
-- Il seed non contiene elementi immagine (servono file veri nello storage): si provano dalla fase 3.
-- Foto profilo (`avatar_path`): colonna presente, nessuna policy di storage dedicata; l'MVP usa iniziale + colore.
-- Gli oggetti in storage non vengono rimossi quando si elimina un elemento o una galassia (pulizia lato client dalla fase 3; nessun rischio di privacy, solo spazio).
+- **L'aspetto è ancora quello di OurWorld** (carta/notte, Fraunces, pianeti, logo a due cerchi, icone PWA): è tutto lavoro della fase W1. In W0 è cambiato solo ciò che si legge.
+- Attività e versioni nel seed (RW1.3) arrivano in W3, con le tabelle relative.
+- I ruoli sono ancora `owner` / `member` (RW3 è nella fase W2).
+- Il tutorial ha copy aggiornata ma gli stessi passi; verrà rivisto con il nuovo layout (RW2.9).
 
 **Problemi noti**
 
-- Su questo Mac (Docker Desktop 4.36, M3) l'immagine storage di default della CLI va in segfault: lo stack locale usa `storage-api v1.60.0` tramite `supabase/.temp/storage-version` (file non versionato: va ricreato su un'altra macchina solo se si ripresenta il problema). Realtime è disattivato in `config.toml`.
-- Il disco del Mac era pieno (2,4 GB liberi) e Docker si bloccava: è stata svuotata **solo la build cache di Docker** (14 GB, rigenerabile). Immagini, container e volumi di altri progetti non sono stati toccati.
-- Un membro rimosso da una galassia lascia lì i propri contenuti privati, che restano invisibili a tutti.
-
-## Fase 2 — Login, inviti, galassie
-
-**Fatto** (branch `feat/fase-2-auth`): token e tema chiaro/scuro, login username+password, middleware di sessione, pagina `/invite/<token>` (nuovo account via service role oppure "Join" se già loggati), selettore galassie, creazione galassia, impostazioni (rinomina, membri, link d'invito, esci/elimina).
-Verificato nel browser: login (desktop chiaro/scuro, 390 px), password errata, creazione invito, registrazione da invito su mobile, invito non riusabile, un non membro non vede la galassia, logout.
-
-Impostazioni galassia verificate su desktop chiaro, 390 px chiaro e scuro.
-
-**Problemi noti**
-- **Figma MCP non disponibile**: il piano Starter ha esaurito le chiamate. La UI è costruita su `docs/figma.md`; il confronto con i frame e l'estrazione dei token del tema scuro restano da fare.
-- La prova nel browser ha creato l'utente demo `marta` nel DB locale (sparisce con `supabase db reset`).
-
-
-## Fase 3 — Sfere, elementi, aggiunta rapida, Notes
-
-**Fatto**
-- Sfere: creazione, modifica (nome, colore dalla palette, emoji, privata, sfera madre), sotto-sfere a un livello, eliminazione con scelta "sposta in…" / "elimina anche gli elementi" (RF2.1, RF2.5, RF2.6).
-- Pagina sfera `/g/<id>/s/<id>`: chip delle sotto-sfere con conteggio che filtrano (`?sub=`), griglia di card, stati vuoti; aprirla segna come visti i suoi elementi ma i badge NEW restano visibili per quella visita.
-- Card nota / link (con fallback colore sfera + dominio) / immagine-polaroid; dettaglio come pannello laterale su desktop e foglio a schermo intero su mobile, aperto da `?item=<id>`: markdown, modifica, sposta, elimina, privacy (solo l'autore), collegamenti in entrata/uscita e "Connect to…" (RF3, RF7.1, RF7.3).
-- Aggiunta rapida: "+" sempre visibile, bottom sheet con tipo, contenuto, galassia (fuori da una galassia), sfera facoltativa → Random, "only me" (RF10.1).
-- Anteprima link lato server `/api/link-preview` con protezione SSRF (niente host privati, redirect controllati, limiti di tempo e dimensione); viene chiesta dopo il salvataggio, così l'aggiunta resta immediata.
-- Immagini: ridimensionate nel browser oltre 1,5 MB, caricate in `<galaxy_id>/<item_id>/…`, servite con signed URL.
-- Vista Notes `/g/<id>/notes` (e `/notes`): una colonna per sfera con ultimi elementi, chip delle sotto-sfere, NEW, "only me", Random con "Waiting for a topic" (RF9.4).
-- La pagina della galassia mostra per ora le sfere come riquadri; l'universo arriva nella fase 5.
-
-Verificato nel browser (desktop chiaro/scuro, 390 px chiaro/scuro): aggiunta di nota, link (anteprima reale da example.com) e immagine; creazione sfera, eliminazione con spostamento; lola non vede la nota privata di alberto né nelle Notes né nella sfera.
-
-**Problemi noti**
-- Le immagini dei link vengono caricate direttamente dal sito d'origine (`referrerPolicy=no-referrer`): se il sito le blocca, resta il fallback colorato solo in assenza di immagine, altrimenti un'immagine rotta.
-
-## Fase 4 — Tela della sfera
-
-**Fatto**
-- Tela React Flow nella pagina sfera, con interruttore Tela / Elenco (`?view=`); predefinita la tela su desktop, l'elenco sotto i 640 px (RD8.4).
-- Card trascinabili, posizione salvata dopo 400 ms con aggiornamento ottimistico; il polling non riporta indietro una card mentre la si sposta (RF5.2).
-- Clic su un punto vuoto → menu Nota / Link / Immagine → elemento creato in quel punto (RF5.3, RD6.5). Suggerimento "Click anywhere to add" come nel frame `15:2`.
-- Collegamenti come curve bezier nel colore della sfera d'origine, evidenziati al passaggio sulla card (RF7.2, RD6.3).
-- Annotazioni (RF6): penna a mano libera (perfect-freehand, 6 colori, 3 spessori), frecce curve, sticker emoji e sticker foto; si spostano trascinandole e si eliminano con × o Canc; autore nel tooltip.
-- Zoom semantico sotto il 55 %: le card mostrano solo titolo e colore (RD6.2). Controlli zoom / "mostra tutto" in basso a sinistra (RD6.4).
-- `?focus=<item>` centra la tela su un elemento (servirà alla ricerca, RF9.3). Il filtro per sotto-sfera vale anche sulla tela.
-
-Verificato nel browser: trascinamento salvato, creazione al clic, tratto + freccia + sticker salvati, sticker spostato ed eliminato, zoom semantico, filtro Italy, lola vede 2 collegamenti su 3 (quello verso la nota privata di alberto resta nascosto), tela navigabile a 390 px, tema scuro.
-
-**Problemi noti**
-- Su mobile la tela è navigabile (pinch, trascinamento) ma il disegno con un dito disattiva il pan finché non si torna allo strumento "sposta".
-- Le card non si raggiungono da tastiera sulla tela; da tastiera si usa la vista Elenco.
-
-## Fase 5 — Universi
-
-**Fatto**
-- Universo della galassia `/g/<id>` (frame `5:2`): sfere-pianeta con gradiente radiale e alone, diametro ∝ radice del numero di elementi (84–220 px), contorno tratteggiato se vuote, lucchetto se private, puntino giallo se hanno novità, fluttuazione lenta (disattivata da `prefers-reduced-motion`) (RF2.3, RD4).
-- Sotto-sfere come lune che compaiono avvicinandosi (zoom ≥ 0,9) e aprono la sfera madre filtrata.
-- Archi tra sfere quando ci sono collegamenti tra elementi di sfere diverse, spessore ∝ numero di collegamenti (RF7.2, RD4.4).
-- Pianeti trascinabili (posizione salvata); "Reorganize" li dispone ad anelli, il più grande al centro e Random in fondo.
-- Pannello "Sphere index" al clic (frame `7:2` / `14:2`): anteprima della tela, sotto-sfere, ultimi elementi, "Open sphere".
-- Transizione firma (RD7.2): doppio clic o "Open sphere" zooma dentro il pianeta con una dissolvenza nel suo colore; tornando indietro (`?from=`) l'universo parte zoomato sul pianeta e si allontana. Con `prefers-reduced-motion` solo dissolvenza.
-- Universo delle galassie `/` (frame `3:2`): un riquadro per galassia con le sfere in miniatura nella loro disposizione, membri, conteggi e badge novità; legenda.
-- Il selettore "All galaxies" (frame `4:2`) c'era già dalla fase 2.
-
-Verificato nel browser (desktop chiaro/scuro, 390 px): 6 pianeti e 2 archi, pannello, lune avvicinandosi, Reorganize salvato, ingresso e ritorno, lola vede la propria sfera privata "Gift ideas" e alberto no.
-
-**Problemi noti**
-- La fluttuazione dei pianeti si può spegnere solo con l'impostazione di sistema "riduci movimento" (nessun interruttore nell'app).
-
-## Fase 6 — Novità, ricerca, export, PWA, mobile
-
-**Fatto**
-- Banner "Since your last visit" sulla home (tutte le galassie) e nell'universo della galassia (solo quella): quante novità, da chi, in quante galassie; "See what's new" apre la modale (frame `8:2`) con elemento, autore, sfera e galassia; "Got it" / × chiude e aggiorna `last_seen_at` (RF8.2). Badge NEW su card, sfere, pianeti e galassie già dalle fasi precedenti (RF8.1, RF8.3).
-- Ricerca ⌘K / Ctrl+K e pulsante nella barra (RF9, RD9.1): risultati dal database (`search_items`, solo contenuti visibili), raggruppati per sfera con la sotto-sfera a destra, chip per filtrare per galassia e per sfera, snippet del testo. Invio apre la sfera sulla tela centrata sull'elemento con il dettaglio aperto (RF9.3).
-- Export della galassia in JSON o Markdown dalle impostazioni (`/api/export`), con la sessione dell'utente: contiene solo ciò che lui vede (RF11.3).
-- PWA: manifest, icone 192/512 + SVG, service worker solo rete (niente cache di dati privati), `theme-color` per tema.
-- Mobile (RD8.3): barra in basso con Cerca, "+" e interruttore tema; contenuti e tele si fermano sopra la barra.
-
-Verificato nel browser: banner (6 novità da Lola e Giulia in 2 galassie) e modale, chiusura persistente; ricerca "lis" raggruppata per sfera, Invio apre Tram 28 sulla tela; lola non trova la nota privata di alberto ma trova la propria; export: alberto e lola ottengono ciascuno i propri contenuti privati e non quelli dell'altro (5 vs 4 collegamenti), giulia riceve 404; manifest valido; 390 px chiaro.
-
-**Problemi noti**
-- Il service worker non mette nulla in cache: l'app non funziona offline (scelta voluta per la privacy).
-- Le immagini nell'export sono riferite con il loro path nello storage, non incluse nel file.
-
-## Fase 7 — Eliminare una sfera da ovunque (MVP2, RF12)
-
-**Fatto**
-- "Delete" raggiungibile da tre nuovi punti, sempre con lo stesso `DeleteSphereDialog` e la stessa RPC `delete_sphere` (nessuna nuova logica di eliminazione): cestino nel pannello "Sphere index"; menu contestuale del pianeta (clic destro su desktop, pressione prolungata ~0,5 s su touch) con Open / Edit / Delete; menu ⋯ nell'intestazione di ogni colonna di Notes (Edit / Delete).
-- Random non mostra mai "Delete" (resta modificabile).
-- Dopo l'eliminazione dall'universo il pianeta resta in scena 260 ms e si dissolve rimpicciolendosi; con `prefers-reduced-motion` solo dissolvenza. Il pannello si chiude se riguardava quella sfera.
-- L'eliminazione invalida sfere, conteggi, elementi, collegamenti e ora anche la ricerca (le novità derivano dagli elementi).
-- RF12.4: le sfere private altrui non arrivano al client (RLS), quindi non hanno alcun menu; nessun buco emerso, nessun nuovo test pgTAP (RF12.5).
-
-Verificato nel browser (desktop chiaro, 390 px scuro con touch, reduced motion): menu contestuale, cestino nel pannello con annulla/conferma, eliminazione con spostamento in Random e con "Delete them too", colonna Notes, pressione prolungata che non apre anche il pannello, alberto non vede "Gift ideas" di lola.
-
-**Problemi noti**
-- Il menu contestuale del pianeta non si apre da tastiera: da tastiera si elimina dal pannello "Sphere index" o da Notes.
-- Ambiente: dopo `supabase link` al progetto remoto, `supabase/.temp/storage-version` torna all'immagine di default (segfault su questo Mac) e compare `supabase/.temp/storage-migration`, incompatibile con il pin `v1.60.0`: `supabase db reset` fallisce e lascia il database locale vuoto. Rimedio: riscrivere `v1.60.0` in `storage-version`, togliere `storage-migration`, rilanciare il reset.
-
-## Fase 8 — Galassie vuote e sondaggio iniziale (MVP2, RF13 + RF14)
-
-**Fatto**
-- Migrazione `20261111182018_mvp2_galaxy_setup.sql` (solo additiva): colonne `galaxies.setup_completed_at` e `setup_answers`; backfill `now()` per tutte le galassie esistenti; `handle_new_galaxy` crea solo la membership dell'owner e Random (sage, 🎲, al centro), anche per la "Just me"; RPC `complete_galaxy_setup(galaxy_id, answers, spheres)`. **Nessuna sfera o elemento esistente viene toccato.**
-- La RPC è transazionale, solo per l'owner, una volta sola (la seconda chiamata fallisce con `setup_already_completed` senza duplicati), valida nomi (1–40), emoji (1–16), colori di palette, posizioni, massimo 10 sfere; un array vuoto è "Start from scratch". Le due colonne non sono scrivibili dal client (privilegi per colonna) e si leggono solo da membri (RLS già esistente).
-- Sondaggio in 3 passi (`GalaxySetupDialog`, schermo intero su mobile): chi siete (preselezionato dal tipo di galassia), interessi a chip + "Something else" (nome + emoji), anteprima dei pianeti modificabili (nome, emoji, colore) o rimovibili. Mappatura deterministica interesse → sfera in `src/lib/galaxySetup.ts`, colori senza ripetizioni finché la palette basta, posizioni ad anello attorno a Random con la stessa geometria di "Reorganize".
-- Si apre da solo alla prima apertura per l'owner (anche subito dopo "New galaxy"); "Maybe later" lo rimanda (riapribile dallo stato vuoto e dalle impostazioni), "Start from scratch" chiude il setup senza creare nulla.
-- Universo con la sola Random: scheda di benvenuto sotto il pianeta; per gli altri membri "<owner> is setting up this galaxy" con la possibilità di creare sfere a mano.
-- Alla chiusura i pianeti nuovi compaiono uno dopo l'altro (solo dissolvenza con `prefers-reduced-motion`).
-- Seed: le cinque sfere demo del Figma sono inserite esplicitamente e le galassie demo sono già "configurate". Test pgTAP: `11_galaxy_setup.test.sql` (owner, altro membro, non membro, anon, doppia chiamata, validazioni) e conteggi aggiornati in `02`; 347 asserzioni.
-
-Verificato nel browser (desktop chiaro, 390 px chiaro e scuro, reduced motion): alberto non vede alcun sondaggio sulle galassie demo; nuova galassia → sondaggio → 4 pianeti con modifiche salvate; "Maybe later" e riapertura da stato vuoto e impostazioni; lola (membro) vede il messaggio d'attesa e crea una sfera a mano; "Start from scratch"; utente nuovo da invito (`nina`): nessun sondaggio sulla galassia in cui entra, sondaggio con "Just me" preselezionato sulla sua galassia personale.
-
-**Mancante / da decidere con Albi**
-- La migrazione **non è ancora sul database remoto** e `develop` non è su `main`: servono il tuo ok (`supabase db push --remote`, poi merge).
-
-**Problemi noti**
-- "Maybe later" è ricordato per dispositivo (`localStorage`): su un altro dispositivo il sondaggio si riapre una volta.
-- Se qualcuno crea sfere a mano prima del setup, quelle nuove del sondaggio occupano le posizioni libere dell'anello ma non spostano le esistenti: può servire un "Reorganize".
-- La prova nel browser lascia nel DB locale l'utente `nina` e alcune galassie di prova (spariscono con `supabase db reset`).
-- Docker Desktop si è bloccato durante un `supabase db reset` (disco quasi pieno, 3,7 GB liberi): è stato necessario chiuderlo forzatamente e riavviarlo. Nessun volume toccato.
-
-## Fase 9 — Tutorial al primo login (MVP2, RF15)
-
-**Fatto**
-- Migrazione `20261111190235_mvp2_tutorial.sql` (solo additiva): `profiles.tutorial_completed_at`, backfill `now()` per gli utenti esistenti, RPC `complete_tutorial()` (idempotente, tiene la prima data). La colonna non è scrivibile dal client. Test `12_tutorial.test.sql`; 359 asserzioni in tutto.
-- Tutorial a coach-mark con spotlight sull'interfaccia reale, scritto a mano (nessuna libreria): `src/lib/tutorial.ts` (passi, scelta dei bersagli, posizionamento, con test), `components/tutorial/TutorialProvider` + `TutorialOverlay`.
-- 7 passi (6 per chi non è owner di una galassia condivisa): galassie e sfere → entrare in una sfera → "+" e Random → card/collegamenti/annotazioni → "Only me" → novità e ricerca → invitare qualcuno. Se il bersaglio non è a schermo il passo si salta o diventa una scheda centrata senza spotlight (es. "Only me" punta al pianeta privato solo se ne vedi uno).
-- Ordine (RF15.2): parte da solo sull'universo di una galassia quando non c'è nient'altro davanti; il sondaggio (un dialog) e la comparsa dei pianeti vengono sempre prima. Chi arriva da un invito in una galassia già configurata lo vede subito.
-- Next / Back / Skip, avanzamento, Esc; focus intrappolato e ripristinato (Radix Dialog), annuncio del passo per screen reader, pulsanti da 44 px. A 390 px la scheda sta sopra la barra in basso e il FAB, mai fuori schermo.
-- Completare, saltare o chiudere con Esc segnano il tutorial come fatto. "Replay tutorial" nel menu utente (da qualsiasi pagina: porta all'universo di una galassia e riparte).
-
-Verificato nel browser: alberto non vede né sondaggio né tutorial; replay da home con 7 passi, Tab che resta nella scheda, Back, Esc; lola in tema scuro (6 passi, spotlight sul suo pianeta privato); utente nuovo da invito a 390 px (parte da solo, 6 passi, tutti a schermo, non ritorna dopo il ricaricamento); utente nuovo che apre per prima la sua "Just me": sondaggio → pianeti → tutorial sui pianeti appena creati; "Skip" segna il profilo.
-
-**Problemi noti**
-- Il tutorial vive solo sull'universo di una galassia: i passi su card, collegamenti e "Only me" sono spiegati lì e non dentro una tela.
-- `tutorial_completed_at` è leggibile (come il resto del profilo) da chi condivide una galassia con l'utente.
-- In tema chiaro l'oscuramento attorno allo spotlight è leggero (stesso token `overlay` dei dialog).
+- OurWorld e OuWork in locale usano entrambi `localhost` e lo stesso nome di cookie di sessione Supabase: nello stesso browser, il login in uno fa uscire dall'altro. Per provarli insieme servono due profili del browser (o una finestra privata).
+- Su questo Mac l'immagine storage di default della CLI va in segfault: lo stack usa `storage-api v1.60.0` tramite `supabase/.temp/storage-version` (file non versionato, da ricreare se si clona altrove e il problema si ripresenta).
+- Disco quasi pieno: all'inizio della sessione c'erano 190 MB liberi. Sono state rimosse cinque immagini Docker `supabase/storage-api` non usate (5 GB, riscaricabili); container, volumi e immagini di altri progetti non sono stati toccati. Con meno di qualche GB libero Docker tende a bloccarsi.
+- La verifica nel browser lascia nel database locale eventuali workspace di prova (spariscono con `supabase db reset`).

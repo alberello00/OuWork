@@ -6,5 +6,5 @@ export default async function NotesRedirect() {
   const supabase = await createClient();
   const { data } = await supabase.from('galaxies').select('id, is_personal').order('created_at');
   const target = data?.find((g) => !g.is_personal) ?? data?.[0];
-  redirect(target ? `/g/${target.id}/notes` : '/');
+  redirect(target ? `/w/${target.id}/notes` : '/');
 }

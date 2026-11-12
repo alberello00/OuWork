@@ -47,7 +47,7 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
             const scope = new Set([sphere.id, ...subs.map((s) => s.id)]);
             const items: Item[] = data.items.filter((i) => scope.has(i.sphere_id));
             const newCount = items.filter((i) => i.is_new).length;
-            const href = `/g/${galaxyId}/s/${sphere.id}`;
+            const href = `/w/${galaxyId}/b/${sphere.id}`;
             return (
               <section
                 key={sphere.id}

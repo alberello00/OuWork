@@ -1,9 +1,18 @@
-# OurWorld — Registro delle decisioni
+# OuWork — Registro delle decisioni
 
 Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recenti in alto.
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-12 | W0 | Nel database restano `galaxies`, `spheres`, `items`; cambiano solo copy, route (`/w/<id>`, `/w/<id>/b/<id>`) e i nomi predefiniti creati dai trigger ("Personal", "Inbox" 📥) | Rinominare lo schema: decine di policy, RPC e test da riscrivere senza alcun vantaggio per l'utente (decisione del kickoff) |
+| 2026-11-12 | W0 | Le chiavi di `copy.ts` (`copy.galaxies`, `copy.spheres`…), i nomi dei componenti e dei parametri di route (`galaxyId`, `sphereId`) restano quelli del modello dati | Rinominare tutto in W0: molto rumore subito prima del rifacimento del layout (W1), dove i componenti dell'universo vengono comunque sostituiti |
+| 2026-11-12 | W0 | Lo stack Supabase locale di OuWork usa `project_id = "ouwork"` e le porte 553xx (API 55321, DB 55322) | Tenere le porte 543xx: lo stack locale di OurWorld gira sulla stessa macchina e andrebbe fermato ogni volta; con porte diverse i due convivono e non c'è modo di resettare per sbaglio il database dell'altro |
+| 2026-11-12 | W0 | La scelta dei template (RW2.9) è stata anticipata in W0 al posto del sondaggio "Couple / Friends / Family" | Togliere il sondaggio in W0 e lasciare i workspace nuovi senza setup fino a W1: un buco funzionale tra due fasi |
+| 2026-11-12 | Setup | Template → board in `galaxySetup.ts` (emoji, colore), nomi in `copy.ts`; l'anteprima permette ancora di rinominare, ricolorare o togliere un board; "Blank" chiama la stessa RPC con zero board | Creare i board senza anteprima: meno controllo; una RPC per template: la RPC esistente è già transazionale e idempotente |
+| 2026-11-12 | Setup | Preselezione: "Blank" sul workspace personale, "Product launch" su quelli condivisi; `setup_answers` ora è `{version: 2, template, boards}` | Nessuna preselezione: un clic in più nel caso più comune |
+| 2026-11-12 | Seed | Sei utenti demo (password `ouwork-dev`): cinque nel workspace "Product Launch", `sam` solo in "Website Redesign" come non membro per le prove di privacy | Un solo workspace: non ci sarebbe modo di provare a mano l'isolamento tra workspace |
+| 2026-11-12 | Seed | Attività e versioni (RW1.3) entrano nel seed in W3, quando esistono le tabelle `activity_events` e `item_versions` | Creare ora tabelle provvisorie: verrebbero rifatte in W3 |
+| 2026-11-12 | Ambiente | Rimosse cinque immagini Docker `supabase/storage-api` non usate da alcun container (v1.25.7, v1.33.0, v1.44.2, v1.89.13, v1.90.1): il disco aveva 190 MB liberi e un secondo stack non sarebbe partito | Fermarsi e chiedere: sono immagini riscaricabili, e quelle recenti vanno in segfault su questo Mac (lo stack usa la v1.60.0) |
 | 2026-11-11 | Tutorial | Il tutorial gira solo sull'universo di una galassia; "Replay" porta lì da qualsiasi pagina | Un tour che naviga tra home, universo e tela: molto più fragile, e l'utente perderebbe il punto in cui si trovava |
 | 2026-11-11 | Tutorial | Parte quando l'universo è "tranquillo" (pianeti a schermo, nessun dialog o menu, nessun pianeta in arrivo) per tre controlli di fila | Coordinare a mano sondaggio e tutorial con stato condiviso: più accoppiamento; così qualsiasi dialog futuro ha la precedenza |
 | 2026-11-11 | Tutorial | La scheda è un Radix Dialog senza overlay proprio; lo spotlight è un riquadro con `box-shadow` enorme | Focus trap, Esc e ripristino del focus scritti a mano; una libreria di tour (dipendenza da chiedere, RF15.6) |

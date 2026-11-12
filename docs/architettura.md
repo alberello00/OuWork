@@ -1,5 +1,7 @@
 # OurWorld — Architettura tecnica
 
+> **Documento ereditato da OurWorld.** Per OuWork vale solo dove non è contraddetto da `docs/requisiti-ouwork.md` (nomenclatura: galassia = workspace, sfera = board, Random = Inbox). I vincoli sui dati di produzione di OurWorld non si applicano.
+
 _10 novembre 2026. Da leggere con `requisiti-funzionali-mvp.md` (RF) e `requisiti-graphic-design.md` (RD)._
 
 ## Scelte di fondo

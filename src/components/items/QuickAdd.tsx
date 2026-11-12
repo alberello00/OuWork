@@ -25,7 +25,7 @@ const TYPES: { type: ItemType; label: string; icon: React.ReactNode }[] = [
   { type: 'image', label: copy.items.image, icon: <ImageIcon size={15} aria-hidden /> },
 ];
 
-const LAST_GALAXY_KEY = 'ourworld:last-galaxy';
+const LAST_GALAXY_KEY = 'ouwork:last-workspace';
 
 /** "+" always visible + quick form as a bottom sheet (RF10.1, RD8.2). */
 export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -80,7 +80,7 @@ export function QuickAdd({ open, onOpenChange }: { open: boolean; onOpenChange: 
         onSuccess: ({ id }) => {
           try { window.localStorage.setItem(LAST_GALAXY_KEY, galaxyId); } catch { /* ignore */ }
           toast(copy.items.added(target.name), {
-            action: { label: copy.spheres.open, onClick: () => router.push(`/g/${galaxyId}/s/${target.id}?item=${id}`) },
+            action: { label: copy.spheres.open, onClick: () => router.push(`/w/${galaxyId}/b/${target.id}?item=${id}`) },
           });
           reset();
           onOpenChange(false);

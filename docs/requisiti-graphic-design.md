@@ -1,5 +1,7 @@
 # OurWorld — Requisiti di graphic design (MVP)
 
+> **Documento ereditato da OurWorld.** Per OuWork vale solo dove non è contraddetto da `docs/requisiti-ouwork.md` (nomenclatura: galassia = workspace, sfera = board, Random = Inbox). I vincoli sui dati di produzione di OurWorld non si applicano.
+
 _Sessione 1 — 9 novembre 2026. Da leggere insieme a `requisiti-funzionali-mvp.md`. Dove il prototipo Figma è più specifico (es. font DM Sans), vale il prototipo: vedi `figma.md`._
 
 ## Direzione visiva in una riga

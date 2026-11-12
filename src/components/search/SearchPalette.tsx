@@ -101,7 +101,7 @@ export function SearchPalette({ open, onOpenChange }: { open: boolean; onOpenCha
     setQ('');
     // RF9.3: open the sphere and centre the canvas on the item
     const sub = own?.parent_id ? `&sub=${own.id}` : '';
-    router.push(`/g/${item.galaxy_id}/s/${top.id}?view=canvas&focus=${item.id}&item=${item.id}${sub}`);
+    router.push(`/w/${item.galaxy_id}/b/${top.id}?view=canvas&focus=${item.id}&item=${item.id}${sub}`);
   }
 
   const chip = 'shrink-0 rounded-pill';
