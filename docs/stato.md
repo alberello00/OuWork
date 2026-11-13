@@ -17,7 +17,15 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 13 novembre 2026 (fine fa
 
 ## Online
 
-Niente. OuWork non ha ancora un progetto Supabase remoto né un progetto Vercel: li crea Albi a mano e passa le variabili d'ambiente (vedi `.env.example`). Fino ad allora si lavora solo sullo stack locale. `main` non è stato toccato dopo la copia.
+In preparazione. Albi ha scelto: database con il suo account owner **e** il workspace demo "Product Launch" (account demo con password diversa da `ouwork-dev`); Vercel pubblica `main`.
+
+Passi (una volta sola):
+
+1. Albi crea un **nuovo** progetto Supabase (mai `ouniverse`) e un progetto Vercel collegato a `alberello00/OuWork`.
+2. `supabase link --project-ref <nuovo ref>` e `supabase db push` (solo migrazioni), poi il seed demo e `scripts/demo-password.mjs`.
+3. `scripts/create-user.mjs <username> "<Nome>"` crea l'account owner di Albi (nessuna registrazione pubblica: gli altri entrano con un invito).
+4. In Supabase: Authentication → "Allow new users to sign up" **disattivato**; Site URL = dominio Vercel.
+5. Variabili su Vercel: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` (`ANTHROPIC_API_KEY` da W4).
 
 ## Come provarlo
 
