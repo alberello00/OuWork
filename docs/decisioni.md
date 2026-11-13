@@ -4,6 +4,11 @@ Una riga o due per decisione non ovvia presa durante lo sviluppo. Le più recent
 
 | Data       | Area   | Decisione                                                                       | Alternative scartate / motivo                                  |
 | ---------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 2026-11-13 | W2 | Ruoli `owner` / `editor` / `viewer`; i `member` esistenti diventano `editor`; l'invito sceglie solo tra editor e viewer (un solo owner per workspace) | Più owner per workspace: complica eliminazione e trasferimento senza un bisogno reale |
+| 2026-11-13 | W2 | Il viewer può ancora segnare item come visti e chiudere il banner "novità" (dati suoi, non del workspace) | Sola lettura totale: perderebbe il "nuovo dall'ultima visita" |
+| 2026-11-13 | W2 | Un solo canale Realtime privato per workspace (`ws:<id>`) per modifiche e presenza; le modifiche invalidano le query invece di patchare la cache | Un canale per board: più connessioni e la overview non si aggiornerebbe; patch della cache: più codice, rischio di dati privati arrivati per errore |
+| 2026-11-13 | W2 | Polling di riserva ogni 15 s solo quando il canale non è connesso | Polling sempre attivo: carico inutile sul piano free |
+| 2026-11-13 | W2 | Per un viewer "Add item" sparisce solo nel workspace che sta guardando; altrove resta per scrivere nei propri workspace | Nasconderlo ovunque: il viewer di un workspace è spesso editor di un altro |
 | 2026-11-12 | W1 | Accento indaco `#4F46E5` (chiaro) / `#8B8DF8` (scuro); neutri tipo zinc nel chiaro, grigio-ardesia nel scuro; scala `--color-n-1…10` dietro i token semantici, che restano gli stessi nomi (`bg`, `card`, `border`, `text`…) | Rinominare tutti i token semantici: centinaia di classi da toccare senza cambiare nulla a schermo |
 | 2026-11-12 | W1 | Font: Inter per tutto, JetBrains Mono per codice, ID e livello di zoom; corpo 16 px su mobile, 14 px da `sm` in su | Geist: equivalente, ma Inter regge meglio le cifre tabulari nelle liste |
 | 2026-11-12 | W1 | Palette dei board da 10 a 8 colori: tolti `terracotta` e `moss` con una migrazione che aggiorna vincolo e RPC di setup | Tenere 10 colori: RW2.1 chiede 8, e i due tolti erano quasi doppioni di coral e sage |

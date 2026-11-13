@@ -15,10 +15,12 @@ interface Props {
   items: Item[];
   sphereById: Map<string, Sphere>;
   onOpen: (id: string) => void;
+  /** viewers see connections but cannot add or remove them (RW3) */
+  canEdit: boolean;
 }
 
 /** RF7.1 / RF7.3: incoming and outgoing connections, and a picker to add one. */
-export function ItemConnections({ item, items, sphereById, onOpen }: Props) {
+export function ItemConnections({ item, items, sphereById, onOpen, canEdit }: Props) {
   const { data: links = [] } = useLinks(item.galaxy_id);
   const createLink = useCreateLink();
   const deleteLink = useDeleteLink();
@@ -47,21 +49,21 @@ export function ItemConnections({ item, items, sphereById, onOpen }: Props) {
         <button type="button" onClick={() => onOpen(other.id)} className="min-h-11 min-w-0 flex-1 truncate text-left text-[13px] hover:underline">
           {itemTitle(other)}
         </button>
-        <button
+        {canEdit ? <button
           type="button"
           aria-label={copy.items.disconnect}
           onClick={() => deleteLink.mutate(linkId)}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2"
         >
           <X size={14} aria-hidden />
-        </button>
+        </button> : null}
       </li>
     );
   }
 
   return (
     <section className="border-t border-border pt-4">
-      <h3 className="font-body text-[11px] font-bold uppercase tracking-wider text-text-muted">{copy.items.links}</h3>
+      <h3 className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">{copy.items.links}</h3>
       {outgoing.length || incoming.length ? (
         <ul className="mt-1">
           {outgoing.map((l) => <Row key={l.id} linkId={l.id} other={byId.get(l.target_id)!} dir="out" />)}
@@ -71,7 +73,7 @@ export function ItemConnections({ item, items, sphereById, onOpen }: Props) {
         <p className="mt-2 text-[12px] text-text-muted">{copy.items.linksEmpty}</p>
       )}
 
-      {picking ? (
+      {!canEdit ? null : picking ? (
         <div className="mt-3">
           <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={copy.items.connectPlaceholder} autoFocus aria-label={copy.items.connect} />
           <ul className="mt-1.5 max-h-56 overflow-y-auto">

@@ -10,6 +10,7 @@ import { useGalaxies } from '@/lib/queries/galaxies';
 import { useSpheres } from '@/lib/queries/spheres';
 import { useMounted } from '@/lib/useMounted';
 import { GalaxySwitcher } from './GalaxySwitcher';
+import { PresenceStack } from './PresenceStack';
 import { ThemeToggle } from './ThemeToggle';
 import { UserMenu } from './UserMenu';
 
@@ -45,7 +46,7 @@ function Breadcrumb() {
 }
 
 /** Top bar (RW2.7): breadcrumb on desktop, logo and switcher on smaller screens, then search and "add". */
-export function TopBar({ children, onAdd }: { children?: React.ReactNode; onAdd: () => void }) {
+export function TopBar({ children, onAdd }: { children?: React.ReactNode; onAdd?: () => void }) {
   // Radix menus generate ids that differ between server and client here: mount them on the client only
   const mounted = useMounted();
   return (
@@ -58,11 +59,14 @@ export function TopBar({ children, onAdd }: { children?: React.ReactNode; onAdd:
       </div>
       <Breadcrumb />
       <div className="ml-auto flex items-center gap-1.5">
+        {mounted ? <PresenceStack /> : null}
         {children}
-        <Button variant="primary" size="sm" data-tour="add" onClick={onAdd} className="max-sm:hidden">
-          <Plus size={14} aria-hidden />
-          {copy.nav.add}
-        </Button>
+        {onAdd ? (
+          <Button variant="primary" size="sm" data-tour="add" onClick={onAdd} className="max-sm:hidden">
+            <Plus size={14} aria-hidden />
+            {copy.nav.add}
+          </Button>
+        ) : null}
         <span className="flex items-center lg:hidden">
           <ThemeToggle className="h-9 w-9 max-sm:hidden" />
           {mounted ? <UserMenu /> : <span aria-hidden className="h-9 w-9" />}

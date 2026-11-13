@@ -5,6 +5,8 @@ export const copy = {
   tagline: 'Boards for teams that think together.',
   inviteOnly: 'Invite only. No public sign-up.',
   common: {
+    readOnly: 'View only',
+    readOnlyHint: 'You are a viewer in this workspace: you can read and search, not edit.',
     cancel: 'Cancel',
     save: 'Save',
     create: 'Create',
@@ -30,6 +32,7 @@ export const copy = {
   invite: {
     title: (galaxy: string) => `Join “${galaxy}”`,
     invitedBy: (name: string | null) => (name ? `${name} invited you to this workspace.` : 'You have been invited to this workspace.'),
+    joinAsRole: (role: string) => `You will join as ${role === 'viewer' ? 'a viewer: you can read and search, but not edit' : 'an editor: you can create and edit boards and items'}.`,
     newAccount: 'Choose a username and a password to join.',
     displayName: 'Your name',
     username: 'Username',
@@ -97,6 +100,14 @@ export const copy = {
     rename: 'Name',
     members: 'Members',
     owner: 'owner',
+    roles: {
+      owner: { label: 'Owner', hint: 'Manages members, roles and settings.' },
+      editor: { label: 'Editor', hint: 'Creates, edits and links boards and items.' },
+      viewer: { label: 'Viewer', hint: 'Reads, searches and follows activity. Cannot edit.' },
+    },
+    roleLabel: (name: string) => `Role of ${name}`,
+    roleChanged: (name: string, role: string) => `${name} is now ${role.toLowerCase()}.`,
+    inviteAs: 'Invite as',
     remove: 'Remove',
     removeConfirm: (name: string) => `Remove ${name} from this workspace?`,
     removed: 'Member removed.',
@@ -114,7 +125,7 @@ export const copy = {
     expired: 'expired',
     noInvites: 'No invite links yet.',
     personalNote: 'This is your personal workspace: only you can see it, and it cannot be shared or deleted.',
-    onlyOwner: 'Only the workspace owner can invite or remove members.',
+    onlyOwner: 'Only the workspace owner can invite members, remove them or change roles.',
     setup: 'Boards',
     setupHint: 'Pick a template to create the first boards.',
     dangerZone: 'Danger zone',
@@ -339,6 +350,12 @@ export const copy = {
         body: 'Open the workspace settings to create an invite link.',
       },
     },
+  },
+  presence: {
+    onBoard: (names: string[]) => `On this board: ${names.join(', ')}`,
+    inWorkspace: (names: string[]) => `In this workspace: ${names.join(', ')}`,
+    offline: 'Reconnecting…',
+    offlineHint: 'Live updates are paused. Changes still sync every 15 seconds.',
   },
   search: {
     placeholder: 'Search notes, links and images…',

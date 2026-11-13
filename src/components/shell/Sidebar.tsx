@@ -9,6 +9,7 @@ import { SphereDot } from '@/components/spheres/SphereDot';
 import { SphereFormDialog } from '@/components/spheres/SphereFormDialog';
 import { copy } from '@/lib/copy';
 import { useGalaxies } from '@/lib/queries/galaxies';
+import { useRole } from '@/lib/queries/useCanEdit';
 import { useSphereStats, useSpheres } from '@/lib/queries/spheres';
 import { useMounted } from '@/lib/useMounted';
 import { cn } from '@/lib/utils';
@@ -30,6 +31,7 @@ export function Sidebar({ className }: { className?: string }) {
   const { data: spheres = [] } = useSpheres(galaxyId);
   const { data: stats } = useSphereStats(galaxyId);
   const [creating, setCreating] = useState(false);
+  const { canEdit } = useRole(galaxyId);
   const inWorkspace = !!galaxyId && !!galaxies?.some((g) => g.id === galaxyId);
   const top = spheres.filter((s) => !s.parent_id);
   const activeSub = search.get('sub');
@@ -59,9 +61,11 @@ export function Sidebar({ className }: { className?: string }) {
 
             <div className="mb-1 mt-4 flex items-center justify-between pl-2">
               <h2 className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">{copy.nav.boards}</h2>
-              <button type="button" aria-label={copy.universe.newSphere} onClick={() => setCreating(true)} className="inline-flex h-7 w-7 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
-                <Plus size={15} aria-hidden />
-              </button>
+              {canEdit ? (
+                <button type="button" aria-label={copy.universe.newSphere} onClick={() => setCreating(true)} className="inline-flex h-7 w-7 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
+                  <Plus size={15} aria-hidden />
+                </button>
+              ) : null}
             </div>
             <ul className="space-y-px">
               {top.map((s) => {

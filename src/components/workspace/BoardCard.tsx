@@ -23,6 +23,7 @@ interface Props {
   profileById: Map<string, Profile>;
   onEdit: (sphere: Sphere) => void;
   onDelete: (sphere: Sphere) => void;
+  canEdit: boolean;
 }
 
 /** The people who touched the board last, most recent first. */
@@ -37,7 +38,7 @@ export function lastEditors(items: Item[], max = 3): string[] {
 }
 
 /** One board in the workspace overview (RW2.3): thumbnail, colour, count, last editors, last change. */
-export function BoardCard({ galaxyId, sphere, subs, items, isPrivate, sphereById, profileById, onEdit, onDelete }: Props) {
+export function BoardCard({ galaxyId, sphere, subs, items, isPrivate, sphereById, profileById, onEdit, onDelete, canEdit }: Props) {
   const href = `/w/${galaxyId}/b/${sphere.id}`;
   const fresh = items.filter((i) => i.is_new).length;
   const latest = items.reduce<string | null>((max, i) => (i.updated_at && (!max || i.updated_at > max) ? i.updated_at : max), null);
@@ -60,7 +61,7 @@ export function BoardCard({ galaxyId, sphere, subs, items, isPrivate, sphereById
           </h2>
           {isPrivate ? <Lock size={13} aria-label={copy.common.onlyMe} className="shrink-0 text-text-muted" /> : null}
           {fresh ? <NewBadge count={fresh} /> : null}
-          <Dropdown>
+          {canEdit ? <Dropdown>
             <DropdownTrigger aria-label={copy.spheres.actions(sphere.name)} className="relative z-10 -mr-1.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
               <MoreHorizontal size={16} aria-hidden />
             </DropdownTrigger>
@@ -70,7 +71,7 @@ export function BoardCard({ galaxyId, sphere, subs, items, isPrivate, sphereById
                 <DropdownItem onSelect={() => onDelete(sphere)} className="text-danger"><Trash2 size={15} aria-hidden />{copy.common.delete}</DropdownItem>
               ) : null}
             </DropdownContent>
-          </Dropdown>
+          </Dropdown> : null}
         </div>
 
         {subs.length ? (

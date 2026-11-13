@@ -109,14 +109,14 @@ isOneToOne: false
                   ]
                 },"invites": {
                   Row: {
-                    "created_at": string,"created_by": string | null,"expires_at": string,"galaxy_id": string,"id": string,"token": string,"used_at": string | null,"used_by": string | null
+                    "created_at": string,"created_by": string | null,"expires_at": string,"galaxy_id": string,"id": string,"role": string,"token": string,"used_at": string | null,"used_by": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"created_by"?: string | null,"expires_at"?: string,"galaxy_id": string,"id"?: string,"token"?: string,"used_at"?: string | null,"used_by"?: string | null
+                    "created_at"?: string,"created_by"?: string | null,"expires_at"?: string,"galaxy_id": string,"id"?: string,"role"?: string,"token"?: string,"used_at"?: string | null,"used_by"?: string | null
                   }
                   Update: {
-                    "created_at"?: string,"created_by"?: string | null,"expires_at"?: string,"galaxy_id"?: string,"id"?: string,"token"?: string,"used_at"?: string | null,"used_by"?: string | null
+                    "created_at"?: string,"created_by"?: string | null,"expires_at"?: string,"galaxy_id"?: string,"id"?: string,"role"?: string,"token"?: string,"used_at"?: string | null,"used_by"?: string | null
                   }
                   Relationships: [
                     {
@@ -402,7 +402,7 @@ isOneToOne: false
                            },
 "invite_preview":
 { Args: { "_token": string }; Returns: {
-              "galaxy_name": string,"inviter_name": string,"status": string
+              "galaxy_name": string,"inviter_name": string,"role": string,"status": string
             }[]
                            },
 "mark_seen":
@@ -442,6 +442,9 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"set_member_role":
+{ Args: { "_galaxy_id": string,"_role": string,"_user_id": string }; Returns: undefined
+                           },
 "touch_last_seen":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            }

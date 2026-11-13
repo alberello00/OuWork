@@ -19,6 +19,7 @@ import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { sphereVar } from '@/lib/tokens';
 import { timeAgo } from '@/lib/utils';
 import { useOpenItem } from '@/lib/useOpenItem';
+import { useRole } from '@/lib/queries/useCanEdit';
 
 const PER_SPHERE = 5;
 
@@ -28,6 +29,7 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
   const openItem = useOpenItem();
   const [editing, setEditing] = useState<Sphere | null>(null);
   const [deleting, setDeleting] = useState<Sphere | null>(null);
+  const { canEdit } = useRole(galaxyId);
 
   if (data.isLoading) return <main className="flex-1 p-8 text-[13px] text-text-muted">{copy.common.loading}</main>;
   if (!data.galaxy) return <EmptyState emoji="🔒" title={copy.galaxies.emptyTitle} className="flex-1" />;
@@ -62,7 +64,7 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
                   {isSpherePrivate(sphere, data.sphereById) ? <PrivateBadge /> : null}
                   {newCount ? <NewBadge count={newCount} /> : null}
                   <span className="text-[11.5px] text-text-muted">{items.length}</span>
-                  <Dropdown>
+                  {canEdit ? <Dropdown>
                     <DropdownTrigger aria-label={copy.spheres.actions(sphere.name)} className="-mr-2 inline-flex h-8 w-8 shrink-0 max-sm:h-11 max-sm:w-11 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 hover:text-text">
                       <MoreHorizontal size={18} aria-hidden />
                     </DropdownTrigger>
@@ -72,7 +74,7 @@ export function NotesView({ galaxyId }: { galaxyId: string }) {
                         <DropdownItem onSelect={() => setDeleting(sphere)} className="text-danger"><Trash2 size={15} aria-hidden />{copy.common.delete}</DropdownItem>
                       ) : null}
                     </DropdownContent>
-                  </Dropdown>
+                  </Dropdown> : null}
                 </header>
 
                 {subs.length ? (

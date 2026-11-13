@@ -48,6 +48,7 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
               <p className="mt-3 text-[13px] leading-[19.5px] text-text-muted">
                 {copy.invite.invitedBy(invite.inviter_name)}
               </p>
+              <p className="mt-2 text-[13px] leading-[19.5px] text-text-muted">{copy.invite.joinAsRole(invite.role)}</p>
               {user ? <JoinForm token={token} name={myName ?? ''} /> : <SignUpForm token={token} />}
             </>
           ) : (

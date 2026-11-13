@@ -4,11 +4,12 @@
 --
 --   username   password      notes
 --   maya       ouwork-dev    owner of "Product Launch" (product)
---   jonas      ouwork-dev    member (engineering); owner of "Website Redesign"
---   priya      ouwork-dev    member (design)
---   tom        ouwork-dev    member (marketing)
---   elena      ouwork-dev    member (research)
---   sam        ouwork-dev    member of "Website Redesign" only → use them to check
+--   jonas      ouwork-dev    editor (engineering); owner of "Website Redesign"
+--   priya      ouwork-dev    editor (design)
+--   tom        ouwork-dev    editor (marketing)
+--   elena      ouwork-dev    editor (research)
+--   lee        ouwork-dev    VIEWER of "Product Launch" (a stakeholder): reads, writes nothing
+--   sam        ouwork-dev    editor of "Website Redesign" only → use them to check
 --                            that nothing of "Product Launch" leaks to a non member
 --
 -- Private content to check by hand:
@@ -43,7 +44,8 @@ from (values
   ('aaaaaaaa-0000-4000-8000-000000000003'::uuid, 'priya', 'Priya Nair',  'pink'),
   ('aaaaaaaa-0000-4000-8000-000000000004'::uuid, 'tom',   'Tom Okafor',  'orange'),
   ('aaaaaaaa-0000-4000-8000-000000000005'::uuid, 'elena', 'Elena Rossi', 'green'),
-  ('aaaaaaaa-0000-4000-8000-000000000006'::uuid, 'sam',   'Sam Rivera',  'violet')
+  ('aaaaaaaa-0000-4000-8000-000000000006'::uuid, 'sam',   'Sam Rivera',  'violet'),
+  ('aaaaaaaa-0000-4000-8000-000000000007'::uuid, 'lee',   'Lee Park',    'blue')
 ) as u (id, username, display_name, color);
 
 insert into auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
@@ -63,6 +65,7 @@ declare
   tom   constant uuid := 'aaaaaaaa-0000-4000-8000-000000000004';
   elena constant uuid := 'aaaaaaaa-0000-4000-8000-000000000005';
   sam   constant uuid := 'aaaaaaaa-0000-4000-8000-000000000006';
+  lee   constant uuid := 'aaaaaaaa-0000-4000-8000-000000000007';
 
   g_launch constant uuid := 'eeeeeeee-0000-4000-8000-000000000001';
   g_web    constant uuid := 'eeeeeeee-0000-4000-8000-000000000002';
@@ -102,11 +105,12 @@ begin
     (g_web, 'Website Redesign', jonas, now() - interval '20 days');
 
   insert into public.galaxy_members (galaxy_id, user_id, role, joined_at) values
-    (g_launch, jonas, 'member', now() - interval '44 days'),
-    (g_launch, priya, 'member', now() - interval '44 days'),
-    (g_launch, tom,   'member', now() - interval '40 days'),
-    (g_launch, elena, 'member', now() - interval '38 days'),
-    (g_web, sam, 'member', now() - interval '19 days');
+    (g_launch, jonas, 'editor', now() - interval '44 days'),
+    (g_launch, priya, 'editor', now() - interval '44 days'),
+    (g_launch, tom,   'editor', now() - interval '40 days'),
+    (g_launch, elena, 'editor', now() - interval '38 days'),
+    (g_launch, lee,   'viewer', now() - interval '30 days'),
+    (g_web, sam, 'editor', now() - interval '19 days');
 
   -- maya has been away for three days: she gets the "since your last visit" banner
   update public.galaxy_members set last_seen_at = now() - interval '12 hours';
