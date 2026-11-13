@@ -1,28 +1,14 @@
 'use client';
 
-import { ArrowLeft, Check, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Planet } from '@/components/universe/Planet';
+import { SphereDot } from '@/components/spheres/SphereDot';
 import { Button } from '@/components/ui/Button';
 import { Dialog, DialogContent } from '@/components/ui/Dialog';
 import { Input, Label } from '@/components/ui/Input';
 import { copy } from '@/lib/copy';
-import {
-  buildSpheres,
-  GALAXY_KINDS,
-  guessKind,
-  INTERESTS,
-  interestLabel,
-  interestsFor,
-  isValidSetupSphere,
-  MAX_SETUP_SPHERES,
-  mergePreview,
-  type CustomInterest,
-  type GalaxyKind,
-  type InterestId,
-  type SetupSphere,
-} from '@/lib/galaxySetup';
+import { buildSpheres, guessTemplate, isValidSetupSphere, TEMPLATE_IDS, TEMPLATES, type SetupSphere, type TemplateId } from '@/lib/galaxySetup';
 import { useCompleteGalaxySetup } from '@/lib/queries/galaxies';
 import type { GalaxyWithMembers } from '@/lib/queries/types';
 import { SPHERE_COLORS, SPHERE_EMOJIS, sphereVar } from '@/lib/tokens';
@@ -31,52 +17,33 @@ import { cn } from '@/lib/utils';
 
 interface Props {
   galaxy: GalaxyWithMembers;
-  /** top-level spheres already there besides Random (someone may have added some by hand) */
+  /** top-level boards already there besides the Inbox (someone may have added some by hand) */
   existingCount: number;
   open: boolean;
-  /** closing without finishing = "Maybe later": the galaxy stays not set up */
+  /** closing without finishing = "Maybe later": the workspace stays not set up */
   onOpenChange: (open: boolean) => void;
-  /** setup completed; ids of the new spheres, in order (empty for "Start from scratch") */
+  /** setup completed; ids of the new boards, in order (empty for the blank template) */
   onDone: (sphereIds: string[]) => void;
 }
 
-const STEPS = 3;
+const STEPS = 2;
 
-/** RF14: three quick steps that turn a few answers into the first spheres of a galaxy. */
+/** RW2.9: pick a template, review its boards, create them in one transaction. */
 export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, onDone }: Props) {
   const complete = useCompleteGalaxySetup(galaxy.id);
   const [step, setStep] = useState(0);
-  const [kind, setKind] = useState<GalaxyKind>(() => guessKind(galaxy.is_personal, galaxy.members.length));
-  const [selected, setSelected] = useState<InterestId[]>([]);
-  const [customs, setCustoms] = useState<CustomInterest[]>([]);
-  const [customName, setCustomName] = useState('');
-  const [customEmoji, setCustomEmoji] = useState<string>('✨');
+  const [template, setTemplate] = useState<TemplateId>(() => guessTemplate(galaxy.is_personal));
   const [preview, setPreview] = useState<SetupSphere[]>([]);
   const [editingKey, setEditingKey] = useState<string | null>(null);
 
-  const solo = kind === 'solo';
-  const offered = interestsFor(kind);
-  const picked = selected.filter((id) => offered.includes(id));
-  const total = picked.length + customs.length;
-  const full = total >= MAX_SETUP_SPHERES;
+  const blank = template === 'blank';
   const editing = preview.find((s) => s.key === editingKey);
 
-  function toggle(id: InterestId) {
-    setSelected((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : full ? cur : [...cur, id]));
-  }
-
-  function addCustom() {
-    const name = customName.trim();
-    if (!name || full) return;
-    setCustoms((cur) => (cur.some((c) => c.name.toLowerCase() === name.toLowerCase()) ? cur : [...cur, { name, emoji: customEmoji }]));
-    setCustomName('');
-  }
-
   function toPreview() {
-    const next = mergePreview(preview, buildSpheres(kind, picked, customs));
-    setPreview(next);
+    // edits survive going back and forth as long as the template stays the same
+    setPreview((cur) => (cur.length && cur[0]!.key.startsWith(`${template}:`) ? cur : buildSpheres(template)));
     setEditingKey(null);
-    setStep(2);
+    setStep(1);
   }
 
   function patch(key: string, change: Partial<SetupSphere>) {
@@ -85,30 +52,15 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
 
   function remove(key: string) {
     setPreview((cur) => cur.filter((s) => s.key !== key));
-    if (key.startsWith('custom:')) {
-      // keys are positional: rebuild the remaining custom keys in the preview too
-      const index = Number(key.slice('custom:'.length));
-      setCustoms((cur) => cur.filter((_, i) => i !== index));
-      setPreview((cur) =>
-        cur.map((s) => {
-          if (!s.key.startsWith('custom:')) return s;
-          const i = Number(s.key.slice('custom:'.length));
-          return i > index ? { ...s, key: `custom:${i - 1}` } : s;
-        })
-      );
-    } else {
-      setSelected((cur) => cur.filter((id) => id !== key));
-    }
     setEditingKey(null);
   }
 
-  function submit(spheres: SetupSphere[], scratch = false) {
+  function submit(spheres: SetupSphere[]) {
+    const scratch = spheres.length === 0;
     const places = ringAroundCenter(spheres.map((s) => s.key), existingCount);
     complete.mutate(
       {
-        answers: scratch
-          ? { version: 1, kind, scratch: true }
-          : { version: 1, kind, interests: picked, custom: customs.map((c) => c.name) },
+        answers: { version: 2, template, boards: spheres.map((s) => s.name.trim()) },
         spheres: spheres.map((s, i) => ({ name: s.name.trim(), emoji: s.emoji.trim(), color: s.color, x: places[i]!.x, y: places[i]!.y })),
       },
       {
@@ -128,9 +80,8 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
     );
   }
 
-  const title =
-    step === 0 ? copy.setup.kindTitle : step === 1 ? copy.setup.interestsTitle[kind] : copy.setup.previewTitle[solo ? 'solo' : 'shared'];
-  const body = step === 0 ? copy.setup.kindBody : step === 1 ? copy.setup.interestsBody : copy.setup.previewBody;
+  const title = step === 0 ? copy.setup.templateTitle : copy.setup.previewTitle;
+  const body = step === 0 ? copy.setup.templateBody : copy.setup.previewBody;
   const canCreate = preview.length > 0 && preview.every(isValidSetupSphere) && !complete.isPending;
 
   return (
@@ -150,25 +101,29 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
         </p>
 
         {step === 0 ? (
-          <div role="radiogroup" aria-label={copy.setup.kindTitle} className="mt-5 grid grid-cols-2 gap-2.5">
-            {GALAXY_KINDS.map((k) => {
-              const c = copy.setup.kinds[k];
-              const on = kind === k;
+          <div role="radiogroup" aria-label={copy.setup.templateTitle} className="mt-5 grid gap-2.5 sm:grid-cols-2">
+            {TEMPLATE_IDS.map((id) => {
+              const c = copy.setup.templates[id];
+              const on = template === id;
               return (
                 <button
-                  key={k}
+                  key={id}
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  onClick={() => setKind(k)}
+                  onClick={() => setTemplate(id)}
                   className={cn(
-                    'relative flex min-h-28 flex-col items-start justify-end gap-0.5 rounded-card border p-3.5 text-left transition-colors duration-200',
+                    'relative flex min-h-28 flex-col items-start gap-1 rounded-card border p-3.5 text-left transition-colors duration-200',
                     on ? 'border-text bg-surface-2' : 'border-border hover:bg-surface-2'
                   )}
                 >
-                  <span aria-hidden className="mb-auto text-[30px] leading-none">{c.emoji}</span>
-                  <span className="font-heading text-[19px] leading-tight">{c.label}</span>
+                  <span className="pr-6 text-[15px] font-semibold leading-tight">{c.label}</span>
                   <span className="text-[12px] text-text-muted">{c.hint}</span>
+                  {TEMPLATES[id].length ? (
+                    <span className="mt-auto pt-2 text-[12px] leading-snug text-text-muted">
+                      {TEMPLATES[id].map((b) => `${b.emoji} ${copy.setup.boards[b.key]}`).join(' · ')}
+                    </span>
+                  ) : null}
                   {on ? <Check size={16} aria-hidden className="absolute right-3 top-3" /> : null}
                 </button>
               );
@@ -177,75 +132,6 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
         ) : null}
 
         {step === 1 ? (
-          <div className="mt-5">
-            <div className="flex flex-wrap gap-2">
-              {offered.map((id) => {
-                const on = picked.includes(id);
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    aria-pressed={on}
-                    disabled={!on && full}
-                    onClick={() => toggle(id)}
-                    className={cn(
-                      'inline-flex min-h-11 items-center gap-2 rounded-pill border px-3.5 text-[13px] font-medium transition-colors duration-200 disabled:opacity-45',
-                      on ? 'border-text bg-text text-bg' : 'border-border bg-card hover:bg-surface-2'
-                    )}
-                  >
-                    <span aria-hidden className="text-[16px]">{INTERESTS[id].emoji}</span>
-                    {interestLabel(id)}
-                  </button>
-                );
-              })}
-              {customs.map((c, i) => (
-                <button
-                  key={`${c.name}-${i}`}
-                  type="button"
-                  aria-pressed
-                  onClick={() => setCustoms((cur) => cur.filter((_, j) => j !== i))}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-pill border border-text bg-text px-3.5 text-[13px] font-medium text-bg"
-                >
-                  <span aria-hidden className="text-[16px]">{c.emoji}</span>
-                  {c.name}
-                </button>
-              ))}
-            </div>
-
-            <form
-              className="mt-5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                addCustom();
-              }}
-            >
-              <Label htmlFor="setup-else">{copy.setup.else}</Label>
-              <div className="flex gap-2">
-                <select
-                  aria-label={copy.setup.elseEmoji}
-                  value={customEmoji}
-                  onChange={(e) => setCustomEmoji(e.target.value)}
-                  className="h-11 w-[68px] shrink-0 rounded-card border border-border bg-card px-2 text-[18px]"
-                >
-                  {SPHERE_EMOJIS.map((e) => (
-                    <option key={e} value={e}>{e}</option>
-                  ))}
-                </select>
-                <Input id="setup-else" value={customName} onChange={(e) => setCustomName(e.target.value)} placeholder={copy.setup.elsePlaceholder} maxLength={40} disabled={full} />
-                <Button type="submit" disabled={!customName.trim() || full}>
-                  <Plus size={15} aria-hidden />
-                  {copy.setup.elseAdd}
-                </Button>
-              </div>
-            </form>
-            <p className="mt-3 text-[12px] text-text-muted" aria-live="polite">
-              {full ? copy.setup.limit(MAX_SETUP_SPHERES) : copy.setup.picked(total, MAX_SETUP_SPHERES)}
-            </p>
-          </div>
-        ) : null}
-
-        {step === 2 ? (
           <div className="mt-5">
             {preview.length ? (
               <ul className="grid grid-cols-3 gap-x-2 gap-y-3 min-[440px]:grid-cols-4 sm:grid-cols-5">
@@ -258,7 +144,7 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
                       onClick={() => setEditingKey(editingKey === s.key ? null : s.key)}
                       className={cn('flex w-full flex-col items-center gap-1.5 rounded-card px-1 py-2.5 transition-colors duration-200', editingKey === s.key ? 'bg-surface-2 ring-2 ring-text' : 'hover:bg-surface-2')}
                     >
-                      <Planet color={s.color} emoji={s.emoji} size={58} glow={false} />
+                      <SphereDot color={s.color} emoji={s.emoji} size={44} />
                       <span className="line-clamp-2 text-center text-[12px] font-medium leading-tight">{s.name || '…'}</span>
                     </button>
                   </li>
@@ -307,24 +193,23 @@ export function GalaxySetupDialog({ galaxy, existingCount, open, onOpenChange, o
 
         <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
           {step === 0 ? (
-            <>
-              <Button variant="ghost" onClick={() => onOpenChange(false)}>{copy.setup.later}</Button>
-              <Button variant="ghost" title={copy.setup.scratchHint} disabled={complete.isPending} onClick={() => submit([], true)} className="text-text-muted">
-                {copy.setup.scratch}
-              </Button>
-            </>
+            <Button variant="ghost" onClick={() => onOpenChange(false)}>{copy.setup.later}</Button>
           ) : (
-            <Button variant="ghost" onClick={() => setStep(step - 1)}>
+            <Button variant="ghost" onClick={() => setStep(0)}>
               <ArrowLeft size={15} aria-hidden />
               {copy.common.back}
             </Button>
           )}
           <span className="flex-1" />
-          {step === 0 ? <Button variant="primary" onClick={() => setStep(1)}>{copy.setup.next}</Button> : null}
-          {step === 1 ? <Button variant="primary" disabled={total === 0} onClick={toPreview}>{copy.setup.next}</Button> : null}
-          {step === 2 ? (
+          {step === 0 && blank ? (
+            <Button variant="primary" disabled={complete.isPending} onClick={() => submit([])}>
+              {complete.isPending ? copy.setup.creating : copy.setup.createBlank}
+            </Button>
+          ) : null}
+          {step === 0 && !blank ? <Button variant="primary" onClick={toPreview}>{copy.setup.next}</Button> : null}
+          {step === 1 ? (
             <Button variant="primary" disabled={!canCreate} onClick={() => submit(preview)}>
-              {complete.isPending ? copy.setup.creating : copy.setup.create[solo ? 'solo' : 'shared']}
+              {complete.isPending ? copy.setup.creating : copy.setup.create}
             </Button>
           ) : null}
         </div>

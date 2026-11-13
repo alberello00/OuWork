@@ -25,7 +25,7 @@ export async function acceptInvite(_prev: InviteState, formData: FormData): Prom
   const supabase = await createClient();
   const { data: galaxyId, error } = await supabase.rpc('accept_invite', { _token: token });
   if (error || !galaxyId) return { error: inviteError(error?.message) };
-  redirect(`/g/${galaxyId}`);
+  redirect(`/w/${galaxyId}`);
 }
 
 /**
@@ -94,5 +94,5 @@ export async function signUpWithInvite(_prev: InviteState, formData: FormData): 
   });
   if (signInError) redirect('/login');
 
-  redirect(`/g/${galaxyId}`);
+  redirect(`/w/${galaxyId}`);
 }

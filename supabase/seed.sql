@@ -1,21 +1,26 @@
 -- Demo data for LOCAL development only (applied by `supabase db reset`).
--- It mirrors the Figma prototype: galaxy "Lola & Alberto".
+-- Workspace "Product Launch": a small team shipping the public beta of
+-- "Beacon 2.0", a fictional status-page product.
 --
---   username   password        notes
---   alberto    ourworld-dev    owner of "Lola & Alberto" and of "Friends"
---   lola       ourworld-dev    member of "Lola & Alberto"
---   giulia     ourworld-dev    member of "Friends" only → use her to check that
---                              nothing of "Lola & Alberto" leaks to a non member
+--   username   password      notes
+--   maya       ouwork-dev    owner of "Product Launch" (product)
+--   jonas      ouwork-dev    editor (engineering); owner of "Website Redesign"
+--   priya      ouwork-dev    editor (design)
+--   tom        ouwork-dev    editor (marketing)
+--   elena      ouwork-dev    editor (research)
+--   lee        ouwork-dev    VIEWER of "Product Launch" (a stakeholder): reads, writes nothing
+--   sam        ouwork-dev    editor of "Website Redesign" only → use them to check
+--                            that nothing of "Product Launch" leaks to a non member
 --
 -- Private content to check by hand:
---   * alberto: private note "Anniversary surprise" (Places → Italy)
---   * lola:    private sphere "Gift ideas" with the note "For Alberto's birthday"
+--   * maya:  private note "Pricing — draft numbers" (Roadmap)
+--   * priya: private board "Scratchpad" with the note "Dark mode illustrations"
 --
--- Profiles, "Just me" galaxies, memberships and the Random sphere are created
--- by the database triggers, exactly as in production. Since MVP2 a new galaxy
--- starts with Random only (RF13): the five demo spheres of the Figma prototype
--- are inserted here, and every demo galaxy is marked as already set up so the
--- demo users never get the setup survey.
+-- Profiles, "Personal" workspaces, memberships and the Inbox board are created
+-- by the database triggers, exactly as in production. A new workspace starts
+-- with the Inbox only: the demo boards are inserted here and every demo
+-- workspace is marked as already set up, so demo users never get the template
+-- picker.
 
 -- ── users ──────────────────────────────────────────────────────────────────
 insert into auth.users (
@@ -26,17 +31,21 @@ insert into auth.users (
 )
 select
   '00000000-0000-0000-0000-000000000000', u.id, 'authenticated', 'authenticated',
-  u.username || '@users.ourworld.local',
-  extensions.crypt('ourworld-dev', extensions.gen_salt('bf')),
+  u.username || '@users.ouwork.local',
+  extensions.crypt('ouwork-dev', extensions.gen_salt('bf')),
   now(),
   '{"provider":"email","providers":["email"]}'::jsonb,
   jsonb_build_object('username', u.username, 'display_name', u.display_name, 'color', u.color),
   now() - interval '60 days', now() - interval '60 days',
   '', '', '', '', '', '', '', ''
 from (values
-  ('aaaaaaaa-0000-4000-8000-000000000001'::uuid, 'alberto', 'Alberto', 'teal'),
-  ('bbbbbbbb-0000-4000-8000-000000000002'::uuid, 'lola',    'Lola',    'pink'),
-  ('cccccccc-0000-4000-8000-000000000003'::uuid, 'giulia',  'Giulia',  'indigo')
+  ('aaaaaaaa-0000-4000-8000-000000000001'::uuid, 'maya',  'Maya Chen',   'indigo'),
+  ('aaaaaaaa-0000-4000-8000-000000000002'::uuid, 'jonas', 'Jonas Weber', 'teal'),
+  ('aaaaaaaa-0000-4000-8000-000000000003'::uuid, 'priya', 'Priya Nair',  'pink'),
+  ('aaaaaaaa-0000-4000-8000-000000000004'::uuid, 'tom',   'Tom Okafor',  'orange'),
+  ('aaaaaaaa-0000-4000-8000-000000000005'::uuid, 'elena', 'Elena Rossi', 'green'),
+  ('aaaaaaaa-0000-4000-8000-000000000006'::uuid, 'sam',   'Sam Rivera',  'violet'),
+  ('aaaaaaaa-0000-4000-8000-000000000007'::uuid, 'lee',   'Lee Park',    'blue')
 ) as u (id, username, display_name, color);
 
 insert into auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at)
@@ -45,166 +54,209 @@ select
   jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true, 'phone_verified', false),
   now(), now(), now()
 from auth.users u
-where u.email like '%@users.ourworld.local';
+where u.email like '%@users.ouwork.local';
 
--- ── galaxies, spheres, items ───────────────────────────────────────────────
+-- ── workspaces, boards, items ──────────────────────────────────────────────
 do $$
 declare
-  alberto constant uuid := 'aaaaaaaa-0000-4000-8000-000000000001';
-  lola    constant uuid := 'bbbbbbbb-0000-4000-8000-000000000002';
-  giulia  constant uuid := 'cccccccc-0000-4000-8000-000000000003';
-  g_us      constant uuid := 'eeeeeeee-0000-4000-8000-000000000001';
-  g_friends constant uuid := 'eeeeeeee-0000-4000-8000-000000000002';
+  maya  constant uuid := 'aaaaaaaa-0000-4000-8000-000000000001';
+  jonas constant uuid := 'aaaaaaaa-0000-4000-8000-000000000002';
+  priya constant uuid := 'aaaaaaaa-0000-4000-8000-000000000003';
+  tom   constant uuid := 'aaaaaaaa-0000-4000-8000-000000000004';
+  elena constant uuid := 'aaaaaaaa-0000-4000-8000-000000000005';
+  sam   constant uuid := 'aaaaaaaa-0000-4000-8000-000000000006';
+  lee   constant uuid := 'aaaaaaaa-0000-4000-8000-000000000007';
 
-  s_places uuid; s_music uuid; s_movies uuid; s_ideas uuid; s_memories uuid; s_random uuid;
-  s_italy  constant uuid := 'dddddddd-0000-4000-8000-000000000001';
-  s_abroad constant uuid := 'dddddddd-0000-4000-8000-000000000002';
-  s_gifts  constant uuid := 'dddddddd-0000-4000-8000-000000000003';
-  s_friends_places uuid;
+  g_launch constant uuid := 'eeeeeeee-0000-4000-8000-000000000001';
+  g_web    constant uuid := 'eeeeeeee-0000-4000-8000-000000000002';
 
-  i_lisbon   constant uuid := 'ffffffff-0000-4000-8000-000000000001';
-  i_braies   constant uuid := 'ffffffff-0000-4000-8000-000000000002';
-  i_procida  constant uuid := 'ffffffff-0000-4000-8000-000000000003';
-  i_bolzano  constant uuid := 'ffffffff-0000-4000-8000-000000000004';
-  i_faenza   constant uuid := 'ffffffff-0000-4000-8000-000000000005';
-  i_surprise constant uuid := 'ffffffff-0000-4000-8000-000000000006';
-  i_fado     constant uuid := 'ffffffff-0000-4000-8000-000000000007';
-  i_postino  constant uuid := 'ffffffff-0000-4000-8000-000000000008';
-  i_tram     constant uuid := 'ffffffff-0000-4000-8000-000000000009';
+  s_roadmap     constant uuid := 'dddddddd-0000-4000-8000-000000000001';
+  s_research    constant uuid := 'dddddddd-0000-4000-8000-000000000002';
+  s_design      constant uuid := 'dddddddd-0000-4000-8000-000000000003';
+  s_engineering constant uuid := 'dddddddd-0000-4000-8000-000000000004';
+  s_marketing   constant uuid := 'dddddddd-0000-4000-8000-000000000005';
+  s_interviews  constant uuid := 'dddddddd-0000-4000-8000-000000000006';
+  s_competitors constant uuid := 'dddddddd-0000-4000-8000-000000000007';
+  s_scratch     constant uuid := 'dddddddd-0000-4000-8000-000000000008';
+  s_sitemap     constant uuid := 'dddddddd-0000-4000-8000-000000000009';
+  s_inbox uuid;
+
+  i_timeline   constant uuid := 'ffffffff-0000-4000-8000-000000000001';
+  i_scope      constant uuid := 'ffffffff-0000-4000-8000-000000000002';
+  i_pricing    constant uuid := 'ffffffff-0000-4000-8000-000000000003';
+  i_risks      constant uuid := 'ffffffff-0000-4000-8000-000000000004';
+  i_synthesis  constant uuid := 'ffffffff-0000-4000-8000-000000000005';
+  i_quote      constant uuid := 'ffffffff-0000-4000-8000-000000000006';
+  i_statuspage constant uuid := 'ffffffff-0000-4000-8000-000000000007';
+  i_matrix     constant uuid := 'ffffffff-0000-4000-8000-000000000008';
+  i_onboarding constant uuid := 'ffffffff-0000-4000-8000-000000000009';
+  i_radix      constant uuid := 'ffffffff-0000-4000-8000-00000000000a';
+  i_mobile     constant uuid := 'ffffffff-0000-4000-8000-00000000000b';
+  i_api        constant uuid := 'ffffffff-0000-4000-8000-00000000000c';
+  i_perf       constant uuid := 'ffffffff-0000-4000-8000-00000000000d';
+  i_webhooks   constant uuid := 'ffffffff-0000-4000-8000-00000000000e';
+  i_migration  constant uuid := 'ffffffff-0000-4000-8000-00000000000f';
+  i_messaging  constant uuid := 'ffffffff-0000-4000-8000-000000000010';
+  i_post       constant uuid := 'ffffffff-0000-4000-8000-000000000011';
+  i_channels   constant uuid := 'ffffffff-0000-4000-8000-000000000012';
 begin
   insert into public.galaxies (id, name, owner_id, created_at) values
-    (g_us, 'Lola & Alberto', alberto, now() - interval '45 days'),
-    (g_friends, 'Friends', alberto, now() - interval '20 days');
+    (g_launch, 'Product Launch', maya, now() - interval '45 days'),
+    (g_web, 'Website Redesign', jonas, now() - interval '20 days');
 
   insert into public.galaxy_members (galaxy_id, user_id, role, joined_at) values
-    (g_us, lola, 'member', now() - interval '44 days'),
-    (g_friends, giulia, 'member', now() - interval '19 days');
+    (g_launch, jonas, 'editor', now() - interval '44 days'),
+    (g_launch, priya, 'editor', now() - interval '44 days'),
+    (g_launch, tom,   'editor', now() - interval '40 days'),
+    (g_launch, elena, 'editor', now() - interval '38 days'),
+    (g_launch, lee,   'viewer', now() - interval '30 days'),
+    (g_web, sam, 'editor', now() - interval '19 days');
 
+  -- maya has been away for three days: she gets the "since your last visit" banner
+  update public.galaxy_members set last_seen_at = now() - interval '12 hours';
   update public.galaxy_members
   set joined_at = now() - interval '45 days', last_seen_at = now() - interval '3 days'
-  where user_id = alberto;
-  update public.galaxy_members
-  set last_seen_at = now() - interval '12 hours'
-  where user_id = lola;
+  where user_id = maya;
 
-  -- the Figma layout: five spheres around the centre, Random among them
-  insert into public.spheres (galaxy_id, name, color, emoji, x, y, created_by)
-  select g.id, d.name, d.color, d.emoji, d.x, d.y, g.owner_id
-  from public.galaxies g
-  cross join (values
-    ('Places',         'amber',    '📍',    0, -260, 1),
-    ('Music',          'lavender', '🎵',  225, -130, 2),
-    ('Movies & Shows', 'coral',    '🎬',  225,  130, 3),
-    ('Ideas',          'sky',      '💡',    0,  260, 4),
-    ('Memories',       'rose',     '📸', -225,  130, 5)
-  ) as d (name, color, emoji, x, y, ord)
-  order by g.created_at, d.ord;
-  update public.spheres set x = -225, y = -130 where is_inbox;
+  -- boards of Product Launch on a ring, the Inbox among them
+  insert into public.spheres (id, galaxy_id, name, color, emoji, x, y, created_by) values
+    (s_roadmap,     g_launch, 'Roadmap',     'sky',      '🗺️',    0, -260, maya),
+    (s_research,    g_launch, 'Research',    'lavender', '🔎',  225, -130, elena),
+    (s_design,      g_launch, 'Design',      'rose',     '🎨',  225,  130, priya),
+    (s_engineering, g_launch, 'Engineering', 'teal',     '🛠️',    0,  260, jonas),
+    (s_marketing,   g_launch, 'Marketing',   'amber',    '📣', -225,  130, tom),
+    (s_sitemap,     g_web,    'Sitemap',     'sky',      '🧭',    0, -260, jonas);
+  update public.spheres set x = -225, y = -130 where is_inbox and galaxy_id = g_launch;
   update public.galaxies set setup_completed_at = created_at;
 
-  select id into s_places   from public.spheres where galaxy_id = g_us and name = 'Places';
-  select id into s_music    from public.spheres where galaxy_id = g_us and name = 'Music';
-  select id into s_movies   from public.spheres where galaxy_id = g_us and name = 'Movies & Shows';
-  select id into s_ideas    from public.spheres where galaxy_id = g_us and name = 'Ideas';
-  select id into s_memories from public.spheres where galaxy_id = g_us and name = 'Memories';
-  select id into s_random   from public.spheres where galaxy_id = g_us and is_inbox;
-  select id into s_friends_places from public.spheres where galaxy_id = g_friends and name = 'Places';
+  select id into s_inbox from public.spheres where galaxy_id = g_launch and is_inbox;
 
-  -- sub-spheres of Places, and Lola's private sphere
+  -- sub-boards of Research, and Priya's private board
   insert into public.spheres (id, galaxy_id, parent_id, name, color, emoji, is_private, x, y, created_by) values
-    (s_italy,  g_us, s_places, 'Italy',      'sage',  '🇮🇹', false, -120, -380, alberto),
-    (s_abroad, g_us, s_places, 'Abroad',     'sky',   '✈️', false,  120, -380, lola),
-    (s_gifts,  g_us, null,     'Gift ideas', 'plum',  '🎁', true,   430,    0, lola);
+    (s_interviews,  g_launch, s_research, 'Interviews',  'lavender', '🎙️', false, 345, -250, elena),
+    (s_competitors, g_launch, s_research, 'Competitors', 'coral',    '📊', false, 365, -110, elena),
+    (s_scratch,     g_launch, null,       'Scratchpad',  'plum',     '✏️', true,  450,   20, priya);
 
-  -- Places
-  insert into public.items (id, sphere_id, type, title, body_md, url, preview, is_private, x, y, created_by, created_at, updated_at) values
-    (i_lisbon, s_abroad, 'note', 'Lisbon',
-      E'Three days in **Alfama**.\n\n- pastéis de nata at Manteigaria\n- sunset at Miradouro da Senhora do Monte\n- tram 28, early in the morning',
-      null, null, false, 40, 60, lola, now() - interval '30 days', now() - interval '30 days'),
-    (i_tram, s_abroad, 'link', 'Tram 28 — the classic route', null,
-      'https://www.lisbon.net/tram-28',
-      '{"title":"Tram 28 — the classic route","domain":"lisbon.net"}'::jsonb,
-      false, 340, 40, lola, now() - interval '28 days', now() - interval '28 days'),
-    (i_braies, s_italy, 'note', 'Lake Braies',
-      E'Go at **sunrise**, before the buses.\n\nRent the wooden boat, walk the whole loop (about 1h30).',
-      null, null, false, 60, 320, alberto, now() - interval '25 days', now() - interval '25 days'),
-    (i_procida, s_italy, 'note', 'Procida',
-      E'Marina Corricella, the pastel houses.\n\n> "Il Postino" was filmed here.\n\nLemon salad, lingua di bue for breakfast.',
-      null, null, false, 360, 300, lola, now() - interval '2 days', now() - interval '2 days'),
-    (i_bolzano, s_italy, 'note', 'Bolzano',
-      E'Christmas markets in December 🎄\n\n1. Piazza Walther\n2. Ötzi museum\n3. Renon cable car',
-      null, null, false, 660, 80, alberto, now() - interval '20 days', now() - interval '20 days'),
-    (i_faenza, s_italy, 'note', 'Faenza',
-      E'Ceramics! The MIC museum and a workshop where we can paint our own plates.',
-      null, null, false, 660, 340, lola, now() - interval '1 day', now() - interval '1 day'),
-    (i_surprise, s_italy, 'note', 'Anniversary surprise',
-      E'Book the agriturismo near Faenza for our anniversary. **Do not tell Lola.**',
-      null, null, true, 960, 200, alberto, now() - interval '5 days', now() - interval '5 days');
+  -- Roadmap
+  insert into public.items (id, sphere_id, type, title, body_md, is_private, x, y, created_by, created_at, updated_at) values
+    (i_timeline, s_roadmap, 'note', 'Launch timeline',
+      E'**Public beta: 2 March**\n\n1. Feature freeze — 9 Feb\n2. Private beta (20 customers) — 16 Feb\n3. Launch post and email — 2 Mar\n4. GA decision — end of March',
+      false, 40, 40, maya, now() - interval '30 days', now() - interval '2 days'),
+    (i_scope, s_roadmap, 'note', 'Beta scope (must-have)',
+      E'- Public API v2 with scoped tokens\n- New onboarding flow\n- Mobile incident view\n- Webhook retries\n\n> Decision: SSO moves to GA, not beta.',
+      false, 340, 40, maya, now() - interval '28 days', now() - interval '6 days'),
+    (i_risks, s_roadmap, 'note', 'Launch risks',
+      E'- **Data migration** from v1 incidents could take longer than planned\n- Pricing page not final\n- Open question: do we need a status page for the status page?',
+      false, 640, 60, jonas, now() - interval '10 days', now() - interval '20 hours'),
+    (i_pricing, s_roadmap, 'note', 'Pricing — draft numbers',
+      E'Not for sharing yet.\n\n- Starter: 19 €/month\n- Team: 79 €/month\n- Business: talk to us',
+      true, 340, 360, maya, now() - interval '5 days', now() - interval '5 days');
 
-  -- Music
-  insert into public.items (id, sphere_id, type, title, body_md, url, preview, x, y, created_by, created_at, updated_at) values
-    (i_fado, s_music, 'link', 'Amália Rodrigues — Barco Negro', null,
-      'https://www.youtube.com/watch?v=q9S9xQ8K3wY',
-      '{"title":"Amália Rodrigues — Barco Negro","domain":"youtube.com"}'::jsonb,
-      40, 40, lola, now() - interval '27 days', now() - interval '27 days'),
-    (gen_random_uuid(), s_music, 'note', 'Road trip playlist',
-      E'- Lucio Battisti — *Il mio canto libero*\n- Fleetwood Mac — *Everywhere*\n- Calcutta — *Paracetamolo*',
-      null, null, 340, 80, alberto, now() - interval '15 days', now() - interval '15 days'),
-    (gen_random_uuid(), s_music, 'link', 'Khruangbin — Tiny Desk Concert', null,
-      'https://www.youtube.com/watch?v=vWLJeqLPfSU',
-      '{"title":"Khruangbin — Tiny Desk Concert","domain":"youtube.com"}'::jsonb,
-      640, 40, lola, now() - interval '6 hours', now() - interval '6 hours');
-
-  -- Movies & Shows
+  -- Research → Interviews
   insert into public.items (id, sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
-    (i_postino, s_movies, 'note', 'Il Postino', E'Watch it **before** going to Procida.', 40, 40, alberto, now() - interval '18 days', now() - interval '18 days'),
-    (gen_random_uuid(), s_movies, 'note', 'To watch together', E'- Past Lives\n- La chimera\n- Severance, season 2', 340, 60, lola, now() - interval '10 days', now() - interval '10 days');
+    (i_synthesis, s_interviews, 'note', 'Interview synthesis — 8 customers',
+      E'**Key findings**\n\n- 6 of 8 check incidents on their phone first\n- Setup takes too long: "I gave up at the DNS step"\n- Teams want one place for incident notes and follow-ups',
+      40, 40, elena, now() - interval '21 days', now() - interval '9 days'),
+    (i_quote, s_interviews, 'note', 'Quote: on-call from the phone',
+      E'> "At 3 am I am not opening a laptop. If I cannot acknowledge from my phone, the tool is useless."\n\nHead of platform, 40-person team.',
+      340, 60, elena, now() - interval '20 days', now() - interval '20 days');
 
-  -- Ideas
-  insert into public.items (sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
-    (s_ideas, 'note', 'A shelf for the ceramics', E'Oak, three levels, next to the window.', 40, 40, alberto, now() - interval '9 days', now() - interval '9 days'),
-    (s_ideas, 'note', 'Sunday pasta ritual', E'One new shape every Sunday. Start with *orecchiette*.', 340, 60, lola, now() - interval '3 hours', now() - interval '3 hours');
+  -- Research → Competitors
+  insert into public.items (id, sphere_id, type, title, body_md, url, preview, x, y, created_by, created_at, updated_at) values
+    (i_statuspage, s_competitors, 'link', 'Statuspage — pricing', null,
+      'https://www.atlassian.com/software/statuspage/pricing',
+      '{"title":"Statuspage — pricing","domain":"atlassian.com"}'::jsonb,
+      40, 40, elena, now() - interval '18 days', now() - interval '18 days'),
+    (i_matrix, s_competitors, 'note', 'Competitor matrix',
+      E'| | Mobile | API | Free tier |\n|---|---|---|---|\n| Statuspage | partial | yes | yes |\n| Instatus | yes | yes | yes |\n| Beacon 1.x | no | limited | no |',
+      null, null, 340, 40, tom, now() - interval '16 days', now() - interval '7 days');
 
-  -- Memories
-  insert into public.items (sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
-    (s_memories, 'note', 'First trip together', E'Lisbon, spring. It rained for two days and we did not care.', 40, 40, lola, now() - interval '40 days', now() - interval '40 days');
+  -- Design
+  insert into public.items (id, sphere_id, type, title, body_md, url, preview, x, y, created_by, created_at, updated_at) values
+    (i_onboarding, s_design, 'note', 'Onboarding flow v3',
+      E'Three steps instead of seven:\n\n1. Name the page\n2. Add the first component\n3. Invite the team\n\nDNS setup moves **after** the first incident is published.',
+      null, null, 40, 40, priya, now() - interval '14 days', now() - interval '1 day'),
+    (i_radix, s_design, 'link', 'Radix Primitives', null,
+      'https://www.radix-ui.com/primitives',
+      '{"title":"Radix Primitives","domain":"radix-ui.com"}'::jsonb,
+      340, 40, priya, now() - interval '13 days', now() - interval '13 days'),
+    (i_mobile, s_design, 'note', 'Mobile incident view',
+      E'One-thumb actions: **Acknowledge**, **Update**, **Resolve**.\n\nOpen question: push notifications in beta or GA?',
+      null, null, 640, 60, priya, now() - interval '8 days', now() - interval '5 hours');
 
-  -- Random (inbox): waiting for a sphere
+  -- Engineering
+  insert into public.items (id, sphere_id, type, title, body_md, url, preview, x, y, created_by, created_at, updated_at) values
+    (i_api, s_engineering, 'note', 'Public API v2 — design notes',
+      E'- REST, JSON, cursor pagination\n- Scoped tokens (`read:incidents`, `write:incidents`)\n- Rate limit: 600 requests/min per token\n\nNext step: publish the OpenAPI draft for the private beta.',
+      null, null, 40, 40, jonas, now() - interval '19 days', now() - interval '3 days'),
+    (i_perf, s_engineering, 'note', 'Performance budget',
+      E'- Status page LCP under 1.2 s on 4G\n- API p95 under 150 ms\n- No more than 90 kB of JS on public pages',
+      null, null, 340, 40, jonas, now() - interval '12 days', now() - interval '12 days'),
+    (i_webhooks, s_engineering, 'link', 'Webhooks — retries and signatures', null,
+      'https://docs.stripe.com/webhooks',
+      '{"title":"Webhooks — retries and signatures","domain":"docs.stripe.com"}'::jsonb,
+      640, 40, jonas, now() - interval '11 days', now() - interval '11 days'),
+    (i_migration, s_engineering, 'note', 'Data migration plan',
+      E'1. Dual-write incidents for two weeks\n2. Backfill history in batches of 5k\n3. Read switch behind a flag\n\nRisk: customers with more than 50k incidents.',
+      null, null, 340, 340, jonas, now() - interval '6 days', now() - interval '18 hours');
+
+  -- Marketing
+  insert into public.items (id, sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
+    (i_messaging, s_marketing, 'note', 'Positioning and messaging',
+      E'**Beacon 2.0: incidents handled from anywhere.**\n\n- For on-call teams of 5–50\n- Proof: setup in under five minutes\n- Avoid: "all-in-one", "AI-powered"',
+      40, 40, tom, now() - interval '9 days', now() - interval '2 hours'),
+    (i_post, s_marketing, 'note', 'Launch blog post — outline',
+      E'1. Why we rebuilt onboarding\n2. Mobile first, literally\n3. API v2 for the builders\n4. What is next',
+      340, 60, tom, now() - interval '4 days', now() - interval '4 days'),
+    (i_channels, s_marketing, 'note', 'Channel plan',
+      E'- Email to 4,200 existing users\n- Product Hunt (Tuesday)\n- Two customer stories from the private beta',
+      640, 40, tom, now() - interval '3 hours', now() - interval '3 hours');
+
+  -- Inbox: waiting to be sorted
   insert into public.items (sphere_id, type, title, url, preview, x, y, created_by, created_at, updated_at) values
-    (s_random, 'link', 'How to choose a ceramic glaze', 'https://ceramicartsnetwork.org/daily/article/glaze-basics',
-      '{"title":"How to choose a ceramic glaze","domain":"ceramicartsnetwork.org"}'::jsonb,
-      40, 40, lola, now() - interval '4 hours', now() - interval '4 hours');
+    (s_inbox, 'link', 'Incident communication guide', 'https://www.atlassian.com/incident-management/incident-communication',
+      '{"title":"Incident communication guide","domain":"atlassian.com"}'::jsonb,
+      40, 40, tom, now() - interval '4 hours', now() - interval '4 hours');
   insert into public.items (sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
-    (s_random, 'note', 'That wine from the trattoria', E'Lagrein, the one with the black label. Ask the name next time.', 340, 60, alberto, now() - interval '8 days', now() - interval '8 days');
+    (s_inbox, 'note', 'Idea: status badge for READMEs', E'An SVG badge teams can embed in their repo. Small effort, free distribution.', 340, 60, jonas, now() - interval '8 days', now() - interval '8 days');
 
-  -- Lola's private sphere
+  -- Priya's private board
   insert into public.items (sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
-    (s_gifts, 'note', 'For Alberto''s birthday', E'The film camera he keeps looking at. **Secret!**', 40, 40, lola, now() - interval '7 days', now() - interval '7 days');
+    (s_scratch, 'note', 'Dark mode illustrations', E'Half-baked. Try the line style from the onboarding empty states before showing anyone.', 40, 40, priya, now() - interval '7 days', now() - interval '7 days');
 
-  -- links, also across spheres
+  -- links, mostly across boards
   insert into public.item_links (source_id, target_id, created_by) values
-    (i_lisbon, i_fado, lola),
-    (i_lisbon, i_tram, lola),
-    (i_procida, i_postino, alberto),
-    (i_bolzano, i_braies, alberto),
-    (i_surprise, i_faenza, alberto);
+    (i_timeline, i_scope, maya),
+    (i_scope, i_api, maya),
+    (i_scope, i_onboarding, maya),
+    (i_scope, i_mobile, priya),
+    (i_synthesis, i_mobile, elena),
+    (i_synthesis, i_messaging, tom),
+    (i_quote, i_mobile, priya),
+    (i_synthesis, i_onboarding, priya),
+    (i_api, i_webhooks, jonas),
+    (i_risks, i_migration, jonas),
+    (i_onboarding, i_post, tom),
+    (i_matrix, i_statuspage, tom),
+    (i_pricing, i_matrix, maya);
 
-  -- annotations on the Italy canvas
+  -- annotations on the Roadmap canvas
   insert into public.annotations (sphere_id, kind, data, x, y, rotation, created_by) values
-    (s_italy, 'sticker', '{"emoji":"⭐","size":44}'::jsonb, 300, 250, -8, lola),
-    (s_italy, 'arrow', '{"dx":180,"dy":-60,"color":"coral","size":3}'::jsonb, 420, 250, 0, alberto),
-    (s_italy, 'stroke',
+    (s_roadmap, 'sticker', '{"emoji":"✅","size":44}'::jsonb, 560, 20, 0, maya),
+    (s_roadmap, 'sticker', '{"emoji":"❗","size":44}'::jsonb, 860, 40, 0, jonas),
+    (s_roadmap, 'arrow', '{"dx":160,"dy":-40,"color":"coral","size":3}'::jsonb, 600, 330, 0, jonas),
+    (s_roadmap, 'stroke',
       '{"color":"coral","size":4,"points":[[0,0],[40,-14],[90,-18],[150,-10],[190,6],[200,30],[170,52],[110,62],[50,56],[10,38],[0,14],[8,0]]}'::jsonb,
-      40, 300, 0, lola);
+      30, 250, 0, maya);
 
-  -- Friends: something a non member of "Lola & Alberto" can see
+  -- Website Redesign: something a non member of "Product Launch" can see
   insert into public.items (sphere_id, type, title, body_md, x, y, created_by, created_at, updated_at) values
-    (s_friends_places, 'note', 'Weekend in Turin', E'Giulia knows a place for *bicerin*.', 40, 40, giulia, now() - interval '1 day', now() - interval '1 day'),
-    (s_friends_places, 'note', 'Hike on Monte Baldo', E'Cable car from Malcesine, then the ridge.', 340, 60, alberto, now() - interval '12 days', now() - interval '12 days');
+    (s_sitemap, 'note', 'Top-level pages', E'Home · Product · Pricing · Docs · Changelog', 40, 40, sam, now() - interval '1 day', now() - interval '1 day'),
+    (s_sitemap, 'note', 'Redirects from the old site', E'Keep `/features/*` alive for six months.', 340, 60, jonas, now() - interval '12 days', now() - interval '12 days');
 end;
 $$;
 
--- The demo users already know the app: no first-login tutorial for them (RF15).
+-- The demo users already know the app: no first-login tutorial for them.
 update public.profiles set tutorial_completed_at = created_at;
 
 -- Everything older than each member's last visit has already been seen, so the

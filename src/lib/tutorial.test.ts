@@ -16,18 +16,18 @@ describe('resolveSteps', () => {
   });
 
   it('never points a spotlight at something that is not there', () => {
-    const visible = new Set(['galaxy-switcher', 'planet-inbox', 'search']);
+    const visible = new Set(['galaxy-switcher', 'board-inbox', 'search']);
     const steps = resolveSteps(owner, (t) => visible.has(t));
     for (const s of steps) expect(s.target === null || visible.has(s.target)).toBe(true);
     // no "+" and no settings button on screen: those steps are dropped
     expect(steps.map((s) => s.id)).toEqual(['galaxies', 'enter', 'canvas', 'private', 'news']);
     // with only Random around, "enter" adapts to it; "only me" becomes a plain card
-    expect(steps.find((s) => s.id === 'enter')!.target).toBe('planet-inbox');
+    expect(steps.find((s) => s.id === 'enter')!.target).toBe('board-inbox');
     expect(steps.find((s) => s.id === 'private')!.target).toBeNull();
   });
 
   it('prefers a real sphere to Random', () => {
-    expect(resolveSteps(owner, all).find((s) => s.id === 'enter')!.target).toBe('planet');
+    expect(resolveSteps(owner, all).find((s) => s.id === 'enter')!.target).toBe('board');
   });
 });
 

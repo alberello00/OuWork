@@ -14,7 +14,7 @@ function joinNames(names: string[]): string {
   return `${names.slice(0, -1).join(', ')} ${copy.news.and} ${names.at(-1)}`;
 }
 
-/** "Since your last visit" banner (RF8.2, frames 3:2 / 10:2). Calm, closable. */
+/** "Since your last visit" banner. Calm, closable. */
 export function NewsBanner({ galaxyId, className }: { galaxyId?: string; className?: string }) {
   const { entries, people, galaxyCount } = useNews(galaxyId);
   const touch = useTouchLastSeen();
@@ -33,21 +33,21 @@ export function NewsBanner({ galaxyId, className }: { galaxyId?: string; classNa
       <div
         role="status"
         className={cn(
-          'flex items-center gap-3 rounded-login border border-new-bg/70 bg-card/90 py-2 pl-3.5 pr-1.5 shadow-card backdrop-blur animate-fade-in',
+          'flex items-center gap-3 rounded-card border border-border bg-card py-1 pl-3 pr-1 animate-fade-in',
           className
         )}
       >
-        <span aria-hidden className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-new-bg text-new-text">
+        <span aria-hidden className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-pill bg-new-bg text-new-text">
           <Sparkles size={15} />
         </span>
         <p className="min-w-0 flex-1 text-[13px] leading-snug">
-          <span className="font-heading text-[15px]">{copy.news.title}</span>
+          <span className="font-semibold">{copy.news.title}</span>
           <span className="text-text-muted"> — {copy.news.summary(entries.length, joinNames(people), galaxyId ? 1 : galaxyCount)}</span>
         </p>
-        <button type="button" onClick={() => setOpen(true)} className="inline-flex h-11 shrink-0 items-center rounded-pill px-3 text-[12.5px] font-semibold hover:bg-surface-2">
+        <button type="button" onClick={() => setOpen(true)} className="inline-flex h-9 shrink-0 items-center rounded-pill px-2.5 text-[12.5px] font-semibold text-accent hover:bg-surface-2 max-sm:h-11">
           {copy.news.seeAll}
         </button>
-        <button type="button" aria-label={copy.news.dismiss} onClick={dismiss} className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2">
+        <button type="button" aria-label={copy.news.dismiss} onClick={dismiss} className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-pill text-text-muted hover:bg-surface-2 max-sm:h-11 max-sm:w-11">
           <X size={16} aria-hidden />
         </button>
       </div>

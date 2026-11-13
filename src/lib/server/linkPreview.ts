@@ -105,7 +105,7 @@ export async function fetchPreview(raw: string): Promise<Preview> {
     const res = await fetch(url, {
       redirect: 'manual',
       signal: AbortSignal.timeout(TIMEOUT_MS),
-      headers: { 'user-agent': 'Mozilla/5.0 (compatible; OurWorldPreview/1.0)', accept: 'text/html,*/*;q=0.5' },
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; OuWorkPreview/1.0)', accept: 'text/html,*/*;q=0.5' },
     });
     if (res.status >= 300 && res.status < 400) {
       const location = res.headers.get('location');

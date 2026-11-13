@@ -2,73 +2,84 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* OuWork design tokens (RW2.1). Light is the default theme; dark is slate grey.
+   Components use the semantic tokens; the neutral scale (--color-n-1…10, from
+   background to text) is there for the rare case a semantic token does not fit. */
 @theme {
-  /* ── Typography ── */
-  --font-heading: var(--font-fraunces), Georgia, serif;
-  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+  /* ── Typography (RW2.2): one sans family, one mono ── */
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* ── Radii ── */
-  --radius-card: 12px;
-  --radius-pill: 99px;
-  --radius-login: 20px;
+  /* ── Radii (RW2.4) ── */
+  --radius-card: 8px;
+  /* controls (buttons, chips, inputs): the old name stays, the shape is no longer a pill */
+  --radius-pill: 6px;
+  --radius-login: 12px;
 
-  /* ── Light palette "paper" ── */
-  --color-bg: #FAF6EF;
-  --color-surface-2: #F3EDE2;
-  --color-card: #FFFDF8;
-  --color-border: #E2DACB;
-  --color-dot-grid: #D6CDBD;
-  --color-text: #2B2A33;
-  --color-text-muted: #6B6872;
-  --color-placeholder: #757575;
-  --color-accent: #E4572E;
+  /* ── Neutral scale, light ── */
+  --color-n-1: #FFFFFF;
+  --color-n-2: #FAFAFA;
+  --color-n-3: #F4F4F5;
+  --color-n-4: #E4E4E7;
+  --color-n-5: #D4D4D8;
+  --color-n-6: #A1A1AA;
+  --color-n-7: #6B6B76;
+  --color-n-8: #52525B;
+  --color-n-9: #27272A;
+  --color-n-10: #18181B;
+
+  /* ── Semantic tokens, light ── */
+  --color-bg: var(--color-n-2);
+  --color-surface-2: var(--color-n-3);
+  --color-card: var(--color-n-1);
+  --color-border: var(--color-n-4);
+  --color-dot-grid: var(--color-n-5);
+  --color-text: var(--color-n-10);
+  --color-text-muted: var(--color-n-7);
+  --color-placeholder: var(--color-n-7);
+  /* the single accent: primary actions and selection */
+  --color-accent: #4F46E5;
   /* accent for surfaces that carry white text (AA contrast) */
-  --color-accent-strong: #C8431F;
-  --color-on-accent: #FFFDF8;
-  --color-new-bg: #F7D774;
-  --color-new-text: #7A5A00;
-  --color-danger: #B3261E;
-  --color-danger-soft: #FBE9E7;
-  --color-success: #2F7D5B;
-  --color-warning: #8A6100;
-  --color-card-stripe: #C7A96C;
-  --color-overlay: rgba(43, 42, 51, 0.38);
-  /* ink used on top of sphere / avatar colours, same in both themes */
-  --color-sphere-ink: #2B2A33;
+  --color-accent-strong: #4338CA;
+  --color-accent-soft: #EEF0FF;
+  --color-on-accent: #FFFFFF;
+  --color-new-bg: #EEF0FF;
+  --color-new-text: #4338CA;
+  --color-danger: #C81E1E;
+  --color-danger-soft: #FEF2F2;
+  --color-success: #15803D;
+  --color-success-soft: #F0FDF4;
+  --color-warning: #A16207;
+  --color-warning-soft: #FEFCE8;
+  --color-info: #1D4ED8;
+  --color-info-soft: #EFF6FF;
+  --color-card-stripe: var(--color-n-5);
+  --color-overlay: rgba(24, 24, 27, 0.4);
+  /* ink used on top of board / avatar colours, same in both themes */
+  --color-sphere-ink: #18181B;
   --color-on-user: #FFFFFF;
 
-  /* night sky, used by the universe views and the login illustration in both themes */
-  --color-night-1: #2A2C5C;
-  --color-night-2: #1F2144;
-  --color-night-3: #14152B;
-  --color-night-text: #EDE8DF;
-  --color-night-muted: #B4B0CC;
-  --color-night-border: rgba(237, 232, 223, 0.16);
-  --color-night-surface: rgba(237, 232, 223, 0.07);
+  /* ── Shadows: borders do the work, shadows only lift floating layers ── */
+  --shadow-card: 0 1px 2px rgba(24, 24, 27, 0.05);
+  --shadow-card-lifted: 0 4px 12px rgba(24, 24, 27, 0.12);
+  --shadow-accent: 0 1px 2px rgba(24, 24, 27, 0.12);
+  --shadow-zoom: 0 1px 2px rgba(24, 24, 27, 0.08);
+  --shadow-panel: 0 8px 28px rgba(24, 24, 27, 0.14);
 
-  /* ── Shadows ── */
-  --shadow-card: 0 6px 18px rgba(80, 60, 30, 0.12);
-  --shadow-card-lifted: 0 14px 30px rgba(80, 60, 30, 0.22);
-  --shadow-accent: 0 8px 11px rgba(228, 87, 46, 0.45);
-  --shadow-zoom: 0 0 14px 2px rgba(247, 215, 116, 0.28);
-  --shadow-panel: 0 18px 48px rgba(30, 25, 50, 0.22);
-
-  /* ── Motion (RD7) ── */
-  --ease-soft: cubic-bezier(0.22, 0.8, 0.3, 1);
-  --animate-fade-in: fade-in 200ms var(--ease-soft) both;
-  --animate-pop-in: pop-in 220ms var(--ease-soft) both;
-  --animate-sheet-up: sheet-up 320ms var(--ease-soft) both;
-  --animate-panel-in: panel-in 320ms var(--ease-soft) both;
-  --animate-drift: drift 14s ease-in-out infinite;
-  --animate-planet-out: planet-out 240ms var(--ease-soft) both;
-  --animate-planet-in: planet-in 460ms var(--ease-soft) both;
+  /* ── Motion (RW2.6): 120–200 ms ── */
+  --ease-soft: cubic-bezier(0.2, 0, 0, 1);
+  --animate-fade-in: fade-in 140ms var(--ease-soft) both;
+  --animate-pop-in: pop-in 160ms var(--ease-soft) both;
+  --animate-sheet-up: sheet-up 200ms var(--ease-soft) both;
+  --animate-panel-in: panel-in 200ms var(--ease-soft) both;
 
   @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
   }
   @keyframes pop-in {
-    from { opacity: 0; scale: 0.97; }
+    from { opacity: 0; scale: 0.98; }
     to { opacity: 1; scale: 1; }
   }
   @keyframes sheet-up {
@@ -79,43 +90,28 @@
     from { transform: translateX(100%); }
     to { transform: translateX(0); }
   }
-  @keyframes planet-out {
-    from { opacity: 1; scale: 1; }
-    to { opacity: 0; scale: 0.82; }
-  }
-  @keyframes planet-in {
-    0% { opacity: 0; scale: 0.4; }
-    70% { opacity: 1; scale: 1.06; }
-    100% { opacity: 1; scale: 1; }
-  }
   @keyframes fade-out {
     from { opacity: 1; }
     to { opacity: 0; }
-  }
-  @keyframes drift {
-    0%, 100% { transform: translate3d(0, 0, 0); }
-    50% { transform: translate3d(0, -8px, 0); }
   }
 }
 
 :root {
   color-scheme: light;
 
-  /* ── Sphere palette (RD2.2): the only colours a sphere can have ── */
-  --sphere-coral: #F4A08A;
-  --sphere-amber: #FFD98A;
-  --sphere-sage: #B9CFA8;
-  --sphere-teal: #8FD0C4;
-  --sphere-sky: #A5CEF0;
-  --sphere-lavender: #C9B8F0;
-  --sphere-rose: #EFB3C4;
-  --sphere-terracotta: #D99A7A;
-  --sphere-moss: #B4C283;
-  --sphere-plum: #CFA5D3;
+  /* ── Board palette (RW2.1): 8 muted colours, used as a label ── */
+  --sphere-coral: #D9705F;
+  --sphere-amber: #C99A2E;
+  --sphere-sage: #6F9A5B;
+  --sphere-teal: #3F9C90;
+  --sphere-sky: #4A8FCC;
+  --sphere-lavender: #7F73CF;
+  --sphere-rose: #CC6A96;
+  --sphere-plum: #9B62AC;
 
-  /* ── Personal colours (RD1.2) ── */
-  --user-pink: #D9467A;
-  --user-teal: #2F8F83;
+  /* ── Personal colours ── */
+  --user-pink: #C2417A;
+  --user-teal: #2B8377;
   --user-indigo: #5B5BD6;
   --user-orange: #B8581A;
   --user-green: #37804A;
@@ -124,43 +120,54 @@
   --user-red: #C23B3B;
 }
 
-/* ── Dark theme "night" ── */
+/* ── Dark theme: slate grey ── */
 .dark {
   color-scheme: dark;
 
-  --color-bg: #14152B;
-  --color-surface-2: #1F2144;
-  --color-card: #262850;
-  --color-border: #3D4074;
-  --color-dot-grid: #33366A;
-  --color-text: #EDE8DF;
-  --color-text-muted: #B4B0CC;
-  --color-placeholder: #9490B0;
-  --color-accent: #F0683F;
-  --color-accent-strong: #C8431F;
-  --color-new-bg: #F7D774;
-  --color-new-text: #5C4400;
-  --color-danger: #FF8A80;
-  --color-danger-soft: #4A2230;
-  --color-success: #7FD1A9;
-  --color-warning: #F7D774;
-  --color-card-stripe: #C7A96C;
-  --color-overlay: rgba(8, 8, 20, 0.62);
+  --color-n-1: #111317;
+  --color-n-2: #16181D;
+  --color-n-3: #1C1F26;
+  --color-n-4: #2A2E37;
+  --color-n-5: #3A3F4B;
+  --color-n-6: #5B6270;
+  --color-n-7: #9299A6;
+  --color-n-8: #B4BAC5;
+  --color-n-9: #E3E6EB;
+  --color-n-10: #F4F5F7;
 
-  --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.35);
-  --shadow-card-lifted: 0 14px 30px rgba(0, 0, 0, 0.5);
-  --shadow-panel: 0 18px 48px rgba(0, 0, 0, 0.55);
+  --color-bg: var(--color-n-1);
+  --color-surface-2: var(--color-n-4);
+  --color-card: var(--color-n-3);
+  --color-border: var(--color-n-4);
+  --color-dot-grid: var(--color-n-5);
+  --color-text: var(--color-n-9);
+  --color-accent: #8B8DF8;
+  --color-accent-strong: #4F46E5;
+  --color-accent-soft: #23264D;
+  --color-new-bg: #23264D;
+  --color-new-text: #C3C5FF;
+  --color-danger: #F87171;
+  --color-danger-soft: #3A1C1F;
+  --color-success: #4ADE80;
+  --color-success-soft: #14301F;
+  --color-warning: #FBBF24;
+  --color-warning-soft: #33290F;
+  --color-info: #60A5FA;
+  --color-info-soft: #172A45;
+  --color-overlay: rgba(0, 0, 0, 0.6);
 
-  --sphere-coral: #E58B74;
-  --sphere-amber: #F2C365;
-  --sphere-sage: #9DB88A;
-  --sphere-teal: #6FBDB0;
-  --sphere-sky: #86B6E0;
-  --sphere-lavender: #B09DE3;
-  --sphere-rose: #DE98AC;
-  --sphere-terracotta: #C98462;
-  --sphere-moss: #9FAE6C;
-  --sphere-plum: #BB8CC0;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-card-lifted: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-panel: 0 8px 28px rgba(0, 0, 0, 0.5);
+
+  --sphere-coral: #E58B7B;
+  --sphere-amber: #D9AE4E;
+  --sphere-sage: #8DB37A;
+  --sphere-teal: #5FB5A9;
+  --sphere-sky: #6FA8DC;
+  --sphere-lavender: #9D92E0;
+  --sphere-rose: #DB8AAE;
+  --sphere-plum: #B583C4;
 }
 
 /* ── Base ── */
@@ -171,23 +178,33 @@ body {
 
 body {
   font-family: var(--font-body);
-  font-optical-sizing: auto;
+  /* RW2.2: 16 px on mobile, denser 14 px from the sm breakpoint */
+  font-size: 16px;
+  line-height: 1.5;
   background-color: var(--color-bg);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
 }
 
+@media (min-width: 640px) {
+  body { font-size: 14px; }
+}
+
 h1, h2, h3, h4, h5, h6,
 .font-heading {
   font-family: var(--font-heading);
-  font-variation-settings: "SOFT" 0, "WONK" 1;
-  font-weight: 400;
+  font-weight: 600;
+  letter-spacing: -0.011em;
+}
+
+code, kbd, pre, .font-mono {
+  font-family: var(--font-mono);
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 button,
@@ -201,31 +218,17 @@ button:not(:disabled),
   cursor: pointer;
 }
 
-/* night sky background for the universe views (RD4.3) */
-.night-sky {
-  background-color: var(--color-night-3);
-  background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(237, 232, 223, 0.7) 50%, transparent 51%),
-    radial-gradient(1px 1px at 78% 12%, rgba(237, 232, 223, 0.55) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 64% 72%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 28% 82%, rgba(237, 232, 223, 0.45) 50%, transparent 51%),
-    radial-gradient(1px 1px at 90% 54%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 42% 38%, rgba(247, 215, 116, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 6% 60%, rgba(237, 232, 223, 0.4) 50%, transparent 51%),
-    radial-gradient(ellipse at 50% 35%, var(--color-night-1) 0%, var(--color-night-2) 45%, var(--color-night-3) 100%);
-  color: var(--color-night-text);
-}
-
-/* paper variant of the universe background: soft dots (RD4.3) */
+/* neutral dot grid (RW2.5), shared by the canvas and the overview */
 .paper-sky {
   background-color: var(--color-bg);
   background-image: radial-gradient(var(--color-dot-grid) 1px, transparent 1px);
   background-size: 22px 22px;
+  color: var(--color-text);
 }
 
 /* ── Markdown inside notes (RD3.3) ── */
 .prose-note {
-  font-size: 15px;
+  font-size: 1em;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
@@ -243,7 +246,6 @@ button:not(:disabled),
   border-left: 3px solid var(--color-border);
   padding-left: 0.9em;
   color: var(--color-text-muted);
-  font-style: italic;
 }
 .prose-note code {
   font-size: 0.9em;
@@ -273,34 +275,4 @@ button:not(:disabled),
     transition-duration: 1ms !important;
     scroll-behavior: auto !important;
   }
-  /* planets leaving or arriving in the universe keep a plain fade */
-  .animate-planet-out {
-    animation: fade-out 200ms linear both !important;
-  }
-  /* longhands, so the per-planet delay set inline is kept */
-  .animate-planet-in {
-    animation-name: fade-in !important;
-    animation-duration: 240ms !important;
-  }
-}
-
-/* universe background follows the theme: paper dots by day, night sky by night */
-.universe-bg {
-  background-color: var(--color-bg);
-  background-image: radial-gradient(var(--color-dot-grid) 1px, transparent 1px);
-  background-size: 22px 22px;
-}
-.dark .universe-bg {
-  background-color: var(--color-night-3);
-  background-size: auto;
-  background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(237, 232, 223, 0.7) 50%, transparent 51%),
-    radial-gradient(1px 1px at 78% 12%, rgba(237, 232, 223, 0.55) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 64% 72%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 28% 82%, rgba(237, 232, 223, 0.45) 50%, transparent 51%),
-    radial-gradient(1px 1px at 90% 54%, rgba(237, 232, 223, 0.5) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 42% 38%, rgba(247, 215, 116, 0.5) 50%, transparent 51%),
-    radial-gradient(1px 1px at 6% 60%, rgba(237, 232, 223, 0.4) 50%, transparent 51%),
-    radial-gradient(ellipse at 50% 30%, var(--color-night-1) 0%, var(--color-night-2) 45%, var(--color-night-3) 100%);
-  background-attachment: fixed;
 }

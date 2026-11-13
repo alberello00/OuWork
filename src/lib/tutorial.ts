@@ -21,14 +21,14 @@ export interface TutorialStep {
   when?: (ctx: TutorialContext) => boolean;
 }
 
-/** The tour runs on the universe of a galaxy. Order as in RF15.3. */
+/** The tour runs on the overview of a workspace. Order as in RF15.3. */
 export const TUTORIAL_STEPS: TutorialStep[] = [
   { id: 'galaxies', targets: ['galaxy-switcher'], missing: 'center' },
-  { id: 'enter', targets: ['planet', 'planet-inbox'], missing: 'skip' },
+  { id: 'enter', targets: ['board', 'board-inbox'], missing: 'skip' },
   { id: 'add', targets: ['add'], missing: 'skip' },
-  // cards, links and drawings live inside a sphere: explained on the planet you would open
-  { id: 'canvas', targets: ['planet', 'planet-inbox'], missing: 'center' },
-  { id: 'private', targets: ['planet-private'], missing: 'center' },
+  // cards, links and drawings live inside a sphere: explained on the board you would open
+  { id: 'canvas', targets: ['board', 'board-inbox'], missing: 'center' },
+  { id: 'private', targets: ['board-private'], missing: 'center' },
   { id: 'news', targets: ['search'], missing: 'center' },
   { id: 'invite', targets: ['settings'], missing: 'skip', when: (ctx) => ctx.isOwner && !ctx.isPersonal },
 ];

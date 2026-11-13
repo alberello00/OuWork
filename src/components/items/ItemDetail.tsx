@@ -15,6 +15,7 @@ import { useDeleteItem, useMarkSeen, useUpdateItem } from '@/lib/queries/items';
 import { fetchLinkPreview } from '@/lib/queries/linkPreview';
 import type { Item, Profile, Sphere } from '@/lib/queries/types';
 import { isSpherePrivate } from '@/lib/queries/useGalaxyData';
+import { useRole } from '@/lib/queries/useCanEdit';
 import { domainOf, timeAgo } from '@/lib/utils';
 import { ItemConnections } from './ItemConnections';
 import { itemTitle } from './ItemCard';
@@ -40,6 +41,7 @@ export function ItemDetail({ item, items, spheres, sphereById, profileById, onOp
   const update = useUpdateItem();
   const del = useDeleteItem();
   const markSeen = useMarkSeen();
+  const { canEdit } = useRole(item?.galaxy_id);
   const [editing, setEditing] = useState(false);
   const [moving, setMoving] = useState(false);
   const [draft, setDraft] = useState<ItemDraft>(emptyDraft);
@@ -143,7 +145,7 @@ export function ItemDetail({ item, items, spheres, sphereById, profileById, onOp
                 <img src={item.preview.image} alt="" referrerPolicy="no-referrer" className="aspect-[16/9] w-full rounded-card object-cover" />
               ) : null}
 
-              <h2 className="mt-4 text-[26px] leading-tight">{title}</h2>
+              <h2 className="mt-4 text-[20px] leading-tight">{title}</h2>
 
               {item.type === 'link' && item.url ? (
                 <>
@@ -176,7 +178,7 @@ export function ItemDetail({ item, items, spheres, sphereById, profileById, onOp
             </article>
           )}
 
-          {!editing ? (
+          {!editing && canEdit ? (
             <div className="mt-5 flex flex-wrap gap-2">
               <Button size="sm" onClick={startEdit}><Pencil size={14} aria-hidden />{copy.items.edit}</Button>
               <Button size="sm" onClick={() => setMoving((m) => !m)} aria-expanded={moving}>
@@ -199,7 +201,7 @@ export function ItemDetail({ item, items, spheres, sphereById, profileById, onOp
             </div>
           ) : null}
 
-          {isAuthor && !editing ? (
+          {isAuthor && canEdit && !editing ? (
             <div className="mt-4">
               <Switch
                 checked={item.is_private || spherePrivate}
@@ -213,7 +215,7 @@ export function ItemDetail({ item, items, spheres, sphereById, profileById, onOp
           ) : null}
 
           <div className="mt-5">
-            <ItemConnections item={item} items={items} sphereById={sphereById} onOpen={onOpenItem} />
+            <ItemConnections item={item} items={items} sphereById={sphereById} onOpen={onOpenItem} canEdit={canEdit} />
           </div>
         </div>
       </PanelContent>

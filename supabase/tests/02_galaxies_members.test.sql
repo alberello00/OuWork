@@ -6,19 +6,19 @@ select tests.fixture();
 -- ── bootstrap triggers ─────────────────────────────────────────────────────
 select is((select count(*)::int from public.profiles where username in ('ann', 'bob', 'cat')), 3,
   'a profile is created for every auth user');
-select is((select count(*)::int from public.galaxies where is_personal and name = 'Just me'
+select is((select count(*)::int from public.galaxies where is_personal and name = 'Personal'
            and owner_id in (tests.uid('ann'), tests.uid('bob'), tests.uid('cat'))), 3,
-  'every user gets a personal "Just me" galaxy');
+  'every user gets a personal "Personal" galaxy');
 select is((select count(*)::int from public.spheres where galaxy_id = tests.personal_galaxy('cat')), 1,
   'a new galaxy starts with a single sphere (RF13.1)');
 select results_eq(
   $$ select color, emoji, x, y from public.spheres where galaxy_id = tests.personal_galaxy('cat') $$,
-  $$ values ('sage'::text, '🎲'::text, 0::double precision, 0::double precision) $$,
-  'Random is sage, 🎲, in the centre');
+  $$ values ('sage'::text, '📥'::text, 0::double precision, 0::double precision) $$,
+  'the Inbox is sage, 📥, in the centre');
 select is((select setup_completed_at from public.galaxies where id = tests.personal_galaxy('cat')), null,
   'a new galaxy is not set up yet (RF13.2)');
-select is((select name from public.spheres where galaxy_id = tests.personal_galaxy('cat') and is_inbox), 'Random',
-  'Random is the inbox');
+select is((select name from public.spheres where galaxy_id = tests.personal_galaxy('cat') and is_inbox), 'Inbox',
+  'the Inbox is the inbox');
 select is((select role from public.galaxy_members
            where galaxy_id = '10000000-0000-4000-8000-000000000001' and user_id = tests.uid('ann')), 'owner',
   'the creator becomes owner member');
@@ -32,10 +32,10 @@ select throws_ok(
 
 -- ── visibility ─────────────────────────────────────────────────────────────
 select tests.login('ann');
-select results_eq($$ select name from public.galaxies order by name $$, array['Just me', 'Shared'],
+select results_eq($$ select name from public.galaxies order by name $$, array['Personal', 'Shared'],
   'owner sees her galaxies');
 select tests.login('bob');
-select results_eq($$ select name from public.galaxies order by name $$, array['Just me', 'Shared'],
+select results_eq($$ select name from public.galaxies order by name $$, array['Personal', 'Shared'],
   'member sees the shared galaxy and his personal one');
 select is((select count(*)::int from public.galaxy_members where galaxy_id = '10000000-0000-4000-8000-000000000001'), 2,
   'member sees the member list');
@@ -43,7 +43,7 @@ select results_eq($$ select username from public.profiles order by username $$, 
   'member sees profiles of people he shares a galaxy with, nobody else');
 
 select tests.login('cat');
-select results_eq($$ select name from public.galaxies order by name $$, array['Just me'],
+select results_eq($$ select name from public.galaxies order by name $$, array['Personal'],
   'non member does not see the shared galaxy');
 select is_empty($$ select * from public.galaxy_members where galaxy_id = '10000000-0000-4000-8000-000000000001' $$,
   'non member does not see the member list');
@@ -59,7 +59,7 @@ select lives_ok($$ insert into public.galaxies (name) values ('Book club') retur
 select is((select owner_id from public.galaxies where name = 'Book club'), tests.uid('bob'),
   'the creator is the owner');
 select is((select count(*)::int from public.spheres s join public.galaxies g on g.id = s.galaxy_id where g.name = 'Book club'), 1,
-  'Random is visible to the creator');
+  'the Inbox is visible to the creator');
 select is((select setup_completed_at from public.galaxies where name = 'Book club'), null,
   'a galaxy created by a user starts not set up');
 select throws_ok(
@@ -94,7 +94,7 @@ select throws_ok($$ update public.galaxies set owner_id = 'b0000000-0000-4000-80
   '42501', null, 'ownership cannot be transferred from the client');
 select lives_ok($$ delete from public.galaxies where is_personal $$, 'deleting a personal galaxy is filtered');
 select lives_ok($$ update public.galaxies set name = 'Not me' where is_personal $$, 'renaming a personal galaxy is filtered');
-select is((select name from public.galaxies where id = tests.personal_galaxy('ann')), 'Just me',
+select is((select name from public.galaxies where id = tests.personal_galaxy('ann')), 'Personal',
   'the personal galaxy is untouched');
 
 -- ── members ────────────────────────────────────────────────────────────────

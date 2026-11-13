@@ -14,8 +14,8 @@ export function SphereChip({ sphere, count, selected, className }: Props) {
   return (
     <span
       className={cn(
-        'inline-flex min-h-9 max-w-full items-center gap-1.5 rounded-pill border px-2.5 py-1 text-[12px] font-medium',
-        selected ? 'border-text bg-text text-bg' : 'border-border bg-surface-2 text-text',
+        'inline-flex min-h-8 max-w-full items-center gap-1.5 rounded-pill border px-2 py-0.5 text-[12px] font-medium max-sm:min-h-10',
+        selected ? 'border-accent bg-accent-soft text-accent' : 'border-border bg-card text-text',
         className
       )}
     >

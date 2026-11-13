@@ -112,7 +112,7 @@ export function TutorialOverlay({ steps, onFinish }: Props) {
             </span>
             {copy.tutorial.progress(index + 1, steps.length)}
           </p>
-          <DialogPrimitive.Title className="font-heading mt-2 text-[21px] leading-tight">{text.title}</DialogPrimitive.Title>
+          <DialogPrimitive.Title className="mt-2 text-[15px] font-semibold leading-tight">{text.title}</DialogPrimitive.Title>
           <DialogPrimitive.Description className="mt-1.5 text-[13.5px] leading-relaxed text-text-muted">
             {touch && text.bodyTouch ? text.bodyTouch : text.body}
           </DialogPrimitive.Description>

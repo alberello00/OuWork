@@ -50,6 +50,9 @@ select throws_ok(
   $$ insert into public.spheres (galaxy_id, name, color) values ('10000000-0000-4000-8000-000000000001', 'Neon', '#ff00ff') $$,
   '23514', null, 'colours come only from the palette');
 select throws_ok(
+  $$ insert into public.spheres (galaxy_id, name, color) values ('10000000-0000-4000-8000-000000000001', 'Moss', 'moss') $$,
+  '23514', null, 'the two colours dropped by OuWork are no longer in the palette (RW2.1)');
+select throws_ok(
   $$ insert into public.spheres (galaxy_id, parent_id, name) values ('10000000-0000-4000-8000-000000000001', '20000000-0000-4000-8000-000000000002', 'Peek') $$,
   '42501', null, 'cannot create a sub-sphere under someone else''s private sphere');
 select lives_ok(

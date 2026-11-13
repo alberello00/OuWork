@@ -10,9 +10,9 @@ import { Button } from '@/components/ui/Button';
 import { Dialog, DialogContent } from '@/components/ui/Dialog';
 import { Input, Label } from '@/components/ui/Input';
 import { copy } from '@/lib/copy';
-import { useDeleteGalaxy, useRemoveMember, useRenameGalaxy } from '@/lib/queries/galaxies';
+import { useDeleteGalaxy, useRemoveMember, useRenameGalaxy, useSetMemberRole } from '@/lib/queries/galaxies';
 import { useCreateInvite, useInvites, useRevokeInvite } from '@/lib/queries/invites';
-import type { GalaxyWithMembers } from '@/lib/queries/types';
+import type { GalaxyWithMembers, InviteRole } from '@/lib/queries/types';
 import { timeAgo } from '@/lib/utils';
 
 interface Props {
@@ -28,14 +28,14 @@ interface Props {
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <section className="mt-6">
-      <h3 className="font-body text-[11px] font-bold uppercase tracking-wider text-text-muted">{title}</h3>
+      <h3 className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">{title}</h3>
       {hint ? <p className="mt-1 text-[12px] text-text-muted">{hint}</p> : null}
       <div className="mt-2.5">{children}</div>
     </section>
   );
 }
 
-/** Rename, members, invite links, leave/delete (RF1.2, RF1.3). */
+/** Rename, members and roles, invite links with a role, leave/delete (RW3). */
 export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, children }: Props) {
   const router = useRouter();
   const { userId } = useSession();
@@ -48,6 +48,8 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
   const invites = useInvites(galaxy.id, open && canManage);
   const createInvite = useCreateInvite(galaxy.id);
   const revokeInvite = useRevokeInvite(galaxy.id);
+  const setRole = useSetMemberRole(galaxy.id);
+  const [inviteRole, setInviteRole] = useState<InviteRole>('editor');
 
   const [name, setName] = useState(galaxy.name);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -137,7 +139,7 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
           <Section title={copy.settings.setup} hint={copy.settings.setupHint}>
             <Button onClick={() => { onOpenChange(false); onSetup(); }}>
               <Sparkles size={15} aria-hidden />
-              {copy.setup.emptyCta[galaxy.is_personal ? 'solo' : 'shared']}
+              {copy.setup.emptyCta}
             </Button>
           </Section>
         ) : null}
@@ -151,9 +153,28 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
                   {m.profile.display_name}
                   {m.user_id === userId ? <span className="text-text-muted"> ({copy.common.you})</span> : null}
                 </span>
-                {m.role === 'owner' ? (
-                  <span className="text-[11px] text-text-muted">{copy.settings.owner}</span>
-                ) : canManage ? (
+                {m.role !== 'owner' && canManage ? (
+                  <select
+                    aria-label={copy.settings.roleLabel(m.profile.display_name)}
+                    value={m.role}
+                    disabled={setRole.isPending}
+                    onChange={(e) => {
+                      const role = e.target.value as InviteRole;
+                      setRole.mutate(
+                        { userId: m.user_id, role },
+                        { onSuccess: () => toast(copy.settings.roleChanged(m.profile.display_name, copy.settings.roles[role].label)), onError }
+                      );
+                    }}
+                    className="h-8 rounded-pill border border-border bg-card px-2 text-[12px] max-sm:h-11"
+                  >
+                    {(['editor', 'viewer'] as const).map((r) => (
+                      <option key={r} value={r}>{copy.settings.roles[r].label}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <span className="text-[12px] text-text-muted">{copy.settings.roles[m.role].label}</span>
+                )}
+                {m.role !== 'owner' && canManage ? (
                   <Button
                     size="sm"
                     variant="ghost"
@@ -171,15 +192,31 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
 
         {canManage ? (
           <Section title={copy.settings.invites} hint={copy.settings.invitesHint}>
-            <Button
-              onClick={() =>
-                createInvite.mutate(undefined, { onSuccess: (invite) => invite && void copyLink(invite.token), onError })
-              }
-              disabled={createInvite.isPending}
-            >
-              <Link2 size={15} aria-hidden />
-              {copy.settings.newInvite}
-            </Button>
+            <div className="flex flex-wrap items-end gap-2">
+              <div>
+                <Label htmlFor="invite-role">{copy.settings.inviteAs}</Label>
+                <select
+                  id="invite-role"
+                  value={inviteRole}
+                  onChange={(e) => setInviteRole(e.target.value as InviteRole)}
+                  className="h-9 rounded-pill border border-border bg-card px-2 text-[13px] max-sm:h-11"
+                >
+                  {(['editor', 'viewer'] as const).map((r) => (
+                    <option key={r} value={r}>{copy.settings.roles[r].label}</option>
+                  ))}
+                </select>
+              </div>
+              <Button
+                onClick={() =>
+                  createInvite.mutate(inviteRole, { onSuccess: (invite) => invite && void copyLink(invite.token), onError })
+                }
+                disabled={createInvite.isPending}
+              >
+                <Link2 size={15} aria-hidden />
+                {copy.settings.newInvite}
+              </Button>
+            </div>
+            <p className="mt-1.5 text-[12px] text-text-muted">{copy.settings.roles[inviteRole].hint}</p>
             {invites.data?.length ? (
               <ul className="mt-3 divide-y divide-border rounded-card border border-border">
                 {invites.data.map((inv) => {
@@ -188,6 +225,7 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
                   return (
                     <li key={inv.id} className="flex min-h-12 items-center gap-2 px-3">
                       <code className="min-w-0 flex-1 truncate text-[12px] text-text-muted">…{inv.token.slice(-10)}</code>
+                      <span className="shrink-0 rounded-[4px] bg-surface-2 px-1.5 text-[11px]">{copy.settings.roles[inv.role === 'viewer' ? 'viewer' : 'editor'].label}</span>
                       <span className="shrink-0 text-[11px] text-text-muted">
                         {used ? copy.settings.used : expired ? copy.settings.expired : copy.settings.expires(timeAgo(inv.expires_at))}
                       </span>
@@ -221,7 +259,7 @@ export function GalaxySettingsDialog({ galaxy, open, onOpenChange, onSetup, chil
                 key={f}
                 href={`/api/export?galaxy=${galaxy.id}&format=${f}`}
                 download
-                className="inline-flex h-11 items-center gap-2 rounded-pill border border-border bg-card px-4 text-[13px] font-medium hover:bg-surface-2"
+                className="inline-flex h-9 items-center gap-2 rounded-pill border border-border bg-card px-3.5 text-[13px] font-medium hover:bg-surface-2 max-sm:h-11"
               >
                 <Download size={15} aria-hidden />
                 {f === 'json' ? copy.settings.exportJson : copy.settings.exportMarkdown}

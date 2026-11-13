@@ -8,9 +8,9 @@ import { ItemCard } from '@/components/items/ItemCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { copy } from '@/lib/copy';
 import { useMarkSphereSeen } from '@/lib/queries/spheres';
+import { useRole } from '@/lib/queries/useCanEdit';
 import { isSpherePrivate, useGalaxyData } from '@/lib/queries/useGalaxyData';
 import { useOpenItem } from '@/lib/useOpenItem';
-import { tiltFor } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { SphereHeader } from './SphereHeader';
 
@@ -21,7 +21,7 @@ const SphereCanvas = dynamic(() => import('@/components/canvas/SphereCanvas').th
 
 type View = 'canvas' | 'list';
 
-/** A sphere: header with sub-sphere filter, then its canvas or its list (RD8.4). */
+/** A board: header with sub-board filter, then its canvas or its list. */
 export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId: string }) {
   const data = useGalaxyData(galaxyId);
   const router = useRouter();
@@ -29,6 +29,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
   const params = useSearchParams();
   const openItem = useOpenItem();
   const markSphereSeen = useMarkSphereSeen();
+  const { canEdit } = useRole(galaxyId);
   const activeSub = params.get('sub');
   const viewParam = params.get('view');
   // canvas by default on larger screens, list on phones (RD8.4)
@@ -68,11 +69,11 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
   const scopeIds = useMemo(() => [...scope], [scope]);
 
   if (data.isLoading) return <main className="flex-1 p-8 text-[13px] text-text-muted">{copy.common.loading}</main>;
-  if (!sphere) return <EmptyState emoji="🫧" title={copy.galaxies.emptyTitle} className="flex-1" />;
+  if (!sphere) return <EmptyState emoji="🔍" title={copy.galaxies.emptyTitle} className="flex-1" />;
 
   const target = (activeSub && data.sphereById.get(activeSub)) || sphere;
   const viewSwitch = (
-    <div role="group" aria-label="View" className="flex items-center rounded-pill border border-border bg-card p-0.5">
+    <div role="group" aria-label="View" className="flex items-center rounded-pill border border-border bg-bg p-0.5">
       {(
         [
           ['canvas', copy.spheres.canvas, <Shapes key="c" size={15} aria-hidden />],
@@ -84,7 +85,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
           type="button"
           aria-pressed={view === v}
           onClick={() => setParam('view', v)}
-          className={cn('inline-flex h-10 items-center gap-1.5 rounded-pill px-3 text-[12px] font-medium', view === v ? 'bg-text text-bg' : 'text-text-muted hover:text-text')}
+          className={cn('inline-flex h-7 items-center gap-1.5 rounded-[4px] px-2.5 text-[12px] font-medium max-sm:h-10', view === v ? 'bg-card text-text shadow-card' : 'text-text-muted hover:text-text')}
         >
           {icon}
           <span className="max-sm:sr-only">{label}</span>
@@ -107,6 +108,7 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
         isPrivate={isSpherePrivate(sphere, data.sphereById)}
         activeSub={activeSub}
         onSubChange={setSub}
+        canEdit={canEdit}
       >
         {viewSwitch}
       </SphereHeader>
@@ -124,30 +126,30 @@ export function SphereView({ galaxyId, sphereId }: { galaxyId: string; sphereId:
               isNew={isNew}
               focusId={params.get('focus')}
               onOpenItem={openItem}
+              canEdit={canEdit}
             />
           </div>
         </div>
       ) : (
-      <div className="paper-sky flex-1 px-3 pb-28 pt-4 sm:px-6">
+      <div className="flex-1 px-4 pb-28 pt-4 sm:px-6">
         {sphere.is_inbox && shown.length ? <p className="mb-3 text-[12px] text-text-muted">{copy.spheres.inbox}</p> : null}
         {shown.length ? (
-          <ul className="mx-auto grid max-w-6xl grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="mx-auto grid max-w-6xl grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {shown.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
                   onClick={() => openItem(item.id)}
-                  className="block w-full text-left transition-transform duration-200 hover:-translate-y-0.5"
+                  className="block w-full rounded-card text-left"
                   aria-label={`${copy.spheres.open}: ${item.title ?? item.url ?? item.caption ?? copy.items.untitled}`}
                 >
                   <ItemCard
                     item={{ ...item, is_new: isNew(item.id) }}
                     sphere={data.sphereById.get(item.sphere_id)}
                     author={item.created_by ? data.profileById.get(item.created_by) : undefined}
-                    tilt={tiltFor(item.id) / 3}
                   />
                 </button>
-                {sphere.is_inbox ? <p className="mt-1.5 px-1 text-[11px] italic text-text-muted">{copy.spheres.waiting}</p> : null}
+                {sphere.is_inbox ? <p className="mt-1.5 px-1 text-[11px] text-text-muted">{copy.spheres.waiting}</p> : null}
               </li>
             ))}
           </ul>

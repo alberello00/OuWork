@@ -1,4 +1,4 @@
-// Minimal service worker: makes OurWorld installable (PWA) without caching
+// Minimal service worker: makes OuWork installable (PWA) without caching
 // private data. Requests always go to the network.
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));

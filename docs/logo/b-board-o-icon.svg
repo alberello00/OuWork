@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#4F46E5"/>
+  <svg x="112" y="112" width="288" height="288" viewBox="0 0 64 64">
+  <defs>
+    <mask id="b-board-o-i-ring" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      <rect width="64" height="64" fill="#fff"/>
+      <circle cx="47" cy="47" r="14.5" fill="#000"/>
+    </mask>
+  </defs>
+  <rect x="10" y="10" width="40" height="40" rx="12" fill="none" stroke="#FFFFFF" stroke-width="9" mask="url(#b-board-o-i-ring)"/>
+  <circle cx="47" cy="47" r="9.5" fill="#FFFFFF"/>
+  </svg>
+</svg>

@@ -1,7 +1,7 @@
 // Username + password login on top of Supabase Auth, which requires an email:
 // we derive a synthetic one. The form only ever asks for the username.
 
-export const USERNAME_DOMAIN = 'users.ourworld.local';
+export const USERNAME_DOMAIN = 'users.ouwork.local';
 const USERNAME_RE = /^[a-z0-9_.-]{3,24}$/;
 export const MIN_PASSWORD_LENGTH = 8;
 

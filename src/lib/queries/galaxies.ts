@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { db, unwrap } from './client';
 import { keys } from './keys';
 import type { Json } from '@/lib/supabase/database.types';
-import type { GalaxyWithMembers, Member } from './types';
+import type { GalaxyWithMembers, InviteRole, Member, Role } from './types';
 
 const GALAXY_SELECT =
   'id, name, owner_id, is_personal, created_at, setup_completed_at, setup_answers, ' +
@@ -27,17 +27,19 @@ interface RawGalaxy {
   }[];
 }
 
+const ROLE_ORDER: Record<Role, number> = { owner: 0, editor: 1, viewer: 2 };
+
 function toGalaxy(raw: RawGalaxy): GalaxyWithMembers {
   const members: Member[] = raw.galaxy_members
     .filter((m) => m.profiles)
     .map((m): Member => ({
       user_id: m.user_id,
-      role: m.role === 'owner' ? 'owner' : 'member',
+      role: m.role === 'owner' || m.role === 'viewer' ? m.role : 'editor',
       joined_at: m.joined_at,
       last_seen_at: m.last_seen_at,
       profile: m.profiles!,
     }))
-    .sort((a, b) => (a.role === b.role ? a.joined_at.localeCompare(b.joined_at) : a.role === 'owner' ? -1 : 1));
+    .sort((a, b) => ROLE_ORDER[a.role] - ROLE_ORDER[b.role] || a.joined_at.localeCompare(b.joined_at));
   return {
     id: raw.id,
     name: raw.name,
@@ -50,7 +52,7 @@ function toGalaxy(raw: RawGalaxy): GalaxyWithMembers {
   };
 }
 
-/** Every galaxy I am a member of, shared ones first, "Just me" last. */
+/** Every workspace I am a member of, shared ones first, "Personal" last. */
 export function useGalaxies() {
   return useQuery({
     queryKey: keys.galaxies,
@@ -141,5 +143,15 @@ export function useRemoveMember() {
           .single()
       ),
     onSuccess: () => qc.invalidateQueries(),
+  });
+}
+
+/** The owner changes a member's role (RW3.1). The RPC refuses everybody else. */
+export function useSetMemberRole(galaxyId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId, role }: { userId: string; role: InviteRole }) =>
+      unwrap(await db().rpc('set_member_role', { _galaxy_id: galaxyId, _user_id: userId, _role: role })),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.galaxies }),
   });
 }
