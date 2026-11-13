@@ -11,7 +11,8 @@ insert into storage.objects (bucket_id, name) values
   ('items', '10000000-0000-4000-8000-000000000001/30000000-0000-4000-8000-000000000001/shared.jpg');
 
 -- ── schema ─────────────────────────────────────────────────────────────────
-select is((select role from public.galaxy_members where user_id = tests.uid('bob')), 'editor', 'the fixture member is an editor');
+select is((select role from public.galaxy_members
+            where user_id = tests.uid('bob') and galaxy_id = '10000000-0000-4000-8000-000000000001'), 'editor', 'the fixture member is an editor');
 select throws_ok(
   $$ insert into public.galaxy_members (galaxy_id, user_id, role) values ('10000000-0000-4000-8000-000000000001', tests.uid('cat'), 'member') $$,
   '23514', null, 'the old "member" role no longer exists');
@@ -58,7 +59,10 @@ select lives_ok($$ update public.annotations set x = 999 $$, 'viewer updating an
 select lives_ok($$ delete from public.items $$, 'viewer deleting items is filtered');
 select lives_ok($$ delete from public.item_links $$, 'viewer deleting links is filtered');
 select lives_ok($$ delete from public.annotations $$, 'viewer deleting annotations is filtered');
+-- the Storage API sets this flag before deleting; RLS still applies
+set local storage.allow_delete_query = 'true';
 select lives_ok($$ delete from storage.objects where bucket_id = 'items' $$, 'viewer deleting images is filtered');
+reset storage.allow_delete_query;
 
 -- what a viewer may still do: their own "seen" bookkeeping, leaving
 select lives_ok($$ select public.mark_seen(array['30000000-0000-4000-8000-000000000001'::uuid]) $$, 'viewer marks items as seen');
@@ -72,9 +76,11 @@ select throws_ok(
 
 select tests.logout();
 select is((select count(*)::int from public.items where title = 'Hacked'), 0, 'no item was renamed by the viewer');
-select is((select count(*)::int from public.spheres where name = 'Hacked'), 0, 'no board was renamed by the viewer');
+select is((select count(*)::int from public.spheres
+           where name = 'Hacked' and galaxy_id = '10000000-0000-4000-8000-000000000001'), 0, 'no board was renamed by the viewer');
 select is((select count(*)::int from public.items where galaxy_id = '10000000-0000-4000-8000-000000000001'), 7, 'no item was deleted by the viewer');
-select is((select count(*)::int from public.item_links), 3, 'no link was deleted by the viewer');
+select is((select count(*)::int from public.item_links l join public.items i on i.id = l.source_id
+           where i.galaxy_id = '10000000-0000-4000-8000-000000000001'), 3, 'no link was deleted by the viewer');
 select is((select count(*)::int from public.annotations where x = 999), 0, 'no annotation was moved by the viewer');
 select is((select count(*)::int from storage.objects where bucket_id = 'items'), 1, 'no image was deleted by the viewer');
 select isnt_empty($$ select * from public.item_views where user_id = tests.uid('vic') $$, 'the viewer''s seen mark was saved');

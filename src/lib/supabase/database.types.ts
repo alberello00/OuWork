@@ -411,9 +411,6 @@ isOneToOne: false
 "mark_sphere_seen":
 { Args: { "_sphere_id": string }; Returns: undefined
                            },
-"set_member_role":
-{ Args: { "_galaxy_id": string,"_role": string,"_user_id": string }; Returns: undefined
-                           },
 "redeem_invite":
 { Args: { "_token": string,"_user_id": string }; Returns: string
                            },
@@ -445,6 +442,9 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"set_member_role":
+{ Args: { "_galaxy_id": string,"_role": string,"_user_id": string }; Returns: undefined
+                           },
 "touch_last_seen":
 { Args: Record<PropertyKey, never>; Returns: undefined
                            }

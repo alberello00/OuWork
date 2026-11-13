@@ -6,7 +6,7 @@ import { copy } from '@/lib/copy';
 import { ThemeToggle } from './ThemeToggle';
 
 /** Bottom bar on phones: search, quick add, theme. */
-export function MobileBar({ onSearch, onAdd }: { onSearch: () => void; onAdd: () => void }) {
+export function MobileBar({ onSearch, onAdd }: { onSearch: () => void; onAdd?: () => void }) {
   return (
     <nav
       aria-label="Main"
@@ -15,7 +15,7 @@ export function MobileBar({ onSearch, onAdd }: { onSearch: () => void; onAdd: ()
       <button type="button" onClick={onSearch} aria-label={copy.nav.search} data-tour="search" className="inline-flex h-11 w-11 items-center justify-center rounded-pill hover:bg-card">
         <Search size={20} aria-hidden />
       </button>
-      <AddFab onClick={onAdd} tour className="-mt-5 border-4 border-card" />
+      {onAdd ? <AddFab onClick={onAdd} tour className="-mt-5 border-4 border-card" /> : <span aria-hidden className="h-11 w-11" />}
       <ThemeToggle />
     </nav>
   );

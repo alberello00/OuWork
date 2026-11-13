@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { NewBadge } from '@/components/items/NewBadge';
 import { PrivateBadge } from '@/components/items/PrivateBadge';
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from '@/components/ui/Dropdown';
+import { ReadOnlyBadge } from '@/components/ui/ReadOnlyBadge';
 import { copy } from '@/lib/copy';
 import type { Sphere } from '@/lib/queries/types';
 import { cn } from '@/lib/utils';
@@ -78,7 +79,7 @@ export function SphereHeader(props: Props) {
               <DropdownItem onSelect={() => setDeleting(true)} className="text-danger"><Trash2 size={15} aria-hidden />{copy.common.delete}</DropdownItem>
             ) : null}
           </DropdownContent>
-        </Dropdown> : null}
+        </Dropdown> : <ReadOnlyBadge className="max-sm:hidden" />}
       </div>
 
       {subSpheres.length ? (

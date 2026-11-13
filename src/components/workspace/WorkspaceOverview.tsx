@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, LayoutGrid, Network, Plus, Settings, Sparkles, StickyNote } from 'lucide-react';
+import { LayoutGrid, Network, Plus, Settings, Sparkles, StickyNote } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -13,6 +13,7 @@ import { SphereFormDialog } from '@/components/spheres/SphereFormDialog';
 import { AvatarStack } from '@/components/ui/AvatarStack';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { ReadOnlyBadge } from '@/components/ui/ReadOnlyBadge';
 import { copy } from '@/lib/copy';
 import { useMoveSpheres } from '@/lib/queries/spheres';
 import { useRole } from '@/lib/queries/useCanEdit';
@@ -123,10 +124,7 @@ export function WorkspaceOverview({ galaxyId }: { galaxyId: string }) {
               {copy.universe.newSphere}
             </Button>
           ) : (
-            <span title={copy.common.readOnlyHint} className="inline-flex h-8 items-center gap-1.5 rounded-pill border border-border bg-surface-2 px-2.5 text-[12px] font-medium text-text-muted">
-              <Eye size={14} aria-hidden />
-              {copy.common.readOnly}
-            </span>
+            <ReadOnlyBadge />
           )}
         </div>
         <div role="tablist" aria-label={copy.nav.universe} className="mt-3 flex gap-4">

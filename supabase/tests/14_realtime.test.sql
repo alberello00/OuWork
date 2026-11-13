@@ -4,10 +4,10 @@ select * from no_plan();
 select tests.fixture();
 
 -- ── published tables ───────────────────────────────────────────────────────
-select results_eq(
-  $$ select tablename::text from pg_publication_tables
-     where pubname = 'supabase_realtime' and schemaname = 'public' order by 1 $$,
-  array['annotations', 'galaxy_members', 'item_links', 'items', 'spheres'],
+select is(
+  array(select tablename::text collate "C" from pg_publication_tables
+        where pubname = 'supabase_realtime' and schemaname = 'public' order by 1),
+  array['annotations', 'galaxy_members', 'item_links', 'items', 'spheres']::text[],
   'items, boards, annotations, links and members are published');
 select is_empty(
   $$ select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public'
@@ -16,8 +16,8 @@ select is_empty(
 
 -- ── topic parsing ──────────────────────────────────────────────────────────
 select is(private.channel_galaxy_id('ws:10000000-0000-4000-8000-000000000001'), '10000000-0000-4000-8000-000000000001'::uuid, 'ws:<uuid> names a workspace');
-select is(private.channel_galaxy_id('ws:not-a-uuid'), null, 'a malformed topic names nothing');
-select is(private.channel_galaxy_id('board:10000000-0000-4000-8000-000000000001'), null, 'other prefixes name nothing');
+select is(private.channel_galaxy_id('ws:not-a-uuid'), null::uuid, 'a malformed topic names nothing');
+select is(private.channel_galaxy_id('board:10000000-0000-4000-8000-000000000001'), null::uuid, 'other prefixes name nothing');
 
 -- ── who may join ───────────────────────────────────────────────────────────
 select tests.login('ann');

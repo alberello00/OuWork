@@ -1,6 +1,6 @@
 # OuWork — Stato del progetto
 
-_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fine fase W1)._
+_Aggiornato a fine di ogni fase. Ultimo aggiornamento: 13 novembre 2026 (fine fase W2)._
 
 ## Riepilogo
 
@@ -8,7 +8,7 @@ _Aggiornato a fine di ogni fase. Ultimo aggiornamento: 12 novembre 2026 (fine fa
 | ---- | ----- | ------ |
 | W0 — Separazione da OurWorld, rebrand (RW1) | ✅ fatta | `feat/w0-separazione` → `develop` |
 | W1 — Design professionale (RW2) | ✅ fatta (logo A "Linked boards") | `feat/w1-design` → `develop` |
-| W2 — Ruoli + Realtime (RW3, RW4) | da fare | `feat/w2-ruoli-realtime` |
+| W2 — Ruoli + Realtime (RW3, RW4) | ✅ fatta | `feat/w2-ruoli-realtime` → `develop` |
 | W3 — Activity log, versioni, collegamenti (RW5–RW7) | da fare | `feat/w3-tracciamento` |
 | W4 — Infrastruttura AI + bacchetta sulle note (RW8) | da fare | `feat/w4-ai-note` |
 | W5 — Bacchetta sul board (RW9) | da fare | `feat/w5-ai-board` |
@@ -24,13 +24,13 @@ Niente. OuWork non ha ancora un progetto Supabase remoto né un progetto Vercel:
 ```bash
 supabase start -x logflare,vector,edge-runtime,imgproxy,supavisor,studio,mailpit   # serve Docker
 supabase db reset        # migrazioni + seed demo
-supabase test db         # 359 test pgTAP
+supabase test db         # 428 test pgTAP
 pnpm dev                 # se la porta 3000 è occupata (es. da OurWorld) Next usa la 3001
 ```
 
 - Stack locale: `project_id = "ouwork"`, API su `http://127.0.0.1:55321`, database sulla porta `55322`. Convive con lo stack locale di OurWorld (porte 543xx).
 - `.env.local` si crea da `.env.example` con le chiavi di `supabase status -o env`; non è versionato.
-- Utenti demo (password `ouwork-dev`): `maya` (owner), `jonas`, `priya`, `tom`, `elena` nel workspace "Product Launch"; `sam` solo in "Website Redesign" (è il "non membro" per le prove di privacy).
+- Utenti demo (password `ouwork-dev`): `maya` (owner), `jonas`, `priya`, `tom`, `elena` (editor) e `lee` (viewer) nel workspace "Product Launch"; `sam` solo in "Website Redesign" (è il "non membro" per le prove di privacy).
 - Contenuti privati da controllare a mano: nota "Pricing — draft numbers" di maya (board Roadmap), board "Scratchpad" di priya.
 
 ## Punto di partenza (ereditato da OurWorld)
@@ -101,3 +101,24 @@ Verificato nel browser (Chrome headless pilotato da script): home, overview, Map
 
 - Le miniature dei board disegnano solo gli item, non le annotazioni.
 - Disco: durante la build è finito lo spazio (63 MB liberi); recuperati ~600 MB cancellando i profili Chrome temporanei delle prove (nello scratchpad della sessione). Ora 4,7 GB liberi.
+
+## Fase W2 — Ruoli e Realtime (RW3, RW4)
+
+**Fatto**
+
+- **Ruoli (RW3.1)**: `owner` / `editor` / `viewer` su `galaxy_members` (migrazione `20261112190000_w2_roles.sql`, i vecchi `member` diventano `editor`). Helper `private.can_edit`, `can_edit_sphere`, `can_edit_item`; le policy di scrittura su board, item, collegamenti, annotazioni e immagini richiedono owner o editor. Il viewer legge, cerca e segna come visto, nient'altro. `delete_sphere` rifiuta i viewer.
+- **Gestione (RW3.2)**: l'owner cambia il ruolo dei membri dalle impostazioni (RPC `set_member_role`); l'invito porta il ruolo scelto ("Invite as" editor/viewer) e la pagina d'invito dice con che ruolo si entra.
+- **Interfaccia per il viewer**: badge "View only" su overview e board; nascosti "Add item", "+" mobile, nuovo board, menu del board, toolbar della tela, trascinamento, modifica e collegamenti nel dettaglio. Il form rapido propone solo i workspace in cui si può scrivere.
+- **Realtime (RW4.1)**: un canale privato `ws:<id>` per workspace con `postgres_changes` su items, spheres, annotations, item_links, galaxy_members; invalidazione mirata delle query TanStack in batch da 250 ms. Accesso al canale limitato ai membri da policy su `realtime.messages` (migrazione `20261112200000_w2_realtime.sql`). Se il canale cade, polling ogni 15 s.
+- **Presenza (RW4.2)**: avatar dei membri sullo stesso board (o nel workspace, fuori dai board) nella barra in alto; "Reconnecting…" quando il canale non è connesso.
+
+Gate: lint, typecheck, 61 test unitari, 428 asserzioni pgTAP (nuovi `13_roles`, `14_realtime`). Verificato nel browser con due sessioni (maya owner, lee viewer) sullo stesso board: presenza reciproca, item inserito da un'altra sessione che compare senza ricaricare, interfaccia del viewer; desktop e 390 px, chiaro e scuro.
+
+**Mancante**
+
+- RW4.3 (cursori live) non fatto: è un "nice to have".
+
+**Problemi noti**
+
+- In locale il container Realtime a volte non riparte dopo un blocco di Docker: `supabase stop && supabase start …` lo rimette in piedi. Senza Realtime l'app funziona lo stesso col polling.
+- Disco quasi pieno (circa 3 GB liberi): Docker si è bloccato una volta per mancanza di spazio.
